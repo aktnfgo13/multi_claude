@@ -1,5 +1,9 @@
 # CLAUDE.md — notes for coding agents working in this repository
 
+**Read `AGENTS.md` first.** Its mandatory requirements (R1–R6: modular architecture, JUCE/OS-independent core,
+macOS/Windows common DSP and preset compatibility, ARM hardware portability, real-time safety and memory management,
+preservation of existing models/presets) override anything below.
+
 ## Golden rules
 * `mfx_core` (src/core, src/dsp, src/engine, src/presets, src/platform, src/neural) must never include JUCE or OS headers
   (except platform/ and the denormal helper). The plug-in is a thin wrapper.

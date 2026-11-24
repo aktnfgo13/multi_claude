@@ -18,3 +18,10 @@
 | K-012 | FIXED | P0 | 튜너 링버퍼 데이터 레이스 | atomic<float> relaxed |
 | K-013 | FIXED | P1 | 딜레이/리버브 바이패스 시 꼬리가 잘림 | 트레일 처리(입력만 페이드, 이펙트는 계속 처리) |
 | K-014 | FIXED | P1 | Custom Drive v1이 실사용 레벨에서 과도한 포화·압축·앨리어싱 | 매핑 v2 (E-013) |
+| K-015 | OPEN | P1 | (R3) Windows 빌드와 macOS/Windows/Linux 간 렌더 출력 일치를 검증하지 않음 | 플랫폼별 골든 렌더 비교(허용 오차 명시) 추가 |
+| K-016 | OPEN | P2 | (R4) `ScopedNoDenormals`가 x86(MXCSR)·aarch64(FPCR)만 지원, ARMv7/Cortex-M(FPSCR FZ) 경로 없음 | 하드웨어 후보 확정 시 추가 |
+| K-017 | OPEN | P2 | (R4) 이펙트별 메모리 사용량(prepare 할당 바이트) 측정·보고 없음 | `Effect::memoryBytes()` 또는 할당 카운터로 벤치마크에 추가 |
+| K-018 | OPEN | P3 | (R4) NAM(Eigen·예외·힙)과 JSON 파서는 Cortex-M에 부적합, 연구용 정적 다이오드 클리퍼는 샘플당 double | NAM은 선택 모듈 유지, MCU 타깃은 프리셋 바이너리 포맷·float 경로 별도 |
+| K-019 | OPEN | P1 | (R6) 프리셋에 이펙트 모델 버전이 없어 Custom Drive v2가 기존 프리셋 소리를 바꿈(팩토리 프리셋은 레벨만 재조정, v1 경로는 코드에만 존재) | 블록별 `model_version`(없으면 1) + Custom Drive v1/v2 선택. v0.1 미출시라 사용자 피해는 없음 |
+| K-020 | OPEN | P1 | (R6) 팩토리 프리셋 렌더 회귀(골든 출력) 테스트 없음 — 소리 변화가 자동으로 검출되지 않음 | 프리셋별 고정 입력 렌더 해시/ESR 비교 테스트 |
+| K-021 | OPEN | P2 | (R6) 앰프 Model 같은 Choice 파라미터에 항목을 추가하면 호스트 정규화 값이 바뀌어 DAW 자동화가 다른 모델을 가리킬 수 있음(프리셋 JSON은 영향 없음) | 예비 슬롯 확보 또는 새 앰프는 새 type id 정책 결정 |
