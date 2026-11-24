@@ -1,0 +1,84 @@
+{
+  "data": "DDSP fits to SPICE feedback-clipper DRIVE sweep (simulation)",
+  "train_knobs": [
+    0,
+    50,
+    100
+  ],
+  "held_out": [
+    25,
+    75
+  ],
+  "methods": {
+    "linear": [
+      {
+        "knob": 25,
+        "param_domain_rmse": 10.874138135109003,
+        "esr_vs_spice": 0.041851111705859693,
+        "esr_per_position_fit": 0.03783930783726656
+      },
+      {
+        "knob": 75,
+        "param_domain_rmse": 3.8424265375797524,
+        "esr_vs_spice": 0.05431500222456231,
+        "esr_per_position_fit": 0.056739204754129136
+      }
+    ],
+    "piecewise": [
+      {
+        "knob": 25,
+        "param_domain_rmse": 7.0356689304596305,
+        "esr_vs_spice": 0.032894284300070055,
+        "esr_per_position_fit": 0.03783930783726656
+      },
+      {
+        "knob": 75,
+        "param_domain_rmse": 0.03055973308760251,
+        "esr_vs_spice": 0.057043646481408396,
+        "esr_per_position_fit": 0.056739204754129136
+      }
+    ],
+    "pchip": [
+      {
+        "knob": 25,
+        "param_domain_rmse": 5.148728268026205,
+        "esr_vs_spice": 0.03236013469659956,
+        "esr_per_position_fit": 0.03783930783726656
+      },
+      {
+        "knob": 75,
+        "param_domain_rmse": 0.041622233328687704,
+        "esr_vs_spice": 0.05702966327451862,
+        "esr_per_position_fit": 0.056739204754129136
+      }
+    ],
+    "lowdim": [
+      {
+        "knob": 25,
+        "param_domain_rmse": 4.470202818128047,
+        "esr_vs_spice": 0.03273115191873369,
+        "esr_per_position_fit": 0.03783930783726656
+      },
+      {
+        "knob": 75,
+        "param_domain_rmse": 0.09000933480301795,
+        "esr_vs_spice": 0.05714903303749056,
+        "esr_per_position_fit": 0.056739204754129136
+      }
+    ],
+    "mlp": [
+      {
+        "knob": 25,
+        "param_domain_rmse": 5.003398600046944,
+        "esr_vs_spice": 0.03236461251331683,
+        "esr_per_position_fit": 0.03783930783726656
+      },
+      {
+        "knob": 75,
+        "param_domain_rmse": 0.4119858394496013,
+        "esr_vs_spice": 0.05785282464956815,
+        "esr_per_position_fit": 0.056739204754129136
+      }
+    ]
+  }
+}

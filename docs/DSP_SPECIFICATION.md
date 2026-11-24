@@ -17,50 +17,58 @@
 
 특정 상용 페달의 복제가 아니라, **각 노브가 하나의 물리량에만 대응**하도록 설계한 드라이브입니다.
 
-### 신호 흐름
+### 신호 흐름 (매핑 v2, 2026-11-24 통합 고도화)
 
 ```
 x → HPF1 20 Hz (입력 커플링) → Tight: HPF2 (Q 0.6) → Mid(pre): Peak
-  → [OS ↑] → ×G (Drive) → Emphasis: HighShelf1 +E dB @1.5 kHz
-          → 바이어스 이동 (그리드 전도형 동적 상태)
-          → 비대칭 대수 시그모이드  y = V·u/(1+|u/V|^p)^(1/p),  V = Vp(u≥0) / Vn(u<0)
-          → 2단 소프트 스테이지 (Crunch, c2)
+  → [OS ↑] → ×G (Drive) → Pre-clip LPF2 7.2 kHz → Emphasis: HighShelf1 +E dB @1.5 kHz
+          → 바이어스 이동 (그리드 전도형 동적 상태, 2 ms 충전 / 150 ms 방전)
+          → 해석적 니 곡선 + 로그 잔여 기울기:
+               z = v/Vth + β
+               y = Vth · [K_p(z) + κ·asinh(z) − f(β)] / f'(β)      (소신호 기울기 1, 동작점 β)
+               K_2 = z/√(1+z²), K_4 = z/(1+z⁴)^¼, K_6 = z/(1+z⁶)^⅙, p∈[2,6]은 이웃 두 곡선의 선형 혼합
+          → 2단 소프트 스테이지 (Crunch, c2, s = 2·Vth, K_2)
           → De-emphasis: HighShelf1 −E dB → [OS ↓]
-  → DC 블로커 → Mid(post) → Tilt(±) → Fizz LPF2 → ×makeup(+12 dB)
+  → DC 블로커 → Mid(post) → Tilt(±) → Fizz LPF2 → ×makeup
   → Mix(지연 정렬된 드라이와) → ×Level
 ```
 
-### 노브 → 물리량 매핑 (`customDriveMapping`, Python 미러: `research/common/mfx_dsp.py`)
+### 노브 → 물리량 매핑 v2 (`customDriveMapping`, Python 미러 `research/common/mfx_dsp.py`)
 
-| 노브 (0–100, n=값/100) | 물리량 | 식 | 기본값(=노브) |
+v1은 `customDriveMappingV1`로 코드에 남겨 두었습니다(전/후 비교용, 제품 경로에서는 사용하지 않음).
+자세한 표·이유·프리셋 영향은 [PARAMETER_SPECIFICATION.md](PARAMETER_SPECIFICATION.md)를 보십시오.
+
+| 노브 (n=값/100) | 물리량 | v2 식 | 기본값 |
 |---|---|---|---|
-| Drive | 클리핑단 입력 소신호 이득 G | 48·n dB | 25 → 12 dB |
-| Headroom | 클리핑 임계 Vth (출력 상한, 포화 시작점) | −24 + 24·n dBFS | 50 → −12 dBFS |
-| Crunch | 니(knee) 경도 p, 2단 스테이지 c2 | p = 1.5·(10/1.5)^n, c2 = 1+2n | 50 → p 3.9 |
-| Grain | 비대칭 a, 엠퍼시스 E, 동적 바이어스 깊이 | a = 0.45n, Vp=Vth(1+a), Vn=Vth(1−a), E=15n dB, depth=0.15+0.25n | 50 |
-| Tight | 클리핑 전 HPF 차단 주파수 | 30·30^n Hz (30–900 Hz) | 50 → 164 Hz |
-| Mid Character | 클리핑 전 피크(±10 dB), 클리핑 후 30 % | m=2n−1: f = 700·2^(m/2) Hz, gain 10m dB, Q 0.9+0.5m(m≥0) / 0.7 | 50 → 0 dB |
-| Tone | 클리핑 후 틸트 ±6 dB @800 Hz + Fizz LPF | tilt = 12(n−0.5) dB, fc = 2.5k·5.6^n Hz | 50 → 5.9 kHz |
-| Mix | 병렬 클린(지연 정렬) | 0–100 % | 100 % |
-| Level | 출력 | −24…+12 dB | −6 dB |
-| Oversampling | 비선형 구간 | 1x/2x/4x/8x | 2x |
+| Drive | 클리핑단 입력 소신호 이득 G | −6 + 36n dB | 25 → +3 dB |
+| Headroom | 클리핑 임계 Vth | −18 + 18n dBFS | 50 → −9 dBFS |
+| Crunch | 니 경도 p, 잔여 기울기 κ, 2단 c2 | p = 2+4n², κ = (0.12+0.5h)(1.4−1.3n), c2 = 1+0.3n | 50 → p 3 |
+| Grain | 동작점 β(짝수 배음), 엠퍼시스 E, 바이어스 깊이 | β = 0.6n, E = 5n dB, depth = 0.1+0.2n | 50 |
+| Tight / Mid / Tone | (v1과 동일) | | |
+| (출력 보정) makeup | Headroom 50 %, Drive 15 % 보상 | −0.5·Vth_dB − 0.15·G_dB | 50/25 → +4.05 dB |
 
-**Drive와 Headroom의 분리(측정으로 검증, `audio.custom_drive_*`)**
+**측정으로 확인한 성질 (`audio.custom_drive_*`, 48 kHz, OS 2x)**
 
-* Drive는 소신호 이득만 바꾸고 출력 상한은 거의 바꾸지 않음: 0→100에서 소신호 +48.0 dB, 포화 시 상한 변화 < 3 dB.
-* Headroom은 소신호 이득을 바꾸지 않고(−70 dBFS 입력에서 변화 < 0.5 dB) 포화 시작점과 상한을 이동:
-  1 dB 압축점이 Headroom 0→100에서 약 24 dB 이동, 상한 +18 dB 이상.
-* 단순 출력 볼륨이 아님: 소신호 레벨은 그대로이고 압축이 시작되는 입력 레벨만 바뀝니다.
+* Drive 0→100: 소신호 +30.6 dB(36 dB × 0.85), 포화 상한 변화 < 3 dB.
+* Headroom 0→100: 1 dB 압축점이 14–24 dB 범위에서 이동, 소신호 레벨은 9 dB(임계 이동의 절반)만 변함
+  → Headroom은 순수한 볼륨 노브도 아니고(v1처럼) 완전 보상도 아님.
+* Crunch 0→100: 1 dB→6 dB 압축 사이 입력 폭(니 폭)이 3 dB 이상 좁아짐.
+* Grain 0→100: 레벨 매칭 후 짝/홀 배음비 +10 dB 이상.
+* Drive 0 / Headroom 50 / 입력 피크 −7.2 dBFS(실제 험버커 DI 수준): THD 6 %, 프레이즈 잔차 2.7 % — 클린에 가까움.
+  (v1은 같은 조건에서 THD 22 %, 잔차 24 %.)
 
-**Grain**은 랜덤 노이즈가 아니라 (1) 양/음 포화 레벨의 비대칭(짝수 배음), (2) 클리핑 앞뒤의 상보 셸빙
-(선형 응답은 그대로, 고역에서의 비선형 상호작용만 증가 → 고차 배음 분포 변화), (3) 동적 바이어스 깊이를 조절합니다.
-레벨을 맞춘 비교에서 Grain 0→100이 짝/홀 배음비를 10 dB 이상 바꾸는 것을 테스트로 확인합니다.
+**v1 → v2 변경 이유 (벤치마크 E-013)**: v1은 Drive 0에서도 +6.5 dB, Headroom 기본 −12 dBFS, makeup +12 dB 고정이라
+실제 기타 레벨(−7 dBFS 피크)에서 이미 강하게 포화했고, |z|^p 곡선의 0점 꺾임(비해석성) 때문에 고차 배음이 느리게
+감쇠해 앨리어싱이 컸습니다. v2는 게인 스테이징을 실제 입력 레벨에 맞추고, 해석적 곡선 + 로그 잔여 기울기(피드백
+클리퍼처럼 포화 이후에도 다이내믹이 남음)로 바꾸었습니다.
 
-**동적 상태(피킹 반응)**: 양의 과구동이 커플링 상태 b를 2 ms로 충전하고 150 ms로 방전시킵니다(진공관 그리드 전도
-블로킹의 단순 모델). 강하게 칠수록 동작점이 이동해 비대칭·압축이 순간적으로 증가하고 회복됩니다.
+**진단 (`CustomDrive::setDiagnosticsEnabled`, 기본 off)**: 입력 피크/RMS, 클리퍼 입력 피크(Vth 대비 dB), 클리퍼 출력 피크,
+게인 압축량, DSP에 실제 적용된 Drive/Vth/makeup/κ/p. 오디오 스레드는 relaxed atomic만 기록합니다.
+UI 표시는 아직 없습니다(KNOWN_ISSUES K-006).
 
 **단순화 / 미검증 사항**: 실제 아날로그 회로를 측정해 맞춘 것이 아니며, 회로 소자 수준 모델이 아닌
-“물리적 의미가 있는 블록 모델”입니다. 청감 평가(ABX)는 수행하지 않았습니다.
+“물리적 의미가 있는 블록 모델”입니다. 청감 평가(ABX)는 사람이 수행해야 하며 아직 수행하지 않았습니다
+(ABX 세트는 `tests/results/compare_drive/` 생성 절차 참고).
 
 ## 기타 드라이브
 

@@ -10,8 +10,12 @@ Training uses a frequency-sampling approximation of the first-order IIR filters 
 padded) for speed; the exported model is re-evaluated with the TRUE recursive IIR (numpy reference)
 and with the C++ engine (mfx_render). Differences between the three are reported.
 
-Loss: ESR + pre-emphasised ESR (1st-order HP pre-emphasis 0.95) + multi-resolution STFT.
-Data split: guitar-like segment (first 2 s of each item) = train, chirp (last 1 s) = validation.
+Loss (weights from --loss-config JSON, research/ddsp/configs/): ESR + pre-emphasised ESR
+  + multi-resolution STFT + optional RMS-envelope loss (dB, L1, attack/sustain dynamics).
+Delay alignment: the target is cross-correlated against the input-linear part and shifted by the
+  estimated bulk lag (reported) in addition to the known oversampler latency.
+Data split (per item, disjoint in time): train = guitar-like 0..1.6 s, validation = 1.6..2.0 s
+  (early stopping / model selection), test = chirp (last 1 s, never seen during selection).
 
 Usage:
   python3 research/ddsp/train_ddsp.py --dataset audio/reference/spice_feedback_clipper --param-value 0.5
@@ -127,8 +131,46 @@ def mrstft(t, y):
     return loss / 3
 
 
-def total_loss(t, y):
-    return esr(t, y) + esr(pre_emph(t), pre_emph(y)) + 0.1 * mrstft(t, y)
+LOSS_CFG = {"esr": 1.0, "esr_pre_emphasis": 1.0, "pre_emphasis_coeff": 0.95, "mrstft": 0.1,
+            "mrstft_ffts": [256, 1024, 4096], "envelope": 0.0, "envelope_window_ms": 10.0}
+
+
+def envelope_db(x, win):
+    e = torch.nn.functional.avg_pool1d((x ** 2)[:, None, :], win, win // 2)[:, 0, :]
+    return 10 * torch.log10(e + 1e-10)
+
+
+def mrstft_cfg(t, y, ffts):
+    loss = 0.0
+    for n in ffts:
+        win = torch.hann_window(n, dtype=t.dtype)
+        T = torch.stft(t, n, n // 4, window=win, return_complex=True).abs()
+        Y = torch.stft(y, n, n // 4, window=win, return_complex=True).abs()
+        loss = loss + torch.norm(T - Y) / (torch.norm(T) + 1e-9) + torch.mean(torch.abs(torch.log(T + 1e-7) - torch.log(Y + 1e-7)))
+    return loss / len(ffts)
+
+
+def total_loss(t, y, cfg=None):
+    c = cfg or LOSS_CFG
+    a = c["pre_emphasis_coeff"]
+    pe = lambda v: v[..., 1:] - a * v[..., :-1]
+    loss = c["esr"] * esr(t, y) + c["esr_pre_emphasis"] * esr(pe(t), pe(y))
+    if c["mrstft"]:
+        loss = loss + c["mrstft"] * mrstft_cfg(t, y, c["mrstft_ffts"])
+    if c["envelope"]:
+        w = max(8, int(c["envelope_window_ms"] * 1e-3 * FS))
+        loss = loss + c["envelope"] * torch.mean(torch.abs(envelope_db(t, w) - envelope_db(y, w)))
+    return loss
+
+
+def estimate_lag(x, y, max_lag=256):
+    """bulk lag of y relative to x (samples) from the cross-correlation peak."""
+    n = min(len(x), len(y), 1 << 16)
+    X = np.fft.rfft(x[:n], 2 * n); Y = np.fft.rfft(y[:n], 2 * n)
+    r = np.fft.irfft(Y * np.conj(X))
+    cand = np.concatenate([r[:max_lag + 1], r[-max_lag:]])
+    lags = np.concatenate([np.arange(max_lag + 1), np.arange(-max_lag, 0)])
+    return int(lags[np.argmax(np.abs(cand))])
 
 
 # ----------------------------------------------------------------------------- data
@@ -148,9 +190,21 @@ def load_items(dataset, param_value):
 
 
 def split(xs, ys):
-    tr = [(x[: 2 * FS], y[: 2 * FS]) for x, y in zip(xs, ys)]
-    va = [(x[2 * FS:], y[2 * FS:]) for x, y in zip(xs, ys)]
-    return tr, va
+    cut = int(1.6 * FS)
+    tr = [(x[:cut], y[:cut]) for x, y in zip(xs, ys)]
+    va = [(x[cut: 2 * FS], y[cut: 2 * FS]) for x, y in zip(xs, ys)]
+    te = [(x[2 * FS:], y[2 * FS:]) for x, y in zip(xs, ys)]
+    return tr, va, te
+
+
+def align(xs, ys):
+    """remove a bulk target lag (e.g. measurement/SPICE delay) before training; returns lags."""
+    out, lags = [], []
+    for x, y in zip(xs, ys):
+        L = estimate_lag(x, y)
+        lags.append(L)
+        out.append(np.concatenate([y[L:], np.zeros(L)]) if L > 0 else (np.concatenate([np.zeros(-L), y[:L]]) if L < 0 else y))
+    return out, lags
 
 
 def shift_target(y):
@@ -182,10 +236,13 @@ def esr_np(t, y):
     return float(np.sum((t - y) ** 2) / np.sum(t ** 2))
 
 
-def train_one(dataset, pv, steps, build, seed=0):
+def train_one(dataset, pv, steps, build, seed=0, loss_cfg=None, do_align=True):
     torch.manual_seed(seed)
     xs, ys, meta = load_items(dataset, pv)
-    tr, va = split(xs, ys)
+    lags = [0] * len(ys)
+    if do_align:
+        ys, lags = align(xs, ys)
+    tr, va, te = split(xs, ys)
     model = DdspDrive().double()
     opt = torch.optim.Adam(model.parameters(), lr=0.02)
     best, best_state = float("inf"), None
@@ -202,7 +259,7 @@ def train_one(dataset, pv, steps, build, seed=0):
         X, Y = torch.tensor(np.array(bx)), torch.tensor(np.array(by))
         opt.zero_grad()
         out = model(X)
-        loss = total_loss(Y[:, 2048:], out[:, 2048:])  # skip filter warm-up
+        loss = total_loss(Y[:, 2048:], out[:, 2048:], loss_cfg)  # skip filter warm-up
         if not torch.isfinite(loss):
             if best_state is not None:
                 model.load_state_dict(best_state)
@@ -212,16 +269,23 @@ def train_one(dataset, pv, steps, build, seed=0):
         loss.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         opt.step(); sched.step()
-        if loss.item() < best:
-            best, best_state = loss.item(), {k: v.detach().clone() for k, v in model.state_dict().items()}
+        if step % 10 == 0 or step == steps - 1:   # model selection on the VALIDATION split
+            with torch.no_grad():
+                vl = 0.0
+                for x, y in va:
+                    vo = model(torch.tensor(x)[None])
+                    vl += total_loss(torch.tensor(shift_target(y))[None, 2048:], vo[:, 2048:], loss_cfg).item()
+            if np.isfinite(vl) and vl < best:
+                best, best_state = vl, {k: v.detach().clone() for k, v in model.state_dict().items()}
         if step % max(1, steps // 8) == 0:
             print(f"  step {step:4d} loss {loss.item():.5f}")
-    if best_state is not None:  # best training-batch state (noisy but avoids late divergence)
+    if best_state is not None:  # best validation-loss state
         model.load_state_dict(best_state)
     prm = model.physical()
-    res = dict(param_value=pv, params=prm, train_seconds=time.time() - t0, data=meta)
-    # evaluation on validation (chirp) and train segments with the TRUE IIR + C++
-    for name, part in [("validation_chirp", va), ("train_guitar_like", tr)]:
+    res = dict(param_value=pv, params=prm, train_seconds=time.time() - t0, data=meta,
+               loss_config=loss_cfg or LOSS_CFG, target_lag_samples=lags, best_validation_loss=best)
+    # evaluation with the TRUE IIR + C++ engine; "test_chirp" was never used for selection
+    for name, part in [("test_chirp", te), ("validation_guitar_like", va), ("train_guitar_like", tr)]:
         e_fs, e_np, e_cpp = [], [], []
         for x, y in part:
             yt = shift_target(y)
@@ -245,21 +309,26 @@ def main():
     ap.add_argument("--steps", type=int, default=300)
     ap.add_argument("--build", default=os.path.join(ROOT, "build"))
     ap.add_argument("--out", default=os.path.join(ROOT, "research", "ddsp", "results"))
+    ap.add_argument("--loss-config", default=os.path.join(ROOT, "research", "ddsp", "configs", "loss_default.json"))
+    ap.add_argument("--no-align", action="store_true")
+    ap.add_argument("--tag", default="")
     a = ap.parse_args()
+    cfg = dict(LOSS_CFG); cfg.update({k: v for k, v in json.load(open(a.loss_config)).items() if not k.startswith("_")})
     os.makedirs(a.out, exist_ok=True)
     idx = json.load(open(os.path.join(a.dataset, "index.json")))
     values = sorted({next(iter(i["params"].values())) for i in idx["items"] if i["params"]}) if a.all else [a.param_value]
     results = []
     for pv in values:
         print(f"training value={pv}")
-        r = train_one(a.dataset, pv, a.steps, a.build if os.path.exists(os.path.join(a.build, "mfx_render")) else None)
-        print(json.dumps({k: r[k] for k in ["param_value", "validation_chirp", "train_guitar_like"]}, indent=1))
+        r = train_one(a.dataset, pv, a.steps, a.build if os.path.exists(os.path.join(a.build, "mfx_render")) else None,
+                      loss_cfg=cfg, do_align=not a.no_align)
+        print(json.dumps({k: r[k] for k in ["param_value", "target_lag_samples", "test_chirp", "validation_guitar_like"]}, indent=1))
         results.append(r)
         # C++ compatible export: a preset with one ddsp_drive block
         preset = {"format": "mfx-preset", "version": 1, "name": f"DDSP {os.path.basename(a.dataset)} {pv}",
                   "chain": [{"type": "ddsp_drive", "lane": "pre", "params": r["params"]}], "midi": []}
-        json.dump(preset, open(os.path.join(a.out, f"ddsp_{os.path.basename(a.dataset)}_{pv:g}.preset.json"), "w"), indent=2)
-    json.dump(results, open(os.path.join(a.out, f"ddsp_{os.path.basename(a.dataset)}_summary.json"), "w"), indent=2)
+        json.dump(preset, open(os.path.join(a.out, f"ddsp_{os.path.basename(a.dataset)}{a.tag}_{pv:g}.preset.json"), "w"), indent=2)
+    json.dump(results, open(os.path.join(a.out, f"ddsp_{os.path.basename(a.dataset)}{a.tag}_summary.json"), "w"), indent=2)
 
 
 if __name__ == "__main__":

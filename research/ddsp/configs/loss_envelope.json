@@ -1,0 +1,10 @@
+{
+  "_comment": "Adds an RMS-envelope (dB, L1) term so attack/sustain compression is fitted explicitly.",
+  "esr": 1.0,
+  "esr_pre_emphasis": 1.0,
+  "pre_emphasis_coeff": 0.95,
+  "mrstft": 0.1,
+  "mrstft_ffts": [256, 1024, 4096],
+  "envelope": 0.05,
+  "envelope_window_ms": 10.0
+}

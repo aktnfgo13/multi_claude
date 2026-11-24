@@ -140,6 +140,53 @@ def cmd_sweep(a):
     json.dump(index, open(os.path.join(a.outdir, "index.json"), "w"), indent=2)
 
 
+TOLERANCES = {  # relative 1-sigma-like uniform half-widths (typical parts)
+    "RGV": (4.7e3, 0.05), "CGV": (47e-9, 0.10), "CFV": (51e-12, 0.10), "ISV": (2.52e-9, 0.30),
+    "NV": (1.752, 0.03), "RFB": (51e3, 0.05), "RPOT": (500e3, 0.20),
+}
+
+
+def cmd_tolerance(a):
+    """Monte-Carlo component tolerance sweep -> per-variant metrics + seed-disjoint train/val/test split.
+
+    Answers: how much do real units of the same circuit differ (gain, THD, onset)? A model error
+    smaller than the unit-to-unit spread is not audible as 'wrong circuit'."""
+    os.makedirs(a.outdir, exist_ok=True)
+    fs = a.fs
+    rng = np.random.default_rng(a.seed)
+    t = np.arange(int(fs * 0.25)) / fs
+    levels = [0.03, 0.1, 0.3, 1.0]
+    variants = []
+    for v in range(a.n):
+        prm = {"DRIVE": a.drive}
+        if v > 0:  # variant 0 = nominal
+            for k, (nom, tol) in TOLERANCES.items():
+                prm[k] = f"{nom * (1 + rng.uniform(-tol, tol)):.6g}"
+        row = dict(variant=v, params=prm, gain_db=[], thd_pct=[])
+        for amp in levels:
+            x = amp * np.sin(2 * np.pi * 440 * t)
+            y = simulate("feedback_clipper_tol.cir", x, fs, prm, a.oversample, a.vscale)[len(t) // 2:]
+            sp = np.abs(np.fft.rfft(y * np.hanning(len(y))))
+            b = int(round(440 * len(y) / fs))
+            h1 = sp[b - 2:b + 3].max()
+            hs = [sp[k * b - 2:k * b + 3].max() for k in range(2, 10)]
+            row["gain_db"].append(float(20 * np.log10(h1 / (np.abs(np.fft.rfft(x[len(t) // 2:] * np.hanning(len(y))))[b - 2:b + 3].max()))))
+            row["thd_pct"].append(float(100 * np.sqrt(np.sum(np.square(hs))) / h1))
+        variants.append(row)
+        print("variant", v, [round(g, 2) for g in row["gain_db"]], [round(h, 2) for h in row["thd_pct"]])
+    idx = np.arange(1, a.n); rng.shuffle(idx)
+    ntr = int(0.6 * len(idx)); nva = int(0.2 * len(idx))
+    split = dict(train=[0] + sorted(idx[:ntr].tolist()), validation=sorted(idx[ntr:ntr + nva].tolist()),
+                 test=sorted(idx[ntr + nva:].tolist()))
+    G = np.array([r["gain_db"] for r in variants]); T = np.array([r["thd_pct"] for r in variants])
+    summary = dict(data_kind="spice_simulation", netlist="feedback_clipper_tol.cir", drive=a.drive,
+                   input_peak_v=levels, tolerances=TOLERANCES, split=split,
+                   gain_db_spread_p2p=(G.max(0) - G.min(0)).tolist(), thd_pct_min=T.min(0).tolist(),
+                   thd_pct_max=T.max(0).tolist(), variants=variants, ngspice=ngspice_version())
+    json.dump(summary, open(os.path.join(a.outdir, "tolerance_summary.json"), "w"), indent=2)
+    print("gain spread p2p [dB]:", np.round(G.max(0) - G.min(0), 2), " THD range [%]:", np.round(T.min(0), 2), np.round(T.max(0), 2))
+
+
 def cmd_validate(a):
     """Checks the SPICE pipeline itself and compares with the C++ clipper models."""
     fs = 48000.0
@@ -186,9 +233,14 @@ def main():
     s.add_argument("--fs", type=float, default=48000); s.add_argument("--amps", default="0.1,0.3,1.0")
     s.add_argument("--param-name"); s.add_argument("--values", default="")
     s.add_argument("--oversample", type=int, default=8); s.add_argument("--vscale", type=float, default=1.0)
+    tl = sp.add_parser("tolerance")
+    tl.add_argument("--outdir", required=True); tl.add_argument("--n", type=int, default=16)
+    tl.add_argument("--drive", type=float, default=0.5); tl.add_argument("--seed", type=int, default=1)
+    tl.add_argument("--fs", type=float, default=48000); tl.add_argument("--oversample", type=int, default=8)
+    tl.add_argument("--vscale", type=float, default=1.0)
     sp.add_parser("validate")
     a = ap.parse_args()
-    {"run": cmd_run, "sweep": cmd_sweep, "validate": cmd_validate}[a.cmd](a)
+    {"run": cmd_run, "sweep": cmd_sweep, "validate": cmd_validate, "tolerance": cmd_tolerance}[a.cmd](a)
 
 
 if __name__ == "__main__":

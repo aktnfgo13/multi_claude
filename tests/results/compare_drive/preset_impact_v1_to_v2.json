@@ -1,0 +1,60 @@
+{
+  "signal": "synthetic Karplus-Strong DI, peak -7.2 dBFS (not a recording)",
+  "results": [
+    {
+      "preset": "02_Crunch_Rhythm.json",
+      "params": {
+        "drive": 15,
+        "headroom": 70,
+        "tight": 70,
+        "mid": 62,
+        "level": 0,
+        "oversampling": 2
+      },
+      "v1_rms_dbfs": -7.577217512548938,
+      "v1_peak_dbfs": 1.0474809455064134,
+      "v2_rms_dbfs": -21.961050436818944,
+      "v2_peak_dbfs": -6.93078586925799,
+      "level_matched_difference_pct": 54.51299387664877,
+      "level_change_db": -14.383832924270006
+    },
+    {
+      "preset": "03_High_Gain_Lead.json",
+      "params": {
+        "drive": 0,
+        "headroom": 100,
+        "tight": 85,
+        "mid": 70,
+        "level": 6,
+        "oversampling": 2
+      },
+      "v1_rms_dbfs": -4.458675509044529,
+      "v1_peak_dbfs": 8.812880498450328,
+      "v2_rms_dbfs": -23.010265558439578,
+      "v2_peak_dbfs": -7.6825882574776685,
+      "level_matched_difference_pct": 43.987534589894615,
+      "level_change_db": -18.55159004939505
+    },
+    {
+      "preset": "05_Custom_Drive_Showcase.json",
+      "params": {
+        "drive": 55,
+        "headroom": 40,
+        "tone": 55,
+        "tight": 60,
+        "crunch": 60,
+        "grain": 65,
+        "mid": 65,
+        "mix": 100,
+        "level": -4,
+        "oversampling": 2
+      },
+      "v1_rms_dbfs": -14.167111167065407,
+      "v1_peak_dbfs": -9.337844337220055,
+      "v2_rms_dbfs": -16.377189133066917,
+      "v2_peak_dbfs": -10.298182851459721,
+      "level_matched_difference_pct": 56.331384070804404,
+      "level_change_db": -2.21007796600151
+    }
+  ]
+}

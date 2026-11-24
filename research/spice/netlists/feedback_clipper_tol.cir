@@ -1,0 +1,21 @@
+* Feedback clipper with tolerance parameters (same topology as feedback_clipper.cir).
+* Nominal: RGV=4.7k CGV=47n CFV=51p ISV=2.52n NV=1.752 RFB=51k RPOT=500k
+.param DRIVE=0.5
+.param RGV=4.7k
+.param CGV=47n
+.param CFV=51p
+.param ISV=2.52n
+.param NV=1.752
+.param RFB=51k
+.param RPOT=500k
+.param RF={RFB + RPOT*DRIVE}
+{INPUT_SOURCE}
+RG inm g {RGV}
+CG g 0 {CGV}
+RF inm out {RF}
+CF inm out {CFV}
+D1 inm out DSI
+D2 out inm DSI
+Bop out 0 V = 4.5*tanh(1e5*(V(in)-V(inm))/4.5)
+.model DSI D(IS={ISV} N={NV} RS=0.5)
+.end

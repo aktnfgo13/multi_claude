@@ -1,12 +1,55 @@
 {
-  "format": "mfx-preset", "version": 1, "name": "Custom Drive Showcase",
-  "input_gain_db": 0, "output_gain_db": -4, "tempo_bpm": 120,
-  "parallel": false, "parallel_mix": 0.5,
+  "format": "mfx-preset",
+  "version": 1,
+  "name": "Custom Drive Showcase",
+  "input_gain_db": 0,
+  "output_gain_db": -4,
+  "tempo_bpm": 120,
+  "parallel": false,
+  "parallel_mix": 0.5,
   "chain": [
-    {"type": "custom_drive", "lane": "pre", "params": {"drive": 55, "headroom": 40, "tone": 55, "tight": 60, "crunch": 60, "grain": 65, "mid": 65, "mix": 100, "level": -4, "oversampling": 2}},
-    {"type": "amp", "lane": "pre", "params": {"model": 3, "gain": 40, "master": 50}},
-    {"type": "cabinet", "lane": "pre", "params": {"source": 0, "sim_model": 2}},
-    {"type": "reverb", "lane": "post", "params": {"type": 0, "decay_s": 1.2, "mix": 15}}
+    {
+      "type": "custom_drive",
+      "lane": "pre",
+      "params": {
+        "drive": 95,
+        "headroom": 40,
+        "tone": 55,
+        "tight": 60,
+        "crunch": 60,
+        "grain": 65,
+        "mid": 65,
+        "mix": 100,
+        "level": -3,
+        "oversampling": 2
+      }
+    },
+    {
+      "type": "amp",
+      "lane": "pre",
+      "params": {
+        "model": 3,
+        "gain": 40,
+        "master": 50
+      }
+    },
+    {
+      "type": "cabinet",
+      "lane": "pre",
+      "params": {
+        "source": 0,
+        "sim_model": 2
+      }
+    },
+    {
+      "type": "reverb",
+      "lane": "post",
+      "params": {
+        "type": 0,
+        "decay_s": 1.2,
+        "mix": 15
+      }
+    }
   ],
   "midi": []
 }

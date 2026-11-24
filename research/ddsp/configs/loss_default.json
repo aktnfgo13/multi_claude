@@ -1,0 +1,10 @@
+{
+  "_comment": "Loss weights for research/ddsp/train_ddsp.py. v1 behaviour = envelope 0.",
+  "esr": 1.0,
+  "esr_pre_emphasis": 1.0,
+  "pre_emphasis_coeff": 0.95,
+  "mrstft": 0.1,
+  "mrstft_ffts": [256, 1024, 4096],
+  "envelope": 0.0,
+  "envelope_window_ms": 10.0
+}
