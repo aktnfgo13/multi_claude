@@ -45,6 +45,18 @@ mfx_render -i <in.wav> -o <out.wav> (--preset <preset.json> | --effect <type> [-
 
 청감 비교는 라우드니스 매칭 후 블라인드 ABX로만 결론을 냅니다(현재 미실시).
 
+## 3-1. 참고 프로젝트 공통 벤치마크 (`apps/mfx_compare_drive`, E-013)
+* 두 구현을 같은 바이너리·같은 신호로 측정(참고 소스는 `-DMFX_REFERENCE_DIR`로 경로만 지정, 읽기 전용).
+* **같은 노브 값 비교**와 **매칭 동작점 비교**(소신호 이득 + 1 dB 압축점 최근접)를 반드시 분리해 보고.
+* 그리드: Drive {0,25,50,75,100}(quick) / 12.5 간격(full) × Headroom 같은 값 × 입력 피크 {−60,−48,−36,−24,−18,−12,−7.2,−6,−3} dBFS.
+  나머지 Tone/Tight/Crunch/Grain/Mid 50, Mix 100, Level −6, OS 2x(`--os`로 변경). 샘플레이트 `--fs` 44.1/48/96 kHz.
+* 지표: 소신호 이득, onset(1 dB), THD/h2·h3·h5·h7, 출력 RMS, 3953 Hz 비배음(16 kHz 이하), 합성 프레이즈 왜곡 잔차,
+  볼륨 1/8 클린업 잔차, 어택/서스테인 게인 변화, CPU(ns/샘플, 모노), 지연.
+* 출력: `grid.csv`, `report.json`, `renders/*_raw.wav`·`*_matched-24dBFS.wav`, `abx/trial_NN/{A,B,X}.wav`, 정답 키(청취 후 열람).
+* 그림: `tools/benchmark/plot_compare_drive.py`. 프리셋 영향: `tools/benchmark/preset_mapping_impact.py`.
+* CPU는 같은 기계에서 다른 무거운 작업과 동시에 돌리지 않은 실행만 비교에 사용. Mac과 Linux 수치는 섞지 않음.
+* 버퍼 32–512: 엔진은 블록 크기 불변(테스트 `block_size_invariance`), 버퍼별 실시간 여유는 `run_benchmarks.py`.
+
 ## 4. 최종 평가 항목 (실제 장비 확보 후)
 
 ESR / Pre-emphasis ESR / MRSTFT / 배음 스펙트럼 / IMD(SMPTE 60 Hz + 7 kHz 4:1) / 엔벨로프 오차(다이내믹 응답) /

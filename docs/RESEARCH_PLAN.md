@@ -22,13 +22,18 @@
 | R-001 | 측정·분석 프레임워크 | 구현(하드웨어 미검증) | tools/measurement, tools/audio_analysis |
 | R-002 | SPICE 환경 | PASS | E-004, research/spice |
 | R-003 | Python/C++ parity | PASS | E-005 |
-| R-004 | DDSP 자동 계수 학습 | PARTIAL — 동작·이전 검증, 정확도 −13~−18 dB | E-006 |
+| R-004 | DDSP 자동 계수 학습 | PARTIAL — loss 설정 파일·Envelope loss·train/val/test·지연 정렬 추가(E-016), 정확도 개선 없음 | E-006, E-016 |
 | R-005 | Neural Gray-box | NOT IMPLEMENTED | E-006이 필요성 제시: 피드백 클리핑 구조 + 잔차 소형 신경망 |
-| R-006 | 노브 매핑 LUT | PASS(SPICE) | E-007, C++ `ddsp_drive` + KnobLut |
-| R-007 | 앨리어싱 억제(ADAA) | NOT IMPLEMENTED | E-002 극단 설정 −35 dB |
+| R-006 | 노브 매핑 LUT | PASS(SPICE), 방법 비교 완료 → 구간 선형 유지 | E-007, E-017 |
+| R-011 | SPICE 부품 공차 스윕 | PASS(시뮬레이션) | E-018 |
+| R-007 | 앨리어싱 억제(ADAA) | NOT IMPLEMENTED — Custom Drive v2 해석적 곡선으로 준비됨(K-001) | E-002, E-013 |
 | R-008 | Active Learning | NOT IMPLEMENTED | — |
 | R-009 | DSP Architecture Search | NOT IMPLEMENTED (타깃 하드웨어 미정) | 수동 후보 비교(E-003)만 수행 |
 | R-010 | 소자 단위 신경망 / 범용 회로 설계 플랫폼 | 장기 후보(범위 외) | — |
+
+## parity 범위 (과장 금지)
+parity는 "Python 미러와 C++가 같은 수식을 같은 결과로 계산한다"만 증명합니다. 실제 회로·장비와의 일치는 증명하지 않습니다.
+GRU 베이스라인은 NAM이 아닙니다(NAM은 공식 core로 로딩만 검증).
 
 ## 다음 실험 (우선순위)
 1. **Jan Ray 복각 실측**: `measure_device.py loopback` → 노브 3–5점 × 진폭 3 → `train_ddsp.py`. 같은 데이터로 NAM 학습(공식 트레이너) → ESR/MRSTFT/CPU 비교.

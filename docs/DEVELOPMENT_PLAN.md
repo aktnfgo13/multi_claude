@@ -10,20 +10,21 @@
 * 두 트랙은 `mfx_core`에서만 만납니다. 연구 결과는 "새 이펙트"가 아니라 기존 블록의 구조/계수/LUT로 이전됩니다
   (예: D-010 WDF 이전, `ddsp_drive` + KnobLut).
 
-## 우선순위와 진행 상황 (2026-11-24)
+## 우선순위와 진행 상황 (2026-11-24 통합 고도화 후)
 
 | 단계 | 항목 | 상태 |
 |---|---|---|
-| P0 | 아키텍처, DSP 코어, 엔진, Custom Drive, Gain/EQ/Dynamics, 기본 앰프, Delay/Reverb, IR 로더, Standalone, 파라미터, 프리셋, 벤치마크, 자동 테스트 | 완료(앰프는 단순화 모델) |
-| P1 | AU/VST3, UI, NAM 로더, 모듈레이션, 라우팅, 오버샘플링, SPICE, parity, DDSP 프로토타입 | 완료 — **AU는 Mac 빌드 필요** |
-| P2 | 실측 기반 DDSP, 노브 매핑, LUT 내보내기, Active Learning, 고급 앰프, 하드웨어 후보 평가 | 노브 매핑·LUT 완료(SPICE), 나머지 대기 |
-| P3 | Gray-box, Architecture Search, 임베디드 최적화, 자체 AI 캡처 | 미착수 |
+| P0 | 보존(스냅샷·태그·브랜치), Codex 비교, 회귀, RT 수정, 플러그인 ID 분리, Custom Drive 비교, 벤치마크 | 완료 — **AU 빌드·auval은 사용자 Mac 실행 대기(BLOCKED)** |
+| P1 | Custom Drive 게인·Headroom·앨리어싱(v2), 테일, 진단, 프리셋 재조정 | 완료 / 고게인 앨리어싱·어택 압축 OPEN(K-001, K-002), NAM 리샘플링 DEFER, 진단 UI 미구현 |
+| P2 | DDSP loss 설정·Envelope loss·분할, 노브 매핑 비교, SPICE 공차 | 완료(시뮬레이션 데이터) |
+| P3 | Gray-box, Architecture Search, 임베디드 | 미착수(DEFER) |
 
 ## 다음 마일스톤
-1. M1 (Mac): AU 빌드 → auval → Logic에서 팩토리 프리셋 5종 재생, PDC 확인, CPU 측정.
-2. M2 (측정): 오디오 인터페이스 루프백 보정 → Jan Ray 복각 노브 3–5점 측정 → `index.json` 데이터셋.
-3. M3 (연구): 실측 데이터로 DDSP/NAM/Gray-box 비교, 결과를 EXPERIMENT_LOG에 추가.
-4. M4 (제품): ADAA, NAM 리샘플러, 테일 유지, MIDI 매핑 UI, 프리셋 브라우저.
-5. M5 (하드웨어): 후보 보드에서 `mfx_core` 크로스 빌드, 블록별 사이클 측정.
+1. M1 (Mac, 사용자): `scripts/macos_build_install_verify.sh` → auval → Logic 체크리스트(BUILD_GUIDE §2) → 결과 로그 전달.
+2. M1b (청취, 사용자): `audio/compare_drive_v2/abx` 블라인드 청취, 프리셋 02/03/05 확인, Custom Drive v2 노브 감각 피드백.
+3. M2 (P1): K-001/K-002 — 1차 ADAA, 바이어스·κ 재조정, 결과를 같은 하니스로 Codex와 재비교.
+4. M3 (측정): 실제 DI 녹음과 Jan Ray 복각 루프백 측정 → 하니스·DDSP 재실행.
+5. M4 (제품): NAM 리샘플러, 진단 UI, Codex 고유 기능(스펙트럼 시각화, Input System) 이식 검토, Undo/Redo.
+6. M5 (하드웨어): 후보 보드에서 `mfx_core` 크로스 빌드, 블록별 사이클 측정.
 
-세부 상태표는 `docs/COMPLETION_REPORT.md`.
+세부 상태표는 `docs/INTEGRATION_REPORT.md` (v0.1: `docs/COMPLETION_REPORT.md`).

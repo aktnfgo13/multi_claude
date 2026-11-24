@@ -107,3 +107,98 @@ DRIVE 0/50/100 세 점의 학습 결과로 LUT(로그 영역 보간) → 학습�
 NeuralAmpModelerCore 예제 모델(WaveNet, LSTM, SlimmableContainer A2)을 엔진에서 로딩·실행: 유한 출력,
 실시간 대비 10–106배. 정적 링크 시 아키텍처 등록이 사라지는 문제를 whole-archive 링크로 해결(D-012).
 음질·지연 정확도는 NAM 공식 플러그인과 비교하지 않았음(NOT TESTED).
+
+---
+# 통합 고도화 (2026-11-24, 브랜치 `integration/reference-project-review`, 기준 태그 `baseline-v0.1`)
+
+환경: 클라우드 x86_64 Linux, GCC, Release. **Mac/AU 결과 아님.** CPU 수치는 같은 기계·같은 빌드에서
+병렬 작업이 없을 때 측정한 것만 비교에 사용합니다(전체 48 kHz 실행은 다른 측정과 동시에 돌아 CPU 수치를 쓰지 않음).
+
+## E-012 RT 안정성 + Sanitizer
+* 지시서 RT 위험 목록을 코드와 대조: 파라미터 수명(SlotParameter가 호스트 스레드에서 Effect* 접근) → seqlock 메타데이터로 수정,
+  튜너 링버퍼 레이스 → atomic, 테일 잘림 → 트레일, NAM 샘플레이트 → 바이패스 유지(K-005), AU → 미검증(K-004).
+* 신규 동시성 테스트(라우팅 추가/이동/삭제/병렬 + IR 로드 + 바이패스 + MIDI를 오디오 스레드 처리와 동시에).
+* ASan+UBSan: 전체 통과, 경고 0. TSan: integration 15개 통과, 경고 0 (`tests/results/sanitizer_*.txt`).
+* pluginval strictness 7(GUI 포함), VST3 Linux, SlotParameter 재작성 후 재실행: SUCCESS (`tests/results/pluginval_vst3_linux_strict7_v2.txt`).
+
+## E-013 Custom Drive 공통 벤치마크: Codex vs Claude v1 vs Claude v2
+* 하니스 `apps/mfx_compare_drive.cpp`: 두 구현을 같은 바이너리로 컴파일(Codex 소스는 읽기만), 같은 신호, 모노.
+  Headroom 그리드 D{0..100}×H{0..100}×입력 피크{−60…−3} dBFS, 기타 노브 50, Mix 100, Level −6, OS 2x.
+  - 같은 노브 값 비교(`same_parameter_summary`)와 **매칭된 동작점 비교**(Codex 각 설정에 대해 Claude 그리드에서
+    소신호 이득·1 dB 압축점이 가장 가까운 설정)를 분리.
+  - 지표: 소신호 이득, onset, THD·배음(h2/h3/h5/h7), 3953 Hz 비배음(앨리어싱), 합성 프레이즈 왜곡 잔차,
+    볼륨 1/8 클린업 잔차, 어택(15 ms)·서스테인 게인 변화, CPU, 지연. 원본·−24 dBFS 레벨 매칭 렌더, ABX 무작위 20세트.
+* 결과(48 kHz, H50, 입력 −7.2 dBFS):
+
+| 설정 | 엔진 | 소신호 | THD | 앨리어싱 | 프레이즈 잔차 | 어택 |
+|---|---|---|---|---|---|---|
+| D0 | Claude v1 | +6.5 dB | 22.4 % | −51.8 dB | 23.9 % | −8.0 dB |
+| D0 | Claude v2 | −7.0 dB | 6.1 % | −92.9 dB | 2.7 % | −0.2 dB |
+| D0 | Codex | −2.9 dB | 2.7 % | −83.6 dB | 0.4 % | −0.1 dB |
+| D50 | Claude v1 | — | 32.7 % | −22.8 dB | 60 % | −30.6 dB |
+| D50 | Claude v2 | +8.3 dB | 26.6 % | −51.3 dB | 22.5 % | −5.8 dB |
+| D50 | Codex | +7.2 dB | 14.5 % | −74.4 dB | 11.3 % | −3.3 dB |
+| D100 | Claude v2 | +23.6 dB | 33.6 % | −27.4 dB | 49.7 % | −20.6 dB |
+| D100 | Codex | +27.5 dB | 35.5 % | −52.3 dB | 38.6 % | −16.9 dB |
+
+* 매칭 동작점: 저게인(Codex D0–25) 영역은 Claude v2가 앨리어싱 −82…−93 dB로 Codex(−71…−94)와 같거나 낮음.
+  중·고게인(Codex D50–100)은 Claude v2가 앨리어싱 20–35 dB 높고 어택 압축 1.5–2배 → K-001, K-002.
+* 샘플레이트(D50 H50 앨리어싱): 44.1 kHz Claude −47.3 / Codex −73.7, 48 kHz −51.3 / −74.4, 96 kHz −86.9 / −85.9 dB.
+* 오버샘플링(Claude v2 최종, 앨리어싱 D50 H50 / D100 H50): 1x −28.1 / −19.6, 2x −51.3 / −27.4, 4x −92.8 / −36.4, 8x −93.2 / −48.1 dB.
+  (Codex 2x D100 H50 −52.3 dB → Claude 고게인은 8x에서야 비슷해짐: K-001)
+* CPU(같은 기계, quick 실행, 모노 ns/샘플): Claude v2 1x 71 / 2x 189 / 4x 353, Codex 1x 162 / 2x 668 / 4x 1284
+  (`after_v2_quick/report.json`; 단독 Claude 실행에서는 2x 158 / 4x 316). 반복 간 변동 ±15 % 정도.
+  지연: Claude 0/31/39, Codex 0/64/64 샘플.
+* 결과 파일: `tests/results/compare_drive/{before_v1_quick, after_v2_quick, v2_full48, v2_q44, v2_q96}/`, 그림 `docs/images/compare_drive/`.
+* 한계: 합성 신호만 사용. 청취 평가 없음(ABX 세트만 생성).
+
+## E-014 Custom Drive 매핑 v2 설계 반복
+1. v1 → 게인 스테이징만 변경(−6…+42 dB, Vth −18…0, 보상 makeup) + κ 잔여 기울기: D50 H50 앨리어싱 −22.8 → −34 dB.
+2. |z|^p 곡선 → 해석적 니 계열 + β 오프셋: 변화 작음(±1 dB) — 곡선 꺾임보다 구동 레벨이 지배적임을 확인.
+3. Drive 상한 +30 dB, 엠퍼시스 15→5 dB, 클리핑 전 7.2 kHz LPF2: D50 H50 −48 dB, D25 H50 −89 dB.
+4. Crunch 매핑 완화(p=2+4n², c2=1+0.3n): 기본값에서 THD 26.6 %, −51.3 dB.
+5. 기존 테스트 `crunch_hardens_knee`(h7−h3 지표)가 v2에서 불통과 → 고게인에서 두 설정 모두 사각파 배음비로 수렴해
+   지표가 Crunch를 구분하지 못함. 테스트를 정적 압축곡선의 니 폭(1→6 dB 압축 입력 폭)으로 교체하고, Crunch가 실제로
+   니 폭을 3 dB 이상 바꾸도록 κ 범위(1.4−1.3n)와 2단 스테이지를 조정. **테스트 기대값 변경 이유를 D-018에 기록.**
+6. Python 미러 갱신, parity 재실행: 전 케이스 PASS(최대 상대오차 2.9e-4, ESR ≤ 1.6e-7).
+
+## E-015 앰프 저역 필터 정밀도 (Codex는 저역 컷을 double로 처리)
+float32 계수 양자화 오차를 계산: depth 피크 90 Hz +9 dB, bass 셸프 120 Hz +12 dB를 96/192/384 kHz(OS 8x)에서
+30 Hz 오차 최대 0.17 dB, 60 Hz 이상 0.04 dB 이하. → 들리는 수준이 아니므로 **KEEP(float)**, D-020.
+
+## E-016 DDSP: loss 설정 파일, Envelope loss, train/val/test 분리, 지연 정렬
+* `research/ddsp/configs/loss_*.json`, `--loss-config`. 분할: 항목별 0–1.6 s 학습, 1.6–2.0 s 검증(모델 선택), 마지막 1 s 처프 테스트.
+  교차상관 지연 추정(SPICE 데이터는 0 샘플 — 정상).
+* SPICE 피드백 클리퍼 DRIVE 0.5, 300 step:
+
+| 설정 | test(처프) ESR | 검증 ESR | 학습 ESR |
+|---|---|---|---|
+| v1 스크립트(학습 배치 손실로 선택, 학습 2 s) | 0.052* | — | 0.043 |
+| v2 기본 loss | 0.062 | 0.130 | 0.082 |
+| v2 + Envelope loss 0.05 | 0.063 | 0.136 | 0.086 |
+
+  *v1은 처프를 "validation"으로 불렀지만 모델 선택에는 쓰지 않았으므로 test에 해당.
+  Envelope loss는 이 데이터에서 ESR을 개선하지 못함(목적이 다른 지표이므로 예상 범위). 기본값 0 유지.
+  v2 분할은 학습 데이터가 20 % 줄어 ESR이 약간 나빠짐 — 대신 선택 편향이 없음.
+* 시간 영역 IIR 비교: 주파수 샘플링 학습 모델 / 실제 재귀 IIR(numpy) / C++ 엔진 ESR이 소수점 4자리까지 일치.
+
+## E-017 노브 매핑 방법 비교 (`research/parameter_mapping/compare_mapping_methods.py`)
+학습 위치 {0,50,100} → 보류 {25,75}, 학습 {0,25,100} → 보류 {50,75}. SPICE 대비 오디오 ESR:
+
+| 방법 | 25 | 75 | / | 50 | 75 |
+|---|---|---|---|---|---|
+| 위치별 개별 피팅(상한) | 0.038 | 0.057 | | 0.050 | 0.057 |
+| 선형(끝점) | 0.042 | 0.054 | | 0.050 | 0.054 |
+| 구간 선형(현재 C++ KnobLut) | 0.033 | 0.057 | | 0.050 | 0.057 |
+| PCHIP 스플라인 | 0.032 | 0.057 | | 0.050 | 0.057 |
+| 저차원(a+b·log) | 0.033 | 0.057 | | 0.048 | 0.060 |
+| 소형 MLP | 0.032 | 0.058 | | 0.057 | 0.059 |
+
+이 회로는 DRIVE 25 % 이상에서 응답이 거의 포화돼 방법 간 차이가 작음. MLP는 데이터가 적을 때 보류 위치에서 가장 나쁨.
+→ 구간 선형 KEEP(D-021). 결론의 범위: 위치 5개, 1차원 노브, 시뮬레이션 데이터.
+
+## E-018 SPICE 부품 공차 스윕 (`run_spice.py tolerance`)
+피드백 클리퍼(DRIVE 0.5), 16개 변형(0 = 공칭), 저항 ±5 %, 커패시터 ±10 %, 다이오드 IS ±30 %, N ±3 %, 팟 ±20 % 균등 분포.
+seed로 분리된 train/val/test(10/3/3). 440 Hz 입력 0.03/0.1/0.3/1.0 V에서 게인 산포 0.80/0.69/0.55/0.33 dB(p-p),
+THD 20.4–23.8 / 27.2–28.2 / 24.2–25.1 / 14.8–15.6 %.
+→ 같은 회로의 실물 개체 차이 수준. 모델 오차가 이보다 작으면 "다른 회로"로 구분되기 어렵다는 기준선으로 사용.

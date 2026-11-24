@@ -1,0 +1,20 @@
+# 알려진 문제 (KNOWN_ISSUES)
+
+상태 표기: OPEN(미해결) / MITIGATED(완화, 근본 해결 아님) / BLOCKED(외부 조건 필요) / FIXED(이번 작업에서 해결, 기록용)
+
+| ID | 상태 | 우선 | 내용 | 근거 / 다음 조치 |
+|---|---|---|---|---|
+| K-001 | OPEN | P1 | Custom Drive 중·고게인(Drive ≥ 50)에서 OS 2x·44.1/48 kHz 앨리어싱이 Codex보다 20–35 dB 높음 (D50 H50: −51 dB vs −74 dB, 3953 Hz −7.2 dBFS 스트레스 신호) | E-013. 4x에서는 D50 −92.8 dB, D100은 8x에서도 −48 dB. 사용자 안내 "Drive 60 이상 4x 권장". 다음: 1차 ADAA(K₂·asinh 경로는 닫힌 형식 존재) 또는 고게인 전용 내부 배율, 하프밴드 탭 증가 실험 |
+| K-002 | OPEN | P1 | 같은 동작점(소신호 이득·onset 일치)에서 Claude v2의 어택 압축이 Codex보다 1.5–2배 강함 (예: Codex D75 H50 ↔ Claude D65 H0: −18.3 vs −9.0 dB) | E-013 매칭 비교. 바이어스 깊이·κ 재조정 후보. 청감으로 결정해야 함 |
+| K-003 | OPEN | P1 | 프리셋 02/03/05는 v2에 맞게 레벨만 맞췄고 음색은 v1과 40–50 % 다름 | PARAMETER_SPECIFICATION §2. 사용자 청취 확인 필요 |
+| K-004 | BLOCKED | P0 | macOS auval / Logic Pro 동작 미확인 | 사용자 Mac에서 `scripts/macos_build_install_verify.sh` 실행 필요. 클라우드·Linux VM에서는 macOS 빌드 불가 |
+| K-005 | MITIGATED | P1 | NAM 모델 샘플레이트 ≠ 호스트 샘플레이트이면 NAM 블록이 바이패스됨(오음 출력 방지) | D-013. 실시간 리샘플러(폴리페이즈, 지연 보고) 미구현 → DEFER |
+| K-006 | OPEN | P2 | Custom Drive 진단 값(입력 피크, 클리퍼 입력/Vth, 게인 압축, 적용 값)은 코어 API만 있고 플러그인 UI 표시 없음 | `CustomDrive::readDiagnostics()`. UI 패널은 향후 |
+| K-007 | OPEN | P2 | 빌드 ID는 CMake configure 시점의 git 해시. configure 없이 재빌드하면 이전 해시가 남음 | 릴리스 빌드는 항상 새 build 디렉터리에서 configure |
+| K-008 | OPEN | P2 | Undo/Redo, Tap Tempo UI, 값 직접 입력은 미구현 | 구현된 것처럼 보이는 UI는 두지 않음 |
+| K-009 | OPEN | P2 | 모든 음향 비교는 합성 신호(Karplus-Strong DI, 사인)와 SPICE 시뮬레이션 기준. 실제 DI 녹음·하드웨어 측정 없음 | 사용자 DI 녹음(험버커/싱글, 강약 피킹, 볼륨 롤오프) 제공 시 같은 하니스로 재측정 |
+| K-010 | OPEN | P2 | ABX 세트는 생성만 했고 청취 평가는 수행하지 않음(AI는 청취할 수 없음) | `audio/compare_drive_v2/abx` (Mac 동기화본). 정답 키는 청취 후에만 열 것 |
+| K-011 | FIXED | P0 | 호스트 스레드가 SlotParameter를 통해 Effect*에 접근(수명 경쟁) | seqlock 메타데이터, 메시지 스레드 적용. TSan 경고 0 |
+| K-012 | FIXED | P0 | 튜너 링버퍼 데이터 레이스 | atomic<float> relaxed |
+| K-013 | FIXED | P1 | 딜레이/리버브 바이패스 시 꼬리가 잘림 | 트레일 처리(입력만 페이드, 이펙트는 계속 처리) |
+| K-014 | FIXED | P1 | Custom Drive v1이 실사용 레벨에서 과도한 포화·압축·앨리어싱 | 매핑 v2 (E-013) |

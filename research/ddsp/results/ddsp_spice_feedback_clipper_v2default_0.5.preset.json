@@ -1,0 +1,24 @@
+{
+  "format": "mfx-preset",
+  "version": 1,
+  "name": "DDSP spice_feedback_clipper 0.5",
+  "chain": [
+    {
+      "type": "ddsp_drive",
+      "lane": "pre",
+      "params": {
+        "hpf_hz": 612.0056634342128,
+        "gain_db": 22.698610416479003,
+        "thr_pos": 0.3443742445381575,
+        "thr_neg": 0.3385318912542018,
+        "knee": 2.315487249329201,
+        "lpf_hz": 22000.0,
+        "out_db": 2.35680545156203,
+        "mix": 85.28498415842148,
+        "level": 2.171211150020123,
+        "oversampling": 1
+      }
+    }
+  ],
+  "midi": []
+}

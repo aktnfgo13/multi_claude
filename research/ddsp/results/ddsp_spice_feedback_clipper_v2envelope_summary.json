@@ -1,0 +1,62 @@
+[
+  {
+    "param_value": 0.5,
+    "params": {
+      "hpf_hz": 589.9165534628446,
+      "gain_db": 22.761410630748227,
+      "thr_pos": 0.3604525466545746,
+      "thr_neg": 0.35382143751821454,
+      "knee": 2.825892070758841,
+      "lpf_hz": 22000.0,
+      "out_db": 2.168707796398376,
+      "mix": 84.23209577333766,
+      "level": 2.042486334767958,
+      "oversampling": 1
+    },
+    "train_seconds": 201.15414786338806,
+    "data": {
+      "data_kind": "spice_simulation",
+      "is_hardware_measurement": false,
+      "simulator": "ngspice-42",
+      "netlist": "feedback_clipper.cir",
+      "params": {},
+      "sample_rate": 48000,
+      "input_volts_per_fullscale": 1.0,
+      "note": "dataset for DDSP; input = synthetic guitar-like + sine sweep"
+    },
+    "loss_config": {
+      "esr": 1.0,
+      "esr_pre_emphasis": 1.0,
+      "pre_emphasis_coeff": 0.95,
+      "mrstft": 0.1,
+      "mrstft_ffts": [
+        256,
+        1024,
+        4096
+      ],
+      "envelope": 0.05,
+      "envelope_window_ms": 10.0
+    },
+    "target_lag_samples": [
+      0,
+      0,
+      0
+    ],
+    "best_validation_loss": 2.3453952008502803,
+    "test_chirp": {
+      "esr_freq_sampling_model": 0.06276657006183937,
+      "esr_true_iir_python": 0.06276657766716763,
+      "esr_cpp_engine": 0.06276657696562395
+    },
+    "validation_guitar_like": {
+      "esr_freq_sampling_model": 0.1359396789285393,
+      "esr_true_iir_python": 0.13593968661347935,
+      "esr_cpp_engine": 0.1359397051766197
+    },
+    "train_guitar_like": {
+      "esr_freq_sampling_model": 0.08577364573021158,
+      "esr_true_iir_python": 0.08577364980249723,
+      "esr_cpp_engine": 0.08577365967481415
+    }
+  }
+]

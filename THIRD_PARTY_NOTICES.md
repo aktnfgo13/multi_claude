@@ -39,3 +39,8 @@ Steinberg VST 3 License 페이지 및 VST 3.8 보도자료(2025-10-29).
   공개 문헌 기법입니다. 특허 조사는 수행하지 않았습니다(출시 전 검토 권장).
 * Fractal Audio, Neural DSP, Line 6, Universal Audio, Klon 등 상표는 코드·UI·프리셋 이름에 사용하지 않았습니다.
   "VST"/"Audio Units" 로고·명칭 사용 시 각 회사의 가이드라인을 따라야 합니다.
+
+## 참고 프로젝트(Codex 버전, 사용자 소유) — 배포물에 포함되지 않음
+`apps/mfx_compare_drive`는 비교 측정을 위해 빌드 옵션 `MFX_REFERENCE_DIR`가 지정된 경우에만 사용자의 다른 프로젝트
+(`~/multi_effects`)의 헤더를 컴파일합니다. 그 코드·프리셋·IR은 이 저장소에 복사하지 않았고, 플러그인 바이너리에 링크되지 않습니다.
+외부 모델·IR·데이터셋은 이번 작업에서 새로 추가하지 않았습니다.
