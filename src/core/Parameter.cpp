@@ -18,8 +18,20 @@ const char* unitSuffix(ParamUnit u) {
     }
 }
 
-std::string ParameterSet::formatValue(int i, float v) const {
-    const auto& in = infos_[i];
+float paramToNormalized(const ParamInfo& in, float v) {
+    if (in.max <= in.min) return 0.0f;
+    if (in.scale == ParamScale::Log && in.min > 0.0f)
+        return (float)(std::log(v / in.min) / std::log(in.max / in.min));
+    return (v - in.min) / (in.max - in.min);
+}
+
+float paramFromNormalized(const ParamInfo& in, float n) {
+    n = clampv(n, 0.0f, 1.0f);
+    if (in.scale == ParamScale::Log && in.min > 0.0f) return (float)mapLog(n, in.min, in.max);
+    return in.min + n * (in.max - in.min);
+}
+
+std::string formatParamValue(const ParamInfo& in, float v) {
     char buf[64];
     if (in.unit == ParamUnit::Choice && in.choices) {
         int idx = clampv((int)std::lround(v), 0, in.numChoices - 1);

@@ -43,6 +43,10 @@ public:
     virtual int latencySamples() const { return 0; }
     /// True when a mono input may produce a stereo output (chorus, stereo delay, reverb, pan...).
     virtual bool createsStereo() const { return false; }
+    /// True for effects whose output continues after the input stops (delay, reverb). The engine keeps
+    /// processing them while bypassed (input faded to silence) so tails ring out ("trails").
+    /// Only honoured for zero-latency effects.
+    virtual bool hasTail() const { return false; }
     /// Host tempo for synced effects (called on audio thread before process()).
     virtual void setTempo(double /*bpm*/) {}
 

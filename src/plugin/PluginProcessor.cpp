@@ -6,15 +6,89 @@
 #include "presets/Preset.h"
 
 #include <cstdlib>
+#include <cstring>
 
 namespace mfx::plugin {
 
 // ------------------------------------------------------------------ SlotParameter
+ParamInfo SlotParameter::Meta::toInfo(const char** choicePtrs) const {
+    ParamInfo in;
+    in.id = "";
+    in.name = name;
+    in.min = min; in.max = max; in.def = def;
+    in.unit = unit; in.scale = scale;
+    in.numChoices = numChoices;
+    for (int k = 0; k < numChoices && k < 16; ++k) choicePtrs[k] = choices[k];
+    in.choices = numChoices > 0 ? choicePtrs : nullptr;
+    return in;
+}
+
+SlotParameter::Meta SlotParameter::snapshot() const {
+    // seqlock reader: retry while a write is in progress or happened during the copy
+    Meta m;
+    for (;;) {
+        const uint32_t s1 = seq_.load(std::memory_order_acquire);
+        if (s1 & 1u) continue;
+        std::memcpy(&m, &meta_, sizeof(Meta));
+        std::atomic_thread_fence(std::memory_order_acquire);
+        if (seq_.load(std::memory_order_relaxed) == s1) return m;
+    }
+}
+
+void SlotParameter::bind(const Effect* fx) {
+    Meta m;
+    if (fx) {
+        m.bound = index_ < 0 || index_ < fx->params().size();
+        std::strncpy(m.effectName, fx->displayName(), sizeof(m.effectName) - 1);
+        if (index_ >= 0 && index_ < fx->params().size()) {
+            const auto& in = fx->params().info(index_);
+            std::strncpy(m.name, in.name, sizeof(m.name) - 1);
+            m.min = in.min; m.max = in.max; m.def = in.def; m.unit = in.unit; m.scale = in.scale;
+            m.numChoices = std::min(in.numChoices, 16);
+            for (int k = 0; k < m.numChoices; ++k) std::strncpy(m.choices[k], in.choices[k], sizeof(m.choices[k]) - 1);
+        }
+    }
+    // seqlock writer (message thread only)
+    seq_.fetch_add(1, std::memory_order_acq_rel);
+    std::atomic_thread_fence(std::memory_order_release);
+    std::memcpy(&meta_, &m, sizeof(Meta));
+    seq_.fetch_add(1, std::memory_order_release);
+    if (fx && index_ < 0) value_.store(engine_.isBypassed(slot_) ? 1.0f : 0.0f);
+    if (fx && index_ >= 0 && index_ < fx->params().size()) value_.store(fx->params().getNormalized(index_));
+}
+
+void SlotParameter::setValue(float v) {
+    v = juce::jlimit(0.0f, 1.0f, v);
+    if (index_ < 0) {
+        v = v >= 0.5f ? 1.0f : 0.0f;
+        engine_.setBypass(slot_, v >= 0.5f); // atomic, engine outlives the parameter
+    } else {
+        const Meta m = snapshot();
+        if (m.bound && (m.unit == ParamUnit::Choice || m.unit == ParamUnit::Toggle)) {
+            const char* cp[16];
+            const ParamInfo in = m.toInfo(cp);
+            v = paramToNormalized(in, std::round(paramFromNormalized(in, v)));
+        }
+    }
+    value_.store(v);
+    dirty_.store(true);
+    hostChanged_.store(true);
+}
+
+float SlotParameter::getDefaultValue() const {
+    if (index_ < 0) return 0.0f;
+    const Meta m = snapshot();
+    if (!m.bound) return 0.5f;
+    const char* cp[16];
+    return paramToNormalized(m.toInfo(cp), m.def);
+}
+
 juce::String SlotParameter::getName(int maxLen) const {
+    const Meta m = snapshot();
     juce::String n;
-    if (Effect* fx = fx_.load()) {
-        if (index_ < 0) n = "S" + juce::String(slot_ + 1) + " " + fx->displayName() + " Bypass";
-        else if (index_ < fx->params().size()) n = "S" + juce::String(slot_ + 1) + " " + fx->params().info(index_).name;
+    if (m.effectName[0]) {
+        if (index_ < 0) n = "S" + juce::String(slot_ + 1) + " " + m.effectName + " Bypass";
+        else if (m.bound) n = "S" + juce::String(slot_ + 1) + " " + m.name;
         else n = "S" + juce::String(slot_ + 1) + " (unused " + juce::String(index_ + 1) + ")";
     } else {
         n = "Slot " + juce::String(slot_ + 1) + (index_ < 0 ? " Bypass" : " P" + juce::String(index_ + 1));
@@ -23,46 +97,34 @@ juce::String SlotParameter::getName(int maxLen) const {
 }
 
 juce::String SlotParameter::getText(float v, int) const {
-    Effect* fx = fx_.load();
     if (index_ < 0) return v >= 0.5f ? "Bypassed" : "Active";
-    if (!fx || index_ >= fx->params().size()) return juce::String(v, 3);
-    return fx->params().formatValue(index_, fx->params().fromNormalized(index_, v));
+    const Meta m = snapshot();
+    if (!m.bound) return juce::String(v, 3);
+    const char* cp[16];
+    const ParamInfo in = m.toInfo(cp);
+    return formatParamValue(in, paramFromNormalized(in, v));
 }
 
-void SlotParameter::setValue(float v) {
-    v = juce::jlimit(0.0f, 1.0f, v);
-    if (index_ < 0) {
-        v = v >= 0.5f ? 1.0f : 0.0f;
-        engine_.setBypass(slot_, v >= 0.5f);
-    } else if (Effect* fx = fx_.load(); fx && index_ < fx->params().size()) {
-        auto& ps = fx->params();
-        if (ps.info(index_).isDiscrete()) v = ps.toNormalized(index_, std::round(ps.fromNormalized(index_, v)));
-        ps.setNormalized(index_, v);
-    }
-    value_.store(v);
-    dirty_.store(true);
+float SlotParameter::getValueForText(const juce::String& t) const {
+    const Meta m = snapshot();
+    if (index_ < 0 || !m.bound) return juce::jlimit(0.0f, 1.0f, t.getFloatValue());
+    const char* cp[16];
+    const ParamInfo in = m.toInfo(cp);
+    for (int k = 0; k < in.numChoices; ++k) if (t == cp[k]) return paramToNormalized(in, (float)k);
+    return paramToNormalized(in, juce::jlimit(in.min, in.max, t.getFloatValue()));
 }
 
 bool SlotParameter::isDiscrete() const {
     if (index_ < 0) return true;
-    Effect* fx = fx_.load();
-    return fx && index_ < fx->params().size() && fx->params().info(index_).isDiscrete();
+    const Meta m = snapshot();
+    return m.bound && (m.unit == ParamUnit::Choice || m.unit == ParamUnit::Toggle);
 }
 
 int SlotParameter::getNumSteps() const {
     if (index_ < 0) return 2;
-    Effect* fx = fx_.load();
-    if (fx && index_ < fx->params().size() && fx->params().info(index_).isDiscrete()) {
-        const auto& in = fx->params().info(index_);
-        return (int)(in.max - in.min) + 1;
-    }
+    const Meta m = snapshot();
+    if (m.bound && (m.unit == ParamUnit::Choice || m.unit == ParamUnit::Toggle)) return (int)(m.max - m.min) + 1;
     return AudioProcessorParameter::getNumSteps();
-}
-
-void SlotParameter::bind(Effect* fx) {
-    fx_.store(fx);
-    if (fx && index_ < 0) value_.store(engine_.isBypassed(slot_) ? 1.0f : 0.0f);
-    if (fx && index_ >= 0 && index_ < fx->params().size()) value_.store(fx->params().getNormalized(index_));
 }
 
 // ------------------------------------------------------------------ Processor
@@ -151,8 +213,11 @@ void Processor::timerCallback() {
         Effect* fx = engine_.effect(s);
         if (!fx) continue; // unbound host parameters keep whatever the host set
         bypassParams_[(size_t)s]->mirror(engine_.isBypassed(s) ? 1.0f : 0.0f);
-        for (int p = 0; p < std::min(kParamsPerSlot, fx->params().size()); ++p)
-            slotParams_[(size_t)s][(size_t)p]->mirror(fx->params().getNormalized(p));
+        for (int p = 0; p < std::min(kParamsPerSlot, fx->params().size()); ++p) {
+            auto* sp = slotParams_[(size_t)s][(size_t)p];
+            if (sp->consumeHostChange()) fx->params().setNormalized(p, sp->getValue()); // host wins
+            else sp->mirror(fx->params().getNormalized(p));                            // MIDI / UI / internal
+        }
     }
 }
 
@@ -225,6 +290,14 @@ void Processor::setCurrentProgram(int i) {
 }
 
 void Processor::getStateInformation(juce::MemoryBlock& dest) {
+    // Host changes that the audio thread may not have applied yet (e.g. transport stopped)
+    for (int s = 0; s < Engine::kMaxSlots; ++s) {
+        Effect* fx = engine_.effect(s); // message thread: owned pointer is stable here
+        for (int p = 0; p < kParamsPerSlot; ++p) {
+            auto* sp = slotParams_[(size_t)s][(size_t)p];
+            if (sp->consumeHostChange() && fx && p < fx->params().size()) fx->params().setNormalized(p, sp->getValue());
+        }
+    }
     Json j = presetToJson(engine_, presetName_.toStdString());
     // values of host parameters that are not bound to an effect (kept so the host sees what it set)
     Json unbound = Json::object();

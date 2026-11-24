@@ -11,35 +11,54 @@
 namespace mfx::plugin {
 
 /// Host-automatable parameter bound to (slot, parameter index). Name follows the effect currently in the slot.
+///
+/// Thread safety: hosts may call getName/getText/setValue from any thread, including while the
+/// message thread removes the effect. The parameter therefore never dereferences an Effect*; it keeps
+/// a copy of the parameter metadata, published with a seqlock (writer: message thread in bind()).
+/// setValue only stores the value; the audio thread applies it to the live routing
+/// (Engine::setParameterRT) and getStateInformation flushes host changes on the message thread.
 class SlotParameter : public juce::AudioProcessorParameter {
 public:
+    struct Meta {
+        bool bound = false;
+        char effectName[32] = {};
+        char name[40] = {};
+        float min = 0, max = 1, def = 0;
+        ParamUnit unit = ParamUnit::None;
+        ParamScale scale = ParamScale::Linear;
+        int numChoices = 0;
+        char choices[16][24] = {};
+        ParamInfo toInfo(const char** choicePtrs) const;
+    };
+
     SlotParameter(Engine& e, int slot, int index) : engine_(e), slot_(slot), index_(index) {}
     float getValue() const override { return value_.load(); }
-    /// Any thread. Discrete targets (bypass, choices, toggles) are quantised so that the stored
-    /// state always reproduces the value; the bound effect is updated immediately (atomic).
     void setValue(float v) override;
-    bool isDiscrete() const override;
-    int getNumSteps() const override;
-    float getDefaultValue() const override { return 0.5f; }
+    float getDefaultValue() const override;
     juce::String getName(int maxLen) const override;
     juce::String getLabel() const override { return {}; }
     juce::String getText(float v, int) const override;
-    float getValueForText(const juce::String& t) const override { return t.getFloatValue(); }
+    float getValueForText(const juce::String& t) const override;
     bool isAutomatable() const override { return true; }
+    bool isDiscrete() const override;
+    int getNumSteps() const override;
 
     /// message thread: bind to an effect parameter (or unbind with nullptr) and mirror its value
-    void bind(Effect* fx);
+    void bind(const Effect* fx);
     void mirror(float normalized) { value_.store(normalized); }
     bool consumeDirty() { return dirty_.exchange(false); }
+    bool consumeHostChange() { return hostChanged_.exchange(false); }
     int slot() const { return slot_; }
     int index() const { return index_; }
+    Meta snapshot() const;
 
 private:
     Engine& engine_;
     int slot_, index_;
     std::atomic<float> value_{0.5f};
-    std::atomic<bool> dirty_{false};
-    std::atomic<Effect*> fx_{nullptr}; // display only (names / text), message thread updates
+    std::atomic<bool> dirty_{false}, hostChanged_{false};
+    std::atomic<uint32_t> seq_{0};
+    Meta meta_;
 };
 
 class Processor : public juce::AudioProcessor, private juce::Timer {

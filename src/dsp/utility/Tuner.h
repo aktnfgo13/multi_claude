@@ -36,12 +36,12 @@ public:
 
 protected:
     void onPrepare(const ProcessSpec&) override {}
-    void onReset() override { w_.store(0); acc_ = 0; accN_ = 0; }
+    void onReset() override { w_.store(0); acc_ = 0; accN_ = 0; for (auto& r : ring_) r.store(0.0f, std::memory_order_relaxed); }
     void onParametersChanged(bool) override {}
     void onProcess(AudioBlock& b) override;
 
 private:
-    float ring_[kRing] = {};
+    std::atomic<float> ring_[kRing]; // written by the audio thread, read by the UI thread (relaxed)
     std::atomic<uint32_t> w_{0};
     float acc_ = 0.0f;
     int accN_ = 0;

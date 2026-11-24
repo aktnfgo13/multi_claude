@@ -1,0 +1,18 @@
+[PASS] integration.empty_engine_is_bit_transparent                  2.2 ms 
+[PASS] integration.bypass_signal_integrity_with_latency_compensation      2.7 ms 
+[PASS] integration.reported_latency_equals_measured_delay          33.1 ms 
+[PASS] integration.bypass_toggle_is_click_free                     10.1 ms 
+[PASS] integration.routing_changes_while_running_are_safe_and_faded    100.9 ms 
+[PASS] integration.parallel_lanes_are_latency_aligned              15.3 ms 
+[PASS] integration.mono_input_becomes_stereo_after_stereo_effect    222.3 ms 
+[PASS] integration.meters_and_clip_indicators                       1.0 ms 
+[PASS] integration.midi_cc_controls_parameter_and_bypass            1.1 ms 
+[PASS] integration.sample_rate_change_reprepares_everything       827.4 ms 
+[PASS] integration.preset_reload_while_running_keeps_slot_ids      69.1 ms 
+[PASS] integration.delay_and_reverb_trails_continue_after_bypass     66.3 ms 
+[PASS] integration.trails_bypass_passes_dry_signal_unchanged       27.8 ms 
+[PASS] integration.concurrent_routing_parameter_and_ir_changes    552.8 ms 
+[PASS] integration.tuner_ring_is_readable_while_processing       1500.4 ms 
+
+15 passed, 0 failed, 38 checks
+tsan done 0

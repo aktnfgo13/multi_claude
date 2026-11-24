@@ -24,6 +24,7 @@ public:
     const char* displayName() const override { return "Reverb"; }
     const char* category() const override { return "Reverb"; }
     bool createsStereo() const override { return true; }
+    bool hasTail() const override { return true; }
 
 protected:
     void onPrepare(const ProcessSpec& spec) override;

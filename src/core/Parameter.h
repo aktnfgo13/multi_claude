@@ -27,6 +27,11 @@ struct ParamInfo {
 
 const char* unitSuffix(ParamUnit u);
 
+// Stateless helpers (also used by host-parameter metadata snapshots in the plug-in layer).
+float paramToNormalized(const ParamInfo& in, float v);
+float paramFromNormalized(const ParamInfo& in, float n);
+std::string formatParamValue(const ParamInfo& in, float v);
+
 class ParameterSet {
 public:
     static constexpr int kMaxParams = 24;
@@ -62,24 +67,13 @@ public:
     void setNormalized(int i, float n) { set(i, fromNormalized(i, n)); }
     float getNormalized(int i) const { return toNormalized(i, get(i)); }
 
-    float toNormalized(int i, float v) const {
-        const auto& in = infos_[i];
-        if (in.max <= in.min) return 0.0f;
-        if (in.scale == ParamScale::Log && in.min > 0.0f)
-            return (float)(std::log(v / in.min) / std::log(in.max / in.min));
-        return (v - in.min) / (in.max - in.min);
-    }
-    float fromNormalized(int i, float n) const {
-        const auto& in = infos_[i];
-        n = clampv(n, 0.0f, 1.0f);
-        if (in.scale == ParamScale::Log && in.min > 0.0f) return (float)mapLog(n, in.min, in.max);
-        return in.min + n * (in.max - in.min);
-    }
+    float toNormalized(int i, float v) const { return paramToNormalized(infos_[i], v); }
+    float fromNormalized(int i, float n) const { return paramFromNormalized(infos_[i], n); }
 
     /// Audio thread: returns true once after any write.
     bool consumeDirty() { return dirty_.exchange(0u, std::memory_order_acquire) != 0u; }
 
-    std::string formatValue(int i, float v) const;
+    std::string formatValue(int i, float v) const { return formatParamValue(infos_[i], v); }
 
 private:
     ParamInfo infos_[kMaxParams];

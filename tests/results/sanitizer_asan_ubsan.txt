@@ -1,0 +1,61 @@
+[PASS] unit.smoothing_reaches_target_linearly                       0.0 ms 
+[PASS] unit.parameter_clamp_discrete_and_log_mapping                0.0 ms 
+[PASS] unit.fft_roundtrip_and_parseval                              0.6 ms 
+[PASS] unit.oversampler_latency_is_integer_and_reported             1.0 ms 
+[PASS] unit.oversampler_passband_and_image_rejection               86.6 ms 
+[PASS] unit.delayline_hermite_reads_integer_exact                   0.0 ms 
+[PASS] unit.wav_roundtrip_float_and_24bit                           1.8 ms 
+[PASS] unit.resampler_preserves_sine                              157.8 ms 
+[PASS] unit.tuner_yin_accuracy                                     43.3 ms 
+[PASS] unit.tap_tempo_median                                        0.0 ms 
+[PASS] unit.biquad_lowpass_highpass_cutoff_minus3db                 0.0 ms 
+[PASS] unit.biquad_peak_and_shelves_gain                            0.0 ms 
+[PASS] unit.biquad_stable_over_parameter_sweep                      0.4 ms 
+[PASS] unit.parametric_eq_response_matches_design                  13.2 ms 
+[PASS] unit.partitioned_convolution_equals_direct                  36.5 ms 
+[PASS] unit.algebraic_sigmoid_slope_and_bounds                      0.0 ms 
+[PASS] unit.static_diode_newton_satisfies_kcl                       0.0 ms 
+[PASS] unit.wdf_matches_rc_ode_diode_clipper                       17.9 ms 
+[PASS] unit.wright_omega_accuracy                                   0.0 ms 
+[PASS] unit.json_parse_dump_roundtrip                               0.3 ms 
+[PASS] unit.preset_roundtrip_preserves_chain                        5.2 ms 
+[PASS] unit.preset_unknown_entries_are_reported_not_fatal           3.6 ms 
+[PASS] unit.factory_presets_load_without_warnings                  44.0 ms 
+[PASS] unit.every_effect_describes_valid_parameters                 0.6 ms 
+
+24 passed, 0 failed, 3153 checks
+[PASS] integration.empty_engine_is_bit_transparent                  0.7 ms 
+[PASS] integration.bypass_signal_integrity_with_latency_compensation      1.8 ms 
+[PASS] integration.reported_latency_equals_measured_delay           7.8 ms 
+[PASS] integration.bypass_toggle_is_click_free                      3.4 ms 
+[PASS] integration.routing_changes_while_running_are_safe_and_faded     23.1 ms 
+[PASS] integration.parallel_lanes_are_latency_aligned               2.8 ms 
+[PASS] integration.mono_input_becomes_stereo_after_stereo_effect     54.2 ms 
+[PASS] integration.meters_and_clip_indicators                       0.4 ms 
+[PASS] integration.midi_cc_controls_parameter_and_bypass            0.5 ms 
+[PASS] integration.sample_rate_change_reprepares_everything       224.3 ms 
+[PASS] integration.preset_reload_while_running_keeps_slot_ids      20.1 ms 
+[PASS] integration.delay_and_reverb_trails_continue_after_bypass     20.2 ms 
+[PASS] integration.trails_bypass_passes_dry_signal_unchanged        9.5 ms 
+[PASS] integration.concurrent_routing_parameter_and_ir_changes    319.8 ms 
+[PASS] integration.tuner_ring_is_readable_while_processing        585.4 ms 
+
+15 passed, 0 failed, 38 checks
+[PASS] audio.custom_drive_grid_is_finite_bounded_dc_free         4656.3 ms 
+[PASS] audio.custom_drive_thd_increases_with_drive                211.2 ms 
+[PASS] audio.custom_drive_headroom_moves_saturation_onset_not_small_signal_gain   1158.5 ms 
+[PASS] audio.custom_drive_drive_and_headroom_are_independent_axes     93.5 ms 
+[PASS] audio.custom_drive_soft_vs_hard_picking                    109.6 ms 
+[PASS] audio.custom_drive_grain_changes_texture_not_only_level     96.0 ms 
+[PASS] audio.custom_drive_crunch_hardens_knee                      87.6 ms 
+[PASS] audio.custom_drive_tight_mid_tone_small_signal_responses    157.9 ms 
+[PASS] audio.custom_drive_oversampling_reduces_aliasing           165.7 ms 
+[PASS] audio.custom_drive_latency_matches_dry_alignment             2.5 ms 
+[PASS] audio.custom_drive_parameter_changes_are_smooth_and_reach_dsp     31.8 ms 
+[PASS] audio.custom_drive_runtime_oversampling_switch_is_safe      49.8 ms 
+
+12 passed, 0 failed, 867 checks
+[PASS] audio.block_size_invariance                                577.6 ms 
+
+1 passed, 0 failed, 25 checks
+asan done 0

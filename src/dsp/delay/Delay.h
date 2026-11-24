@@ -21,6 +21,7 @@ public:
     const char* displayName() const override { return "Delay"; }
     const char* category() const override { return "Delay"; }
     bool createsStereo() const override { return true; }
+    bool hasTail() const override { return true; }
     void setTempo(double bpm) override { bpm_ = bpm > 0 ? bpm : bpm_; }
     /// Effective delay time (ms) for the left/main tap after sync resolution.
     double effectiveTimeMs() const;

@@ -211,3 +211,41 @@ TEST(integration, preset_reload_while_running_keeps_slot_ids) {
     }
     CHECK((first == std::vector<int>{0, 1, 2}));
 }
+
+TEST(integration, delay_and_reverb_trails_continue_after_bypass) {
+    // Bypassing a delay right after a note must let the echoes ring out (no hard cut, no reset).
+    Engine e; e.prepare(48000, 256);
+    auto d = createEffect("delay");
+    d->setParam("mode", 0); d->setParam("routing", 0); d->setParam("time_ms", 100.0f);
+    d->setParam("feedback", 50.0f); d->setParam("mix", 50.0f); d->setParam("mod_depth", 0.0f);
+    const int slot = e.addEffect(std::move(d));
+    e.prepare(48000, 256);
+    Host h{e, 256};
+    std::vector<float> x(48000, 0.0f);
+    for (int i = 0; i < 480; ++i) x[(size_t)i] = 0.5f * std::sin(2.0 * kPi * 440.0 * i / 48000.0);
+    std::vector<float> y(x.size()), r(x.size());
+    for (size_t p = 0; p < x.size(); p += 256) {
+        if (p == 1024) e.setBypass(slot, true); // bypass after the note, before the first echo (4800)
+        const float* in[1] = {x.data() + p};
+        float* out[2] = {y.data() + p, r.data() + p};
+        e.process(in, 1, out, 2, (int)std::min<size_t>(256, x.size() - p));
+    }
+    const double echo1 = analysis::peak(y.data() + 4800, 600);
+    const double echo2 = analysis::peak(y.data() + 9600, 600);
+    record("trail_echo1_peak", echo1);
+    CHECK_MSG(echo1 > 0.1 && echo2 > 0.05, "echoes after bypass: " << echo1 << ", " << echo2);
+    CHECK(allFinite(y));
+}
+
+TEST(integration, trails_bypass_passes_dry_signal_unchanged) {
+    Engine e; e.prepare(48000, 256);
+    const int slot = e.addEffect(createEffect("reverb"));
+    e.setBypass(slot, true);
+    e.prepare(48000, 256);
+    Host h{e, 128};
+    auto x = makeNoise(9600, 0.3);
+    auto y = h.run(x);
+    double err = 0.0;
+    for (size_t i = 0; i < x.size(); ++i) err = std::max(err, (double)std::fabs(y[i] - x[i]));
+    CHECK_MSG(err < 1e-6, "bypassed reverb (silent tail) must be transparent, err " << err);
+}

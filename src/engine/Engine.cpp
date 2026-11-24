@@ -258,6 +258,27 @@ void Engine::processSlot(const Routing& r, int slot, float** buf, bool& mono, in
     const int lat = std::min(fx->latencySamples(), SlotRT::kDelay - 1);
     const float target = byp ? 0.0f : 1.0f;
 
+    if (fx->hasTail() && lat == 0) { // trails: keep processing, fade the effect *input* instead of its output
+        float dryLocalT[kMaxChannels][kChunk];
+        float gR[kChunk];
+        const float stepT = (float)(1.0 / (0.005 * fs_));
+        for (int i = 0; i < n; ++i) {
+            if (s.wet < target) s.wet = std::min(target, s.wet + stepT);
+            else if (s.wet > target) s.wet = std::max(target, s.wet - stepT);
+            gR[i] = s.wet;
+        }
+        for (int c = 0; c < nch; ++c)
+            for (int i = 0; i < n; ++i) { dryLocalT[c][i] = buf[c][i]; buf[c][i] *= gR[i]; }
+        fx->setTempo(bpm_.load(std::memory_order_relaxed));
+        AudioBlock tb;
+        tb.numChannels = nch; tb.numSamples = n; tb.ch[0] = buf[0]; tb.ch[1] = buf[1];
+        fx->process(tb);
+        // g = 1: normal output; g = 0: dry + tail of the effect fed with silence
+        for (int c = 0; c < nch; ++c)
+            for (int i = 0; i < n; ++i) buf[c][i] += (1.0f - gR[i]) * dryLocalT[c][i];
+        s.wasFullyBypassed = false;
+        return;
+    }
     if (byp && s.wet <= 0.0f) { // fully bypassed: skip DSP, keep latency constant
         if (lat > 0) {
             int p0 = s.pos, p = 0;

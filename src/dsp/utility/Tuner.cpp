@@ -57,6 +57,7 @@ PitchResult detectPitchYin(const float* x, int n, double fs, double minHz, doubl
 }
 
 Tuner::Tuner() {
+    for (auto& r : ring_) r.store(0.0f, std::memory_order_relaxed);
     params_.add({"mute", "Mute Output", 0, 1, 1, ParamUnit::Toggle});
     params_.add({"reference_hz", "Reference A4", 430, 450, 440, ParamUnit::Hertz});
 }
@@ -68,7 +69,7 @@ void Tuner::onProcess(AudioBlock& b) {
         if (b.numChannels > 1) v = 0.5f * (v + b.ch[1][i]);
         acc_ += v;
         if (++accN_ == kDecim) {
-            ring_[w % kRing] = acc_ / kDecim;
+            ring_[w % kRing].store(acc_ / kDecim, std::memory_order_relaxed);
             ++w;
             acc_ = 0.0f; accN_ = 0;
         }
@@ -83,7 +84,7 @@ PitchResult Tuner::analyze() const {
     std::vector<float> win((size_t)N);
     const uint32_t w = w_.load(std::memory_order_acquire);
     if (w < (uint32_t)N) return {};
-    for (int i = 0; i < N; ++i) win[(size_t)i] = ring_[(w - N + i) % kRing];
+    for (int i = 0; i < N; ++i) win[(size_t)i] = ring_[(w - N + i) % kRing].load(std::memory_order_relaxed);
     PitchResult r = detectPitchYin(win.data(), N, spec_.sampleRate / kDecim);
     if (r.valid) {
         const double ref = params_.get(kReference);
