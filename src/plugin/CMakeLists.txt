@@ -12,13 +12,16 @@ if(APPLE)
   list(APPEND MFX_FORMATS AU)
 endif()
 
+# Identity is deliberately different from the reference (Codex) plug-in
+# ("Multi Effects", com.multieffects.plugin, Mefx/Mfx6) so both can be installed side by side.
 juce_add_plugin(MultiEffects
-  COMPANY_NAME "MultiEffects Project"
-  BUNDLE_ID com.multieffects.mfx
-  PLUGIN_MANUFACTURER_CODE Mfxp
-  PLUGIN_CODE Mfx1
+  VERSION ${PROJECT_VERSION}
+  COMPANY_NAME "MFX Lab"
+  BUNDLE_ID com.mfxlab.mfxclaude
+  PLUGIN_MANUFACTURER_CODE MfxL
+  PLUGIN_CODE McL1
   FORMATS ${MFX_FORMATS}
-  PRODUCT_NAME "MultiEffects"
+  PRODUCT_NAME "MFX Claude"
   IS_SYNTH FALSE
   NEEDS_MIDI_INPUT TRUE
   NEEDS_MIDI_OUTPUT FALSE
@@ -28,7 +31,7 @@ juce_add_plugin(MultiEffects
   AU_MAIN_TYPE kAudioUnitType_MusicEffect
   VST3_CATEGORIES Fx Distortion
   MICROPHONE_PERMISSION_ENABLED TRUE
-  MICROPHONE_PERMISSION_TEXT "MultiEffects processes your guitar input in the standalone app.")
+  MICROPHONE_PERMISSION_TEXT "MFX Claude processes your guitar input in the standalone app.")
 
 file(GLOB MFX_FACTORY_PRESETS ${CMAKE_SOURCE_DIR}/presets/factory/*.json)
 juce_add_binary_data(MultiEffectsPresets SOURCES ${MFX_FACTORY_PRESETS})

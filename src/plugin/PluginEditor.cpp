@@ -1,5 +1,7 @@
 #include "plugin/PluginEditor.h"
 
+#include "core/BuildInfo.h"
+
 namespace mfx::plugin {
 
 using namespace mfx::ui;
@@ -85,7 +87,10 @@ void Editor::paint(juce::Graphics& g) {
     g.fillAll(colours::background);
     g.setColour(colours::text);
     g.setFont(juce::FontOptions(18.0f).withStyle("Bold"));
-    g.drawText("MultiEffects", 14, 10, 160, 28, juce::Justification::centredLeft);
+    g.drawText("MFX Claude", 14, 10, 160, 28, juce::Justification::centredLeft);
+    g.setColour(colours::textDim);
+    g.setFont(juce::FontOptions(10.0f));
+    g.drawText(juce::String("v") + build::version + " " + build::gitCommit, (float)getWidth() - 230.0f, (float)getHeight() - 16.0f, 220.0f, 14.0f, juce::Justification::centredRight);
     g.setColour(colours::textDim);
     g.setFont(juce::FontOptions(12.0f));
     g.drawText(proc_.presetName(), 14, 34, 150, 16, juce::Justification::centredLeft);

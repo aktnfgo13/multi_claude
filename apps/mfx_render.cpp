@@ -22,6 +22,7 @@
 #include <sys/resource.h>
 #endif
 
+#include "core/BuildInfo.h"
 #include "dsp/analysis/Analysis.h"
 #include "dsp/utility/Resample.h"
 #include "engine/EffectFactory.h"
@@ -80,6 +81,7 @@ int main(int argc, char** argv) {
     for (int a = 1; a < argc; ++a) {
         std::string s = argv[a];
         auto next = [&]() -> std::string { if (a + 1 >= argc) { std::cerr << "missing value for " << s << "\n"; std::exit(2); } return argv[++a]; };
+        if (s == "--version") { std::printf("%s %s\n", mfx::build::productName, mfx::build::buildId); return 0; }
         if (s == "--list") {
             for (const auto& e : availableEffects()) std::printf("%-16s %-12s %s\n", e.typeId.c_str(), e.category.c_str(), e.displayName.c_str());
             return 0;
@@ -216,7 +218,7 @@ int main(int argc, char** argv) {
     if (!benchPath.empty()) {
         Json b = Json::object();
         b["tool"] = "mfx_render";
-        b["engine"] = "MultiEffects 0.1.0";
+        b["engine"] = std::string(mfx::build::productName) + " " + mfx::build::buildId;
         b["input"] = inPath;
         b["sample_rate"] = sr;
         b["block_size"] = block;

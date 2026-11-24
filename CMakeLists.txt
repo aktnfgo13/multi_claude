@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.24)
-project(MultiEffects VERSION 0.1.0 LANGUAGES C CXX)
+project(MultiEffects VERSION 0.2.0 LANGUAGES C CXX)
 
 # ----------------------------------------------------------------------------- options
 option(MFX_BUILD_TESTS   "Build C++ tests"                                   ON)
@@ -22,6 +22,25 @@ if(APPLE)
 endif()
 
 include(FetchContent)
+
+# ----------------------------------------------------------------------------- build identity
+# MFX_BUILD_ID lets you check that an installed plug-in is the artifact you just built.
+set(MFX_GIT_COMMIT "nogit")
+find_package(Git QUIET)
+if(GIT_FOUND AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
+  execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+                  OUTPUT_VARIABLE MFX_GIT_COMMIT OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
+  execute_process(COMMAND ${GIT_EXECUTABLE} status --porcelain --untracked-files=no WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+                  OUTPUT_VARIABLE _mfx_dirty OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
+  if(_mfx_dirty)
+    set(MFX_GIT_COMMIT "${MFX_GIT_COMMIT}-dirty")
+  endif()
+endif()
+if(MFX_GIT_COMMIT STREQUAL "nogit" AND EXISTS "${CMAKE_SOURCE_DIR}/SOURCE_ID")
+  file(STRINGS "${CMAKE_SOURCE_DIR}/SOURCE_ID" MFX_GIT_COMMIT LIMIT_COUNT 1)  # written when the tree is exported without .git
+endif()
+string(TIMESTAMP MFX_BUILD_TIME "%Y-%m-%dT%H:%M:%SZ" UTC)
+configure_file(src/core/BuildInfo.h.in ${CMAKE_BINARY_DIR}/generated/core/BuildInfo.h @ONLY)
 
 # ----------------------------------------------------------------------------- DSP core (framework independent)
 add_library(mfx_core STATIC
@@ -52,7 +71,7 @@ add_library(mfx_core STATIC
   src/presets/Preset.cpp
   src/platform/WavFile.cpp
 )
-target_include_directories(mfx_core PUBLIC src)
+target_include_directories(mfx_core PUBLIC src ${CMAKE_BINARY_DIR}/generated)
 if(MSVC)
   target_compile_options(mfx_core PRIVATE /W4 /permissive-)
 else()
