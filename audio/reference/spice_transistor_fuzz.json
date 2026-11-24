@@ -1,0 +1,10 @@
+{
+  "data_kind": "spice_simulation",
+  "is_hardware_measurement": false,
+  "simulator": "ngspice-42",
+  "netlist": "transistor_fuzz.cir",
+  "params": {},
+  "sample_rate": 48000,
+  "input_volts_per_fullscale": 1.0,
+  "note": ""
+}

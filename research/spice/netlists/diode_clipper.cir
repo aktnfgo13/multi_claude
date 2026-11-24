@@ -1,0 +1,11 @@
+* Diode clipper: Vin - R - node ; node - C - gnd ; antiparallel diodes node-gnd
+* Same values as the C++ models (nl::RCDiodeClipper / WDFDiodeClipper): R=2.2k C=10n
+* Diode: 1N4148-like Is=2.52n N=1.752 (RS, CJO omitted to match the C++ ideal Shockley model)
+.param R1=2.2k C1=10n
+{INPUT_SOURCE}
+R1 in out {R1}
+C1 out 0 {C1}
+D1 out 0 DCLIP
+D2 0 out DCLIP
+.model DCLIP D(IS=2.52n N=1.752)
+.end

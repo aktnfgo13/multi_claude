@@ -1,0 +1,13 @@
+{
+  "format": "mfx-preset", "version": 1, "name": "Crunch Rhythm",
+  "input_gain_db": 0, "output_gain_db": -16, "tempo_bpm": 120,
+  "parallel": false, "parallel_mix": 0.5,
+  "chain": [
+    {"type": "noise_gate", "lane": "pre", "params": {"threshold_db": -62}},
+    {"type": "custom_drive", "lane": "pre", "params": {"drive": 15, "headroom": 70, "tight": 70, "mid": 62, "level": 0, "oversampling": 2}},
+    {"type": "amp", "lane": "pre", "params": {"model": 1, "gain": 55, "bass": 45, "mid": 60, "treble": 55, "presence": 45, "master": 55, "sag": 60}},
+    {"type": "cabinet", "lane": "pre", "params": {"source": 0, "sim_model": 0}},
+    {"type": "reverb", "lane": "post", "params": {"type": 0, "decay_s": 0.9, "mix": 12}}
+  ],
+  "midi": [{"cc": 4, "channel": -1, "slot_index": 1, "param": "drive", "min": 0, "max": 0.6}]
+}

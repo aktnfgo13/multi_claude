@@ -1,0 +1,7 @@
+build*/
+*.log
+tests/results/benchmark/renders/
+tests/results/benchmark/inputs/
+__pycache__/
+.DS_Store
+audio/reference/spice_feedback_clipper/*.wav

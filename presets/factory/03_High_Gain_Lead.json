@@ -1,0 +1,14 @@
+{
+  "format": "mfx-preset", "version": 1, "name": "High Gain Lead",
+  "input_gain_db": 0, "output_gain_db": -5, "tempo_bpm": 120,
+  "parallel": false, "parallel_mix": 0.5,
+  "chain": [
+    {"type": "noise_gate", "lane": "pre", "params": {"threshold_db": -55, "hold_ms": 40, "release_ms": 90}},
+    {"type": "custom_drive", "lane": "pre", "params": {"drive": 0, "headroom": 100, "tight": 85, "mid": 70, "level": 6, "oversampling": 2}},
+    {"type": "amp", "lane": "pre", "params": {"model": 2, "gain": 70, "bass": 50, "mid": 45, "treble": 60, "presence": 55, "depth": 55, "master": 50}},
+    {"type": "cabinet", "lane": "pre", "params": {"source": 0, "sim_model": 0, "low_cut_hz": 80, "high_cut_hz": 9000}},
+    {"type": "delay", "lane": "post", "params": {"mode": 1, "routing": 2, "sync": 7, "feedback": 30, "mix": 22, "age": 40}},
+    {"type": "reverb", "lane": "post", "params": {"type": 1, "decay_s": 2.4, "mix": 15}}
+  ],
+  "midi": [{"cc": 64, "channel": -1, "slot_index": 4, "param": "bypass", "min": 0, "max": 1}]
+}

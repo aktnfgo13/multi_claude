@@ -1,0 +1,20 @@
+* 12AX7-style common-cathode triode stage, Koren triode equations as behavioural sources.
+* mu=100 ex=1.4 kg1=1060 kp=600 kvb=300 ; grid conduction approximated by a diode (Rgk ~ 1k).
+* B+ 250 V, Ra 100k, Rk 1.5k / Ck 22u, input via 1M grid leak + 68k grid stopper, output coupling 22n into 1M.
+.param MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+{INPUT_SOURCE}
+VB bplus 0 250
+Rgs in g 68k
+Rgl in 0 1Meg
+Ra bplus p 100k
+Rk k 0 1.5k
+Ck k 0 22u
+Be1 e1 0 V = V(p,k)/{KP}*ln(1 + exp(min({KP}*(1/{MU} + V(g,k)/sqrt({KVB} + V(p,k)*V(p,k))), 60)))
+Bip p k I = V(e1) > 0 ? pwr(V(e1),{EX})/{KG1} : 0
+Re1 e1 0 1Meg
+Dg g k DGRID
+.model DGRID D(IS=1n N=1.5 RS=1k)
+Cc p o 22n
+Rout o 0 1Meg
+Eout out 0 o 0 0.01
+.end

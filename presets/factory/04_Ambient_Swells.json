@@ -1,0 +1,14 @@
+{
+  "format": "mfx-preset", "version": 1, "name": "Ambient Swells",
+  "input_gain_db": 0, "output_gain_db": 12, "tempo_bpm": 90,
+  "parallel": true, "parallel_mix": 0.45,
+  "chain": [
+    {"type": "compressor", "lane": "pre", "params": {"threshold_db": -30, "ratio": 2.5, "attack_ms": 30, "release_ms": 300}},
+    {"type": "amp", "lane": "pre", "params": {"model": 0, "gain": 30, "treble": 45}},
+    {"type": "cabinet", "lane": "pre", "params": {"source": 0, "sim_model": 1}},
+    {"type": "delay", "lane": "a", "params": {"mode": 2, "routing": 1, "time_ms": 520, "feedback": 55, "mix": 45, "age": 55, "offset": 20}},
+    {"type": "reverb", "lane": "b", "params": {"type": 4, "decay_s": 9, "predelay_ms": 40, "modulation": 60, "mix": 85}},
+    {"type": "tremolo", "lane": "post", "params": {"rate_hz": 3, "depth": 15, "stereo": 1}}
+  ],
+  "midi": []
+}

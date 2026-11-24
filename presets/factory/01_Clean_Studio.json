@@ -1,0 +1,14 @@
+{
+  "format": "mfx-preset", "version": 1, "name": "Clean Studio",
+  "input_gain_db": 0, "output_gain_db": 0, "tempo_bpm": 100,
+  "parallel": false, "parallel_mix": 0.5,
+  "chain": [
+    {"type": "noise_gate", "lane": "pre", "params": {"threshold_db": -70, "range_db": -40}},
+    {"type": "compressor", "lane": "pre", "params": {"threshold_db": -26, "ratio": 3, "attack_ms": 12, "release_ms": 180, "makeup_db": 4, "mix": 70}},
+    {"type": "amp", "lane": "pre", "params": {"model": 0, "gain": 35, "bass": 55, "mid": 45, "treble": 60, "master": 45, "bright": 1}},
+    {"type": "cabinet", "lane": "pre", "params": {"source": 0, "sim_model": 1}},
+    {"type": "chorus", "lane": "pre", "params": {"rate_hz": 0.6, "depth": 35, "mix": 30}},
+    {"type": "reverb", "lane": "post", "params": {"type": 2, "decay_s": 1.8, "mix": 18}}
+  ],
+  "midi": []
+}

@@ -1,0 +1,6 @@
+* RC high-pass, fc = 1/(2 pi R C) = 72 Hz (guitar-pedal input coupling)
+.param R1=220k C1=10n
+{INPUT_SOURCE}
+C1 in out {C1}
+R1 out 0 {R1}
+.end

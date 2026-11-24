@@ -1,0 +1,966 @@
+{
+  "cases": [
+    {
+      "esr_vs_reference": -1,
+      "f0": 110,
+      "input_amp_v": 0.1,
+      "model": "tanh",
+      "non_harmonic_db": -88.2077142,
+      "ns_per_base_sample": 15.6007292,
+      "oversampling": 1,
+      "thd_percent": 0.229886791
+    },
+    {
+      "esr_vs_reference": -1,
+      "f0": 110,
+      "input_amp_v": 0.1,
+      "model": "tanh",
+      "non_harmonic_db": -88.2076763,
+      "ns_per_base_sample": 36.8119792,
+      "oversampling": 4,
+      "thd_percent": 0.22988725
+    },
+    {
+      "esr_vs_reference": 0.000231553681,
+      "f0": 110,
+      "input_amp_v": 0.1,
+      "model": "diode_static_newton",
+      "non_harmonic_db": -88.20795,
+      "ns_per_base_sample": 174.283507,
+      "oversampling": 1,
+      "thd_percent": 0.00668736842
+    },
+    {
+      "esr_vs_reference": 0.000231553795,
+      "f0": 110,
+      "input_amp_v": 0.1,
+      "model": "diode_static_newton",
+      "non_harmonic_db": -88.2080752,
+      "ns_per_base_sample": 649.589757,
+      "oversampling": 4,
+      "thd_percent": 0.00668768528
+    },
+    {
+      "esr_vs_reference": 1.68497298e-13,
+      "f0": 110,
+      "input_amp_v": 0.1,
+      "model": "rc_diode_ode",
+      "non_harmonic_db": -88.209005,
+      "ns_per_base_sample": 199.323958,
+      "oversampling": 1,
+      "thd_percent": 0.00667836122
+    },
+    {
+      "esr_vs_reference": 8.46642166e-15,
+      "f0": 110,
+      "input_amp_v": 0.1,
+      "model": "rc_diode_ode",
+      "non_harmonic_db": -88.2090924,
+      "ns_per_base_sample": 557.465104,
+      "oversampling": 4,
+      "thd_percent": 0.00667858188
+    },
+    {
+      "esr_vs_reference": 3.20374668e-09,
+      "f0": 110,
+      "input_amp_v": 0.1,
+      "model": "wdf_diode",
+      "non_harmonic_db": -88.2089923,
+      "ns_per_base_sample": 68.0126736,
+      "oversampling": 1,
+      "thd_percent": 0.00753410903
+    },
+    {
+      "esr_vs_reference": 3.23898837e-09,
+      "f0": 110,
+      "input_amp_v": 0.1,
+      "model": "wdf_diode",
+      "non_harmonic_db": -88.2089448,
+      "ns_per_base_sample": 272.270035,
+      "oversampling": 4,
+      "thd_percent": 0.00753405283
+    },
+    {
+      "esr_vs_reference": -1,
+      "f0": 110,
+      "input_amp_v": 0.5,
+      "model": "tanh",
+      "non_harmonic_db": -88.193977,
+      "ns_per_base_sample": 12.6030556,
+      "oversampling": 1,
+      "thd_percent": 4.94696517
+    },
+    {
+      "esr_vs_reference": -1,
+      "f0": 110,
+      "input_amp_v": 0.5,
+      "model": "tanh",
+      "non_harmonic_db": -88.1938639,
+      "ns_per_base_sample": 59.8390972,
+      "oversampling": 4,
+      "thd_percent": 4.94697382
+    },
+    {
+      "esr_vs_reference": 0.000216837981,
+      "f0": 110,
+      "input_amp_v": 0.5,
+      "model": "diode_static_newton",
+      "non_harmonic_db": -88.1930115,
+      "ns_per_base_sample": 212.536771,
+      "oversampling": 1,
+      "thd_percent": 5.23075086
+    },
+    {
+      "esr_vs_reference": 0.00021683815,
+      "f0": 110,
+      "input_amp_v": 0.5,
+      "model": "diode_static_newton",
+      "non_harmonic_db": -88.1929751,
+      "ns_per_base_sample": 736.168819,
+      "oversampling": 4,
+      "thd_percent": 5.23076093
+    },
+    {
+      "esr_vs_reference": 3.54520256e-13,
+      "f0": 110,
+      "input_amp_v": 0.5,
+      "model": "rc_diode_ode",
+      "non_harmonic_db": -88.1941236,
+      "ns_per_base_sample": 227.355347,
+      "oversampling": 1,
+      "thd_percent": 5.22608533
+    },
+    {
+      "esr_vs_reference": 8.42756337e-15,
+      "f0": 110,
+      "input_amp_v": 0.5,
+      "model": "rc_diode_ode",
+      "non_harmonic_db": -88.1940653,
+      "ns_per_base_sample": 836.27434,
+      "oversampling": 4,
+      "thd_percent": 5.22609666
+    },
+    {
+      "esr_vs_reference": 1.88507335e-10,
+      "f0": 110,
+      "input_amp_v": 0.5,
+      "model": "wdf_diode",
+      "non_harmonic_db": -88.1941037,
+      "ns_per_base_sample": 73.5281944,
+      "oversampling": 1,
+      "thd_percent": 5.22671982
+    },
+    {
+      "esr_vs_reference": 2.89056257e-10,
+      "f0": 110,
+      "input_amp_v": 0.5,
+      "model": "wdf_diode",
+      "non_harmonic_db": -88.1942119,
+      "ns_per_base_sample": 284.945625,
+      "oversampling": 4,
+      "thd_percent": 5.22693537
+    },
+    {
+      "esr_vs_reference": -1,
+      "f0": 110,
+      "input_amp_v": 2,
+      "model": "tanh",
+      "non_harmonic_db": -87.9305201,
+      "ns_per_base_sample": 15.0709375,
+      "oversampling": 1,
+      "thd_percent": 26.980879
+    },
+    {
+      "esr_vs_reference": -1,
+      "f0": 110,
+      "input_amp_v": 2,
+      "model": "tanh",
+      "non_harmonic_db": -87.9305708,
+      "ns_per_base_sample": 59.4734722,
+      "oversampling": 4,
+      "thd_percent": 26.9809273
+    },
+    {
+      "esr_vs_reference": 0.00039116596,
+      "f0": 110,
+      "input_amp_v": 2,
+      "model": "diode_static_newton",
+      "non_harmonic_db": -87.9090834,
+      "ns_per_base_sample": 223.631493,
+      "oversampling": 1,
+      "thd_percent": 28.5995344
+    },
+    {
+      "esr_vs_reference": 0.000391168211,
+      "f0": 110,
+      "input_amp_v": 2,
+      "model": "diode_static_newton",
+      "non_harmonic_db": -87.9092419,
+      "ns_per_base_sample": 793.40316,
+      "oversampling": 4,
+      "thd_percent": 28.5995928
+    },
+    {
+      "esr_vs_reference": 2.25271543e-10,
+      "f0": 110,
+      "input_amp_v": 2,
+      "model": "rc_diode_ode",
+      "non_harmonic_db": -87.9107824,
+      "ns_per_base_sample": 250.098472,
+      "oversampling": 1,
+      "thd_percent": 28.5747556
+    },
+    {
+      "esr_vs_reference": 5.01781508e-13,
+      "f0": 110,
+      "input_amp_v": 2,
+      "model": "rc_diode_ode",
+      "non_harmonic_db": -87.9108269,
+      "ns_per_base_sample": 863.753403,
+      "oversampling": 4,
+      "thd_percent": 28.5748847
+    },
+    {
+      "esr_vs_reference": 2.33894568e-10,
+      "f0": 110,
+      "input_amp_v": 2,
+      "model": "wdf_diode",
+      "non_harmonic_db": -87.9107435,
+      "ns_per_base_sample": 80.3776736,
+      "oversampling": 1,
+      "thd_percent": 28.5749963
+    },
+    {
+      "esr_vs_reference": 2.36619256e-11,
+      "f0": 110,
+      "input_amp_v": 2,
+      "model": "wdf_diode",
+      "non_harmonic_db": -87.9106604,
+      "ns_per_base_sample": 301.908333,
+      "oversampling": 4,
+      "thd_percent": 28.5750652
+    },
+    {
+      "esr_vs_reference": -1,
+      "f0": 110,
+      "input_amp_v": 8,
+      "model": "tanh",
+      "non_harmonic_db": -87.6695489,
+      "ns_per_base_sample": 22.0128472,
+      "oversampling": 1,
+      "thd_percent": 42.1159215
+    },
+    {
+      "esr_vs_reference": -1,
+      "f0": 110,
+      "input_amp_v": 8,
+      "model": "tanh",
+      "non_harmonic_db": -87.6697901,
+      "ns_per_base_sample": 62.4996875,
+      "oversampling": 4,
+      "thd_percent": 42.1160686
+    },
+    {
+      "esr_vs_reference": 0.00103910723,
+      "f0": 110,
+      "input_amp_v": 8,
+      "model": "diode_static_newton",
+      "non_harmonic_db": -84.5868636,
+      "ns_per_base_sample": 226.459688,
+      "oversampling": 1,
+      "thd_percent": 37.3578595
+    },
+    {
+      "esr_vs_reference": 0.00103914775,
+      "f0": 110,
+      "input_amp_v": 8,
+      "model": "diode_static_newton",
+      "non_harmonic_db": -87.4278564,
+      "ns_per_base_sample": 795.44441,
+      "oversampling": 4,
+      "thd_percent": 37.3579922
+    },
+    {
+      "esr_vs_reference": 7.53123162e-08,
+      "f0": 110,
+      "input_amp_v": 8,
+      "model": "rc_diode_ode",
+      "non_harmonic_db": -87.3118109,
+      "ns_per_base_sample": 259.896632,
+      "oversampling": 1,
+      "thd_percent": 37.3010594
+    },
+    {
+      "esr_vs_reference": 1.42595412e-10,
+      "f0": 110,
+      "input_amp_v": 8,
+      "model": "rc_diode_ode",
+      "non_harmonic_db": -87.2469238,
+      "ns_per_base_sample": 896.17066,
+      "oversampling": 4,
+      "thd_percent": 37.3026214
+    },
+    {
+      "esr_vs_reference": 7.51967803e-08,
+      "f0": 110,
+      "input_amp_v": 8,
+      "model": "wdf_diode",
+      "non_harmonic_db": -87.3110491,
+      "ns_per_base_sample": 85.2189931,
+      "oversampling": 1,
+      "thd_percent": 37.301125
+    },
+    {
+      "esr_vs_reference": 1.38998979e-10,
+      "f0": 110,
+      "input_amp_v": 8,
+      "model": "wdf_diode",
+      "non_harmonic_db": -87.2468647,
+      "ns_per_base_sample": 335.198611,
+      "oversampling": 4,
+      "thd_percent": 37.302722
+    },
+    {
+      "esr_vs_reference": -1,
+      "f0": 1031,
+      "input_amp_v": 0.1,
+      "model": "tanh",
+      "non_harmonic_db": -99.4064784,
+      "ns_per_base_sample": 9.33392361,
+      "oversampling": 1,
+      "thd_percent": 0.229886735
+    },
+    {
+      "esr_vs_reference": -1,
+      "f0": 1031,
+      "input_amp_v": 0.1,
+      "model": "tanh",
+      "non_harmonic_db": -99.406303,
+      "ns_per_base_sample": 36.4179167,
+      "oversampling": 4,
+      "thd_percent": 0.229903914
+    },
+    {
+      "esr_vs_reference": 0.0202987199,
+      "f0": 1031,
+      "input_amp_v": 0.1,
+      "model": "diode_static_newton",
+      "non_harmonic_db": -99.4065488,
+      "ns_per_base_sample": 175.825139,
+      "oversampling": 1,
+      "thd_percent": 0.0066851311
+    },
+    {
+      "esr_vs_reference": 0.020299655,
+      "f0": 1031,
+      "input_amp_v": 0.1,
+      "model": "diode_static_newton",
+      "non_harmonic_db": -99.4063348,
+      "ns_per_base_sample": 697.234653,
+      "oversampling": 4,
+      "thd_percent": 0.00668539852
+    },
+    {
+      "esr_vs_reference": 4.64477204e-08,
+      "f0": 1031,
+      "input_amp_v": 0.1,
+      "model": "rc_diode_ode",
+      "non_harmonic_db": -99.4066307,
+      "ns_per_base_sample": 203.28191,
+      "oversampling": 1,
+      "thd_percent": 0.00597527873
+    },
+    {
+      "esr_vs_reference": 1.00098477e-10,
+      "f0": 1031,
+      "input_amp_v": 0.1,
+      "model": "rc_diode_ode",
+      "non_harmonic_db": -99.406258,
+      "ns_per_base_sample": 793.366146,
+      "oversampling": 4,
+      "thd_percent": 0.00598836947
+    },
+    {
+      "esr_vs_reference": 4.71286775e-08,
+      "f0": 1031,
+      "input_amp_v": 0.1,
+      "model": "wdf_diode",
+      "non_harmonic_db": -99.4065785,
+      "ns_per_base_sample": 68.9336458,
+      "oversampling": 1,
+      "thd_percent": 0.00676227929
+    },
+    {
+      "esr_vs_reference": 3.32715334e-09,
+      "f0": 1031,
+      "input_amp_v": 0.1,
+      "model": "wdf_diode",
+      "non_harmonic_db": -99.4065635,
+      "ns_per_base_sample": 271.195972,
+      "oversampling": 4,
+      "thd_percent": 0.00677676619
+    },
+    {
+      "esr_vs_reference": -1,
+      "f0": 1031,
+      "input_amp_v": 0.5,
+      "model": "tanh",
+      "non_harmonic_db": -99.3277825,
+      "ns_per_base_sample": 13.7304167,
+      "oversampling": 1,
+      "thd_percent": 4.94696517
+    },
+    {
+      "esr_vs_reference": -1,
+      "f0": 1031,
+      "input_amp_v": 0.5,
+      "model": "tanh",
+      "non_harmonic_db": -99.3276628,
+      "ns_per_base_sample": 54.1958333,
+      "oversampling": 4,
+      "thd_percent": 4.94731943
+    },
+    {
+      "esr_vs_reference": 0.0187365085,
+      "f0": 1031,
+      "input_amp_v": 0.5,
+      "model": "diode_static_newton",
+      "non_harmonic_db": -99.3126556,
+      "ns_per_base_sample": 261.232153,
+      "oversampling": 1,
+      "thd_percent": 5.23075092
+    },
+    {
+      "esr_vs_reference": 0.0187372753,
+      "f0": 1031,
+      "input_amp_v": 0.5,
+      "model": "diode_static_newton",
+      "non_harmonic_db": -99.3162363,
+      "ns_per_base_sample": 889.329653,
+      "oversampling": 4,
+      "thd_percent": 5.23123594
+    },
+    {
+      "esr_vs_reference": 1.30001401e-07,
+      "f0": 1031,
+      "input_amp_v": 0.5,
+      "model": "rc_diode_ode",
+      "non_harmonic_db": -99.3288792,
+      "ns_per_base_sample": 263.159271,
+      "oversampling": 1,
+      "thd_percent": 4.84574914
+    },
+    {
+      "esr_vs_reference": 2.74553981e-10,
+      "f0": 1031,
+      "input_amp_v": 0.5,
+      "model": "rc_diode_ode",
+      "non_harmonic_db": -99.3286249,
+      "ns_per_base_sample": 937.428299,
+      "oversampling": 4,
+      "thd_percent": 4.85223181
+    },
+    {
+      "esr_vs_reference": 1.28794272e-07,
+      "f0": 1031,
+      "input_amp_v": 0.5,
+      "model": "wdf_diode",
+      "non_harmonic_db": -99.3247119,
+      "ns_per_base_sample": 73.0006597,
+      "oversampling": 1,
+      "thd_percent": 4.8463496
+    },
+    {
+      "esr_vs_reference": 4.63701985e-10,
+      "f0": 1031,
+      "input_amp_v": 0.5,
+      "model": "wdf_diode",
+      "non_harmonic_db": -99.3284394,
+      "ns_per_base_sample": 287.353333,
+      "oversampling": 4,
+      "thd_percent": 4.85302175
+    },
+    {
+      "esr_vs_reference": -1,
+      "f0": 1031,
+      "input_amp_v": 2,
+      "model": "tanh",
+      "non_harmonic_db": -95.1552128,
+      "ns_per_base_sample": 15.4892361,
+      "oversampling": 1,
+      "thd_percent": 26.9808789
+    },
+    {
+      "esr_vs_reference": -1,
+      "f0": 1031,
+      "input_amp_v": 2,
+      "model": "tanh",
+      "non_harmonic_db": -97.3529153,
+      "ns_per_base_sample": 61.5103819,
+      "oversampling": 4,
+      "thd_percent": 26.9825685
+    },
+    {
+      "esr_vs_reference": 0.0261725943,
+      "f0": 1031,
+      "input_amp_v": 2,
+      "model": "diode_static_newton",
+      "non_harmonic_db": -53.5267981,
+      "ns_per_base_sample": 291.557326,
+      "oversampling": 1,
+      "thd_percent": 28.5995342
+    },
+    {
+      "esr_vs_reference": 0.0261648073,
+      "f0": 1031,
+      "input_amp_v": 2,
+      "model": "diode_static_newton",
+      "non_harmonic_db": -75.8835345,
+      "ns_per_base_sample": 983.954479,
+      "oversampling": 4,
+      "thd_percent": 28.6012568
+    },
+    {
+      "esr_vs_reference": 1.41600197e-05,
+      "f0": 1031,
+      "input_amp_v": 2,
+      "model": "rc_diode_ode",
+      "non_harmonic_db": -58.3239789,
+      "ns_per_base_sample": 324.500451,
+      "oversampling": 1,
+      "thd_percent": 27.1838394
+    },
+    {
+      "esr_vs_reference": 2.57738541e-08,
+      "f0": 1031,
+      "input_amp_v": 2,
+      "model": "rc_diode_ode",
+      "non_harmonic_db": -77.3292344,
+      "ns_per_base_sample": 1048.10486,
+      "oversampling": 4,
+      "thd_percent": 27.2957766
+    },
+    {
+      "esr_vs_reference": 1.41568216e-05,
+      "f0": 1031,
+      "input_amp_v": 2,
+      "model": "wdf_diode",
+      "non_harmonic_db": -58.3239264,
+      "ns_per_base_sample": 81.7852431,
+      "oversampling": 1,
+      "thd_percent": 27.1840284
+    },
+    {
+      "esr_vs_reference": 2.55385365e-08,
+      "f0": 1031,
+      "input_amp_v": 2,
+      "model": "wdf_diode",
+      "non_harmonic_db": -77.329437,
+      "ns_per_base_sample": 309.019236,
+      "oversampling": 4,
+      "thd_percent": 27.2958956
+    },
+    {
+      "esr_vs_reference": -1,
+      "f0": 1031,
+      "input_amp_v": 8,
+      "model": "tanh",
+      "non_harmonic_db": -33.843303,
+      "ns_per_base_sample": 16.2229167,
+      "oversampling": 1,
+      "thd_percent": 42.1159215
+    },
+    {
+      "esr_vs_reference": -1,
+      "f0": 1031,
+      "input_amp_v": 8,
+      "model": "tanh",
+      "non_harmonic_db": -58.4346728,
+      "ns_per_base_sample": 63.4919792,
+      "oversampling": 4,
+      "thd_percent": 42.1182583
+    },
+    {
+      "esr_vs_reference": 0.030227378,
+      "f0": 1031,
+      "input_amp_v": 8,
+      "model": "diode_static_newton",
+      "non_harmonic_db": -30.555714,
+      "ns_per_base_sample": 299.239132,
+      "oversampling": 1,
+      "thd_percent": 37.3578594
+    },
+    {
+      "esr_vs_reference": 0.0290971595,
+      "f0": 1031,
+      "input_amp_v": 8,
+      "model": "diode_static_newton",
+      "non_harmonic_db": -56.1679416,
+      "ns_per_base_sample": 996.50191,
+      "oversampling": 4,
+      "thd_percent": 37.3599118
+    },
+    {
+      "esr_vs_reference": 0.000593020603,
+      "f0": 1031,
+      "input_amp_v": 8,
+      "model": "rc_diode_ode",
+      "non_harmonic_db": -34.5800523,
+      "ns_per_base_sample": 339.651771,
+      "oversampling": 1,
+      "thd_percent": 35.6374408
+    },
+    {
+      "esr_vs_reference": 2.58168844e-07,
+      "f0": 1031,
+      "input_amp_v": 8,
+      "model": "rc_diode_ode",
+      "non_harmonic_db": -62.3464512,
+      "ns_per_base_sample": 1109.05292,
+      "oversampling": 4,
+      "thd_percent": 36.0563662
+    },
+    {
+      "esr_vs_reference": 0.00059299397,
+      "f0": 1031,
+      "input_amp_v": 8,
+      "model": "wdf_diode",
+      "non_harmonic_db": -34.5800714,
+      "ns_per_base_sample": 85.5797222,
+      "oversampling": 1,
+      "thd_percent": 35.6374885
+    },
+    {
+      "esr_vs_reference": 2.58150273e-07,
+      "f0": 1031,
+      "input_amp_v": 8,
+      "model": "wdf_diode",
+      "non_harmonic_db": -62.3464137,
+      "ns_per_base_sample": 333.706736,
+      "oversampling": 4,
+      "thd_percent": 36.0564573
+    },
+    {
+      "esr_vs_reference": -1,
+      "f0": 3953,
+      "input_amp_v": 0.1,
+      "model": "tanh",
+      "non_harmonic_db": -89.9114838,
+      "ns_per_base_sample": 10.0197222,
+      "oversampling": 1,
+      "thd_percent": 0.229886735
+    },
+    {
+      "esr_vs_reference": -1,
+      "f0": 3953,
+      "input_amp_v": 0.1,
+      "model": "tanh",
+      "non_harmonic_db": -89.9113727,
+      "ns_per_base_sample": 37.8641319,
+      "oversampling": 4,
+      "thd_percent": 0.229911703
+    },
+    {
+      "esr_vs_reference": 0.298361915,
+      "f0": 3953,
+      "input_amp_v": 0.1,
+      "model": "diode_static_newton",
+      "non_harmonic_db": -89.9114245,
+      "ns_per_base_sample": 179.287743,
+      "oversampling": 1,
+      "thd_percent": 0.00668511951
+    },
+    {
+      "esr_vs_reference": 0.298466847,
+      "f0": 3953,
+      "input_amp_v": 0.1,
+      "model": "diode_static_newton",
+      "non_harmonic_db": -89.9112943,
+      "ns_per_base_sample": 715.900382,
+      "oversampling": 4,
+      "thd_percent": 0.00668595138
+    },
+    {
+      "esr_vs_reference": 0.000117663025,
+      "f0": 3953,
+      "input_amp_v": 0.1,
+      "model": "rc_diode_ode",
+      "non_harmonic_db": -89.9107899,
+      "ns_per_base_sample": 206.772083,
+      "oversampling": 1,
+      "thd_percent": 0.00206436885
+    },
+    {
+      "esr_vs_reference": 2.49767446e-07,
+      "f0": 3953,
+      "input_amp_v": 0.1,
+      "model": "rc_diode_ode",
+      "non_harmonic_db": -89.9106775,
+      "ns_per_base_sample": 814.53441,
+      "oversampling": 4,
+      "thd_percent": 0.00248260418
+    },
+    {
+      "esr_vs_reference": 0.00011766099,
+      "f0": 3953,
+      "input_amp_v": 0.1,
+      "model": "wdf_diode",
+      "non_harmonic_db": -89.9103738,
+      "ns_per_base_sample": 70.3792708,
+      "oversampling": 1,
+      "thd_percent": 0.00243113301
+    },
+    {
+      "esr_vs_reference": 2.53141869e-07,
+      "f0": 3953,
+      "input_amp_v": 0.1,
+      "model": "wdf_diode",
+      "non_harmonic_db": -89.9108202,
+      "ns_per_base_sample": 278.945174,
+      "oversampling": 4,
+      "thd_percent": 0.00291806577
+    },
+    {
+      "esr_vs_reference": -1,
+      "f0": 3953,
+      "input_amp_v": 0.5,
+      "model": "tanh",
+      "non_harmonic_db": -74.4787894,
+      "ns_per_base_sample": 12.9167708,
+      "oversampling": 1,
+      "thd_percent": 4.94693019
+    },
+    {
+      "esr_vs_reference": -1,
+      "f0": 3953,
+      "input_amp_v": 0.5,
+      "model": "tanh",
+      "non_harmonic_db": -89.90863,
+      "ns_per_base_sample": 59.0452431,
+      "oversampling": 4,
+      "thd_percent": 4.94735054
+    },
+    {
+      "esr_vs_reference": 0.255869283,
+      "f0": 3953,
+      "input_amp_v": 0.5,
+      "model": "diode_static_newton",
+      "non_harmonic_db": -52.5773765,
+      "ns_per_base_sample": 292.315729,
+      "oversampling": 1,
+      "thd_percent": 5.22546901
+    },
+    {
+      "esr_vs_reference": 0.255928677,
+      "f0": 3953,
+      "input_amp_v": 0.5,
+      "model": "diode_static_newton",
+      "non_harmonic_db": -89.9012912,
+      "ns_per_base_sample": 1023.48198,
+      "oversampling": 4,
+      "thd_percent": 5.22672121
+    },
+    {
+      "esr_vs_reference": 0.000127372611,
+      "f0": 3953,
+      "input_amp_v": 0.5,
+      "model": "rc_diode_ode",
+      "non_harmonic_db": -65.4130645,
+      "ns_per_base_sample": 319.00816,
+      "oversampling": 1,
+      "thd_percent": 1.69210474
+    },
+    {
+      "esr_vs_reference": 2.64165354e-07,
+      "f0": 3953,
+      "input_amp_v": 0.5,
+      "model": "rc_diode_ode",
+      "non_harmonic_db": -89.9090962,
+      "ns_per_base_sample": 1016.67948,
+      "oversampling": 4,
+      "thd_percent": 2.03235767
+    },
+    {
+      "esr_vs_reference": 0.00012737327,
+      "f0": 3953,
+      "input_amp_v": 0.5,
+      "model": "wdf_diode",
+      "non_harmonic_db": -65.4175378,
+      "ns_per_base_sample": 73.6997569,
+      "oversampling": 1,
+      "thd_percent": 1.69245817
+    },
+    {
+      "esr_vs_reference": 2.6463578e-07,
+      "f0": 3953,
+      "input_amp_v": 0.5,
+      "model": "wdf_diode",
+      "non_harmonic_db": -89.9088956,
+      "ns_per_base_sample": 291.647222,
+      "oversampling": 4,
+      "thd_percent": 2.03273278
+    },
+    {
+      "esr_vs_reference": -1,
+      "f0": 3953,
+      "input_amp_v": 2,
+      "model": "tanh",
+      "non_harmonic_db": -27.9005271,
+      "ns_per_base_sample": 14.3926389,
+      "oversampling": 1,
+      "thd_percent": 26.6787085
+    },
+    {
+      "esr_vs_reference": -1,
+      "f0": 3953,
+      "input_amp_v": 2,
+      "model": "tanh",
+      "non_harmonic_db": -88.2414347,
+      "ns_per_base_sample": 63.5753819,
+      "oversampling": 4,
+      "thd_percent": 26.6785814
+    },
+    {
+      "esr_vs_reference": 0.175010421,
+      "f0": 3953,
+      "input_amp_v": 2,
+      "model": "diode_static_newton",
+      "non_harmonic_db": -23.6206561,
+      "ns_per_base_sample": 378.331389,
+      "oversampling": 1,
+      "thd_percent": 27.836699
+    },
+    {
+      "esr_vs_reference": 0.170737613,
+      "f0": 3953,
+      "input_amp_v": 2,
+      "model": "diode_static_newton",
+      "non_harmonic_db": -73.4848827,
+      "ns_per_base_sample": 1170.12795,
+      "oversampling": 4,
+      "thd_percent": 27.8358864
+    },
+    {
+      "esr_vs_reference": 0.00296476175,
+      "f0": 3953,
+      "input_amp_v": 2,
+      "model": "rc_diode_ode",
+      "non_harmonic_db": -28.8428582,
+      "ns_per_base_sample": 425.456354,
+      "oversampling": 1,
+      "thd_percent": 20.6298125
+    },
+    {
+      "esr_vs_reference": 1.66419675e-06,
+      "f0": 3953,
+      "input_amp_v": 2,
+      "model": "rc_diode_ode",
+      "non_harmonic_db": -84.5500247,
+      "ns_per_base_sample": 1211.81872,
+      "oversampling": 4,
+      "thd_percent": 22.3591085
+    },
+    {
+      "esr_vs_reference": 0.0029648142,
+      "f0": 3953,
+      "input_amp_v": 2,
+      "model": "wdf_diode",
+      "non_harmonic_db": -28.8427069,
+      "ns_per_base_sample": 83.3769792,
+      "oversampling": 1,
+      "thd_percent": 20.6299336
+    },
+    {
+      "esr_vs_reference": 1.66454379e-06,
+      "f0": 3953,
+      "input_amp_v": 2,
+      "model": "wdf_diode",
+      "non_harmonic_db": -84.544108,
+      "ns_per_base_sample": 300.871111,
+      "oversampling": 4,
+      "thd_percent": 22.3591712
+    },
+    {
+      "esr_vs_reference": -1,
+      "f0": 3953,
+      "input_amp_v": 8,
+      "model": "tanh",
+      "non_harmonic_db": -14.2886693,
+      "ns_per_base_sample": 15.3977778,
+      "oversampling": 1,
+      "thd_percent": 37.8004349
+    },
+    {
+      "esr_vs_reference": -1,
+      "f0": 3953,
+      "input_amp_v": 8,
+      "model": "tanh",
+      "non_harmonic_db": -52.7377334,
+      "ns_per_base_sample": 65.2073264,
+      "oversampling": 4,
+      "thd_percent": 37.7986383
+    },
+    {
+      "esr_vs_reference": 0.101748346,
+      "f0": 3953,
+      "input_amp_v": 8,
+      "model": "diode_static_newton",
+      "non_harmonic_db": -15.2499294,
+      "ns_per_base_sample": 390.326806,
+      "oversampling": 1,
+      "thd_percent": 33.6557525
+    },
+    {
+      "esr_vs_reference": 0.074342706,
+      "f0": 3953,
+      "input_amp_v": 8,
+      "model": "diode_static_newton",
+      "non_harmonic_db": -46.650008,
+      "ns_per_base_sample": 1218.49038,
+      "oversampling": 4,
+      "thd_percent": 33.6537783
+    },
+    {
+      "esr_vs_reference": 0.0303341983,
+      "f0": 3953,
+      "input_amp_v": 8,
+      "model": "rc_diode_ode",
+      "non_harmonic_db": -15.9800205,
+      "ns_per_base_sample": 441.018021,
+      "oversampling": 1,
+      "thd_percent": 33.2381923
+    },
+    {
+      "esr_vs_reference": 2.87793695e-06,
+      "f0": 3953,
+      "input_amp_v": 8,
+      "model": "rc_diode_ode",
+      "non_harmonic_db": -58.5946136,
+      "ns_per_base_sample": 1329.92438,
+      "oversampling": 4,
+      "thd_percent": 31.1370135
+    },
+    {
+      "esr_vs_reference": 0.0303345678,
+      "f0": 3953,
+      "input_amp_v": 8,
+      "model": "wdf_diode",
+      "non_harmonic_db": -15.9799669,
+      "ns_per_base_sample": 86.5025347,
+      "oversampling": 1,
+      "thd_percent": 33.2382276
+    },
+    {
+      "esr_vs_reference": 2.87590638e-06,
+      "f0": 3953,
+      "input_amp_v": 8,
+      "model": "wdf_diode",
+      "non_harmonic_db": -58.5947989,
+      "ns_per_base_sample": 339.217118,
+      "oversampling": 4,
+      "thd_percent": 31.1370682
+    }
+  ],
+  "circuit": "Vin-R(2.2k)-node; node-C(10nF)-gnd; antiparallel diodes Is=2.52nA n=1.752",
+  "sample_rate": 48000
+}

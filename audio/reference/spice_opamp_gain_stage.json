@@ -1,0 +1,10 @@
+{
+  "data_kind": "spice_simulation",
+  "is_hardware_measurement": false,
+  "simulator": "ngspice-42",
+  "netlist": "opamp_gain_stage.cir",
+  "params": {},
+  "sample_rate": 48000,
+  "input_volts_per_fullscale": 1.0,
+  "note": ""
+}

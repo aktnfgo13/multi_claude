@@ -1,0 +1,37 @@
+{
+  "simulator": "ngspice-42",
+  "checks": [
+    {
+      "name": "rc_lowpass.cir gain at fc",
+      "value_db": -3.04132849374321,
+      "expected_db": -3.01,
+      "ok": true
+    },
+    {
+      "name": "rc_highpass.cir gain at fc",
+      "value_db": -2.99218877313643,
+      "expected_db": -3.01,
+      "ok": true
+    },
+    {
+      "name": "C++ tanh (4x OS) vs SPICE diode clipper",
+      "esr": 0.005113083109494986,
+      "esr_db": -22.913171480710922
+    },
+    {
+      "name": "C++ diode_static_newton (4x OS) vs SPICE diode clipper",
+      "esr": 0.0016964054544232041,
+      "esr_db": -27.704703398305245
+    },
+    {
+      "name": "C++ rc_diode_ode (4x OS) vs SPICE diode clipper",
+      "esr": 2.6687534845583685e-07,
+      "esr_db": -65.73691540577605
+    },
+    {
+      "name": "C++ wdf_diode (4x OS) vs SPICE diode clipper",
+      "esr": 2.647589309268621e-07,
+      "esr_db": -65.77149381222986
+    }
+  ]
+}

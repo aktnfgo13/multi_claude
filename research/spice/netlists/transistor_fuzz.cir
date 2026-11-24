@@ -1,0 +1,19 @@
+* Two-transistor fuzz (silicon NPN, negative feedback pair), 9 V supply.
+* FUZZ in 0..1 sets the emitter bypass of Q2 (1k pot). Generic NPN model (not a specific part).
+.param FUZZ=0.7
+.param RFZ={max(1, 1k*(1-FUZZ))}
+{INPUT_SOURCE}
+VCC vcc 0 9
+Cin in b1 2.2u
+Q1 c1 b1 0 QSI
+R1 vcc c1 33k
+Q2 c2 c1 e2 QSI
+Rc2a vcc c2 470
+Rc2b c2 c2b 8.2k
+Rf b1 e2 100k
+Re2 e2 0 {RFZ}
+Ce2 e2 0 22u
+Cout c2b out 10n
+Rload out 0 500k
+.model QSI NPN(IS=1e-14 BF=250 VAF=80 RB=10 CJE=8p CJC=4p)
+.end

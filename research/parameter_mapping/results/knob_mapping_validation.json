@@ -1,0 +1,41 @@
+{
+  "lut": "/home/claude/multi_effects/research/parameter_mapping/results/feedback_clipper_drive_lut.json",
+  "train_knobs": [
+    0,
+    50,
+    100
+  ],
+  "rows": [
+    {
+      "knob": 0,
+      "held_out": false,
+      "esr_lut_interpolated_cpp": 0.014774761945187717,
+      "esr_direct_fit_cpp": 0.014774761945187717
+    },
+    {
+      "knob": 25,
+      "held_out": true,
+      "esr_lut_interpolated_cpp": 0.0284558417549767,
+      "esr_direct_fit_cpp": 0.04351980389519535
+    },
+    {
+      "knob": 50,
+      "held_out": false,
+      "esr_lut_interpolated_cpp": 0.051871982892781075,
+      "esr_direct_fit_cpp": 0.05187199099879843
+    },
+    {
+      "knob": 75,
+      "held_out": true,
+      "esr_lut_interpolated_cpp": 0.05341903373935869,
+      "esr_direct_fit_cpp": 0.05408960933166651
+    },
+    {
+      "knob": 100,
+      "held_out": false,
+      "esr_lut_interpolated_cpp": 0.05448205984607841,
+      "esr_direct_fit_cpp": 0.05448205984607841
+    }
+  ],
+  "mapping_checks": "all interpolated values finite; log-domain values > 0 (stable 1st-order filters)"
+}

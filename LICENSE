@@ -1,0 +1,12 @@
+Copyright (c) 2026 MultiEffects project owner. All rights reserved.
+
+This source code is proprietary and intended for a commercial product. No licence is granted to copy,
+modify or distribute it without written permission of the copyright holder.
+
+IMPORTANT: the optional JUCE-based plug-in target (src/plugin, src/ui) links the JUCE framework, which is
+dual licensed under AGPLv3 and the commercial JUCE 8 licence. Distributing a binary built with JUCE requires
+either complying with AGPLv3 (publishing the complete source) or holding an appropriate JUCE 8 licence.
+See THIRD_PARTY_NOTICES.md. The DSP core (src/core, src/dsp, src/engine, src/presets, src/platform)
+does not depend on JUCE.
+
+(Placeholder licence text chosen by the development agent; replace with the owner's chosen terms.)

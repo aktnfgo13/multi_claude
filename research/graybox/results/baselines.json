@@ -1,0 +1,15 @@
+{
+  "data": "SPICE simulation (feedback clipper), synthetic guitar-like train / chirp validation",
+  "knob_value": 0.5,
+  "overdrive_handdesigned_esr_validation": 0.7901916197889104,
+  "gru_blackbox": {
+    "esr_validation": 0.43778182944339133,
+    "train_seconds": 319.3803343772888,
+    "approx_macs_per_sample": 832
+  },
+  "ddsp": {
+    "esr_validation_cpp": 0.05187199099879843,
+    "train_seconds": 37.153470039367676,
+    "note": "7 physical parameters + mix/level; runs as plain DSP in C++ (no network)"
+  }
+}

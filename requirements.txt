@@ -1,0 +1,6 @@
+# Python research / tooling (not needed for the plug-in)
+numpy>=1.26
+scipy>=1.11
+matplotlib>=3.8
+torch>=2.2          # research/ddsp, research/graybox (CPU build is enough)
+sounddevice>=0.4    # optional: tools/measurement playrec (hardware)

@@ -1,0 +1,8 @@
+* Non-inverting op-amp gain stage, behavioural op-amp (A=1e5) with soft +/-4.5 V rails.
+* Gain = 1 + RF/RG.   GBW / slew are NOT modelled.
+.param RF=100k RG=4.7k
+{INPUT_SOURCE}
+RG inm 0 {RG}
+RF inm out {RF}
+Bop out 0 V = 4.5*tanh(1e5*(V(in)-V(inm))/4.5)
+.end

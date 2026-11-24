@@ -1,0 +1,6 @@
+* RC low-pass, fc = 1/(2 pi R C) = 1.59 kHz
+.param R1=10k C1=10n
+{INPUT_SOURCE}
+R1 in out {R1}
+C1 out 0 {C1}
+.end

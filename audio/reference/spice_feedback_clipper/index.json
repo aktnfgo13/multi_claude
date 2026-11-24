@@ -1,0 +1,149 @@
+{
+  "meta": {
+    "data_kind": "spice_simulation",
+    "is_hardware_measurement": false,
+    "simulator": "ngspice-42",
+    "netlist": "feedback_clipper.cir",
+    "params": {},
+    "sample_rate": 48000,
+    "input_volts_per_fullscale": 1.0,
+    "note": "dataset for DDSP; input = synthetic guitar-like + sine sweep"
+  },
+  "items": [
+    {
+      "tag": "feedback_clipper_DRIVE0_amp0.05",
+      "input": "feedback_clipper_DRIVE0_amp0.05_in.wav",
+      "output": "feedback_clipper_DRIVE0_amp0.05_out.wav",
+      "amp": 0.05,
+      "params": {
+        "DRIVE": 0.0
+      }
+    },
+    {
+      "tag": "feedback_clipper_DRIVE0_amp0.2",
+      "input": "feedback_clipper_DRIVE0_amp0.2_in.wav",
+      "output": "feedback_clipper_DRIVE0_amp0.2_out.wav",
+      "amp": 0.2,
+      "params": {
+        "DRIVE": 0.0
+      }
+    },
+    {
+      "tag": "feedback_clipper_DRIVE0_amp0.5",
+      "input": "feedback_clipper_DRIVE0_amp0.5_in.wav",
+      "output": "feedback_clipper_DRIVE0_amp0.5_out.wav",
+      "amp": 0.5,
+      "params": {
+        "DRIVE": 0.0
+      }
+    },
+    {
+      "tag": "feedback_clipper_DRIVE0.25_amp0.05",
+      "input": "feedback_clipper_DRIVE0.25_amp0.05_in.wav",
+      "output": "feedback_clipper_DRIVE0.25_amp0.05_out.wav",
+      "amp": 0.05,
+      "params": {
+        "DRIVE": 0.25
+      }
+    },
+    {
+      "tag": "feedback_clipper_DRIVE0.25_amp0.2",
+      "input": "feedback_clipper_DRIVE0.25_amp0.2_in.wav",
+      "output": "feedback_clipper_DRIVE0.25_amp0.2_out.wav",
+      "amp": 0.2,
+      "params": {
+        "DRIVE": 0.25
+      }
+    },
+    {
+      "tag": "feedback_clipper_DRIVE0.25_amp0.5",
+      "input": "feedback_clipper_DRIVE0.25_amp0.5_in.wav",
+      "output": "feedback_clipper_DRIVE0.25_amp0.5_out.wav",
+      "amp": 0.5,
+      "params": {
+        "DRIVE": 0.25
+      }
+    },
+    {
+      "tag": "feedback_clipper_DRIVE0.5_amp0.05",
+      "input": "feedback_clipper_DRIVE0.5_amp0.05_in.wav",
+      "output": "feedback_clipper_DRIVE0.5_amp0.05_out.wav",
+      "amp": 0.05,
+      "params": {
+        "DRIVE": 0.5
+      }
+    },
+    {
+      "tag": "feedback_clipper_DRIVE0.5_amp0.2",
+      "input": "feedback_clipper_DRIVE0.5_amp0.2_in.wav",
+      "output": "feedback_clipper_DRIVE0.5_amp0.2_out.wav",
+      "amp": 0.2,
+      "params": {
+        "DRIVE": 0.5
+      }
+    },
+    {
+      "tag": "feedback_clipper_DRIVE0.5_amp0.5",
+      "input": "feedback_clipper_DRIVE0.5_amp0.5_in.wav",
+      "output": "feedback_clipper_DRIVE0.5_amp0.5_out.wav",
+      "amp": 0.5,
+      "params": {
+        "DRIVE": 0.5
+      }
+    },
+    {
+      "tag": "feedback_clipper_DRIVE0.75_amp0.05",
+      "input": "feedback_clipper_DRIVE0.75_amp0.05_in.wav",
+      "output": "feedback_clipper_DRIVE0.75_amp0.05_out.wav",
+      "amp": 0.05,
+      "params": {
+        "DRIVE": 0.75
+      }
+    },
+    {
+      "tag": "feedback_clipper_DRIVE0.75_amp0.2",
+      "input": "feedback_clipper_DRIVE0.75_amp0.2_in.wav",
+      "output": "feedback_clipper_DRIVE0.75_amp0.2_out.wav",
+      "amp": 0.2,
+      "params": {
+        "DRIVE": 0.75
+      }
+    },
+    {
+      "tag": "feedback_clipper_DRIVE0.75_amp0.5",
+      "input": "feedback_clipper_DRIVE0.75_amp0.5_in.wav",
+      "output": "feedback_clipper_DRIVE0.75_amp0.5_out.wav",
+      "amp": 0.5,
+      "params": {
+        "DRIVE": 0.75
+      }
+    },
+    {
+      "tag": "feedback_clipper_DRIVE1_amp0.05",
+      "input": "feedback_clipper_DRIVE1_amp0.05_in.wav",
+      "output": "feedback_clipper_DRIVE1_amp0.05_out.wav",
+      "amp": 0.05,
+      "params": {
+        "DRIVE": 1.0
+      }
+    },
+    {
+      "tag": "feedback_clipper_DRIVE1_amp0.2",
+      "input": "feedback_clipper_DRIVE1_amp0.2_in.wav",
+      "output": "feedback_clipper_DRIVE1_amp0.2_out.wav",
+      "amp": 0.2,
+      "params": {
+        "DRIVE": 1.0
+      }
+    },
+    {
+      "tag": "feedback_clipper_DRIVE1_amp0.5",
+      "input": "feedback_clipper_DRIVE1_amp0.5_in.wav",
+      "output": "feedback_clipper_DRIVE1_amp0.5_out.wav",
+      "amp": 0.5,
+      "params": {
+        "DRIVE": 1.0
+      }
+    }
+  ]
+}

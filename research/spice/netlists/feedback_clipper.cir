@@ -1,0 +1,15 @@
+* Op-amp feedback clipper (overdrive topology): diodes + 51p in the feedback path,
+* gain leg 4.7k + 47n (720 Hz), drive pot DRIVE in 0..1 -> RF = 51k + 500k*DRIVE.
+* Behavioural op-amp (A=1e5, soft rails +/-4.5 V); 4.5 V virtual ground replaced by 0 V (AC equivalent).
+.param DRIVE=0.5
+.param RF={51k + 500k*DRIVE}
+{INPUT_SOURCE}
+RG inm g 4.7k
+CG g 0 47n
+RF inm out {RF}
+CF inm out 51p
+D1 inm out DSI
+D2 out inm DSI
+Bop out 0 V = 4.5*tanh(1e5*(V(in)-V(inm))/4.5)
+.model DSI D(IS=2.52n N=1.752 RS=0.5)
+.end

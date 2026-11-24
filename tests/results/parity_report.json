@@ -1,0 +1,209 @@
+{
+  "tolerance": {
+    "max_rel": 0.001,
+    "esr": 1e-06
+  },
+  "passed": true,
+  "cases": [
+    {
+      "effect": "custom_drive",
+      "settings": 0,
+      "signal": "impulse",
+      "block": 256,
+      "max_abs": 5.180927209254282e-06,
+      "max_rel": 2.651685667341391e-05,
+      "esr": 3.650841815111667e-09,
+      "status": "PASS"
+    },
+    {
+      "effect": "custom_drive",
+      "settings": 0,
+      "signal": "sine_220_-12dB",
+      "block": 256,
+      "max_abs": 5.060530450469447e-05,
+      "max_rel": 0.0001554493146715455,
+      "esr": 2.911054805833507e-10,
+      "status": "PASS"
+    },
+    {
+      "effect": "custom_drive",
+      "settings": 0,
+      "signal": "noise_-20dB",
+      "block": 256,
+      "max_abs": 6.2643181184054986e-06,
+      "max_rel": 2.4123131828102954e-05,
+      "esr": 1.9109880889275205e-10,
+      "status": "PASS"
+    },
+    {
+      "effect": "custom_drive",
+      "settings": 0,
+      "signal": "guitar_di_synthetic",
+      "block": 1,
+      "max_abs": 1.0592420697078109e-05,
+      "max_rel": 3.198129704820381e-05,
+      "esr": 9.429410930597718e-11,
+      "status": "PASS"
+    },
+    {
+      "effect": "custom_drive",
+      "settings": 0,
+      "signal": "guitar_di_synthetic",
+      "block": 64,
+      "max_abs": 1.0592420697078109e-05,
+      "max_rel": 3.198129704820381e-05,
+      "esr": 9.429410930597718e-11,
+      "status": "PASS"
+    },
+    {
+      "effect": "custom_drive",
+      "settings": 0,
+      "signal": "guitar_di_synthetic",
+      "block": 512,
+      "max_abs": 1.0592420697078109e-05,
+      "max_rel": 3.198129704820381e-05,
+      "esr": 9.429410930597718e-11,
+      "status": "PASS"
+    },
+    {
+      "effect": "custom_drive",
+      "settings": 1,
+      "signal": "impulse",
+      "block": 256,
+      "max_abs": 1.1354672272353983e-05,
+      "max_rel": 4.48509430198845e-05,
+      "esr": 7.19067238188609e-11,
+      "status": "PASS"
+    },
+    {
+      "effect": "custom_drive",
+      "settings": 1,
+      "signal": "sine_220_-12dB",
+      "block": 256,
+      "max_abs": 0.0001232186943521396,
+      "max_rel": 0.0005248943655220361,
+      "esr": 1.6963356904369823e-09,
+      "status": "PASS"
+    },
+    {
+      "effect": "custom_drive",
+      "settings": 1,
+      "signal": "noise_-20dB",
+      "block": 256,
+      "max_abs": 5.21338286034595e-05,
+      "max_rel": 0.0002540829289362744,
+      "esr": 5.368978848338264e-10,
+      "status": "PASS"
+    },
+    {
+      "effect": "custom_drive",
+      "settings": 1,
+      "signal": "guitar_di_synthetic",
+      "block": 256,
+      "max_abs": 5.2407764826567504e-05,
+      "max_rel": 0.00021685018247814263,
+      "esr": 1.2799921072297374e-10,
+      "status": "PASS"
+    },
+    {
+      "effect": "custom_drive",
+      "settings": 2,
+      "signal": "impulse",
+      "block": 256,
+      "max_abs": 5.952235503280112e-05,
+      "max_rel": 0.00020300683699405955,
+      "esr": 8.304046654606707e-07,
+      "status": "PASS"
+    },
+    {
+      "effect": "custom_drive",
+      "settings": 2,
+      "signal": "sine_220_-12dB",
+      "block": 256,
+      "max_abs": 0.0006176159258484137,
+      "max_rel": 0.0007532702118248947,
+      "esr": 7.893217744693348e-09,
+      "status": "PASS"
+    },
+    {
+      "effect": "custom_drive",
+      "settings": 2,
+      "signal": "noise_-20dB",
+      "block": 256,
+      "max_abs": 0.0002208377703926956,
+      "max_rel": 0.0004133729145243826,
+      "esr": 6.306098860159562e-08,
+      "status": "PASS"
+    },
+    {
+      "effect": "custom_drive",
+      "settings": 2,
+      "signal": "guitar_di_synthetic",
+      "block": 256,
+      "max_abs": 0.0003151062399968929,
+      "max_rel": 0.00045890700352441935,
+      "esr": 2.2047522864687076e-08,
+      "status": "PASS"
+    },
+    {
+      "effect": "custom_drive",
+      "settings": "param_changes",
+      "signal": "guitar_di_synthetic",
+      "block": 256,
+      "max_abs": 0.00010717847435567918,
+      "max_rel": 0.0003332812472371058,
+      "esr": 4.963761344376547e-10,
+      "status": "PASS"
+    },
+    {
+      "effect": "custom_drive",
+      "settings": 0,
+      "signal": "guitar_di_synthetic_x10",
+      "block": 256,
+      "max_abs": 1.0592420697078109e-05,
+      "max_rel": 3.19812501058838e-05,
+      "esr": 9.442903001485391e-11,
+      "status": "PASS"
+    },
+    {
+      "effect": "ddsp_drive",
+      "settings": "trained-like",
+      "signal": "impulse",
+      "block": 256,
+      "max_abs": 1.0906274980002073e-07,
+      "max_rel": 3.5949843277487684e-07,
+      "esr": 4.4084170744717885e-12,
+      "status": "PASS"
+    },
+    {
+      "effect": "ddsp_drive",
+      "settings": "trained-like",
+      "signal": "sine_220_-12dB",
+      "block": 256,
+      "max_abs": 1.6776370745028024e-06,
+      "max_rel": 2.973400473615221e-06,
+      "esr": 1.1101101313958799e-13,
+      "status": "PASS"
+    },
+    {
+      "effect": "ddsp_drive",
+      "settings": "trained-like",
+      "signal": "noise_-20dB",
+      "block": 256,
+      "max_abs": 8.527129709001713e-07,
+      "max_rel": 1.5676731483945637e-06,
+      "esr": 3.2006381554008084e-13,
+      "status": "PASS"
+    },
+    {
+      "effect": "ddsp_drive",
+      "settings": "trained-like",
+      "signal": "guitar_di_synthetic",
+      "block": 256,
+      "max_abs": 1.2305656761080197e-06,
+      "max_rel": 2.1541617927646365e-06,
+      "esr": 1.7250882135878108e-13,
+      "status": "PASS"
+    }
+  ]
+}
