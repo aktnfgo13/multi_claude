@@ -6,9 +6,11 @@ option(MFX_BUILD_TESTS   "Build C++ tests"                                   ON)
 option(MFX_BUILD_APPS    "Build command line tools (offline renderer, bench)" ON)
 option(MFX_WITH_NAM      "Build NAM support (NeuralAmpModelerCore, MIT + Eigen MPL2)" OFF)
 option(MFX_BUILD_PLUGIN  "Build JUCE plug-in (AU/VST3/Standalone)"            OFF)
+set(MFX_SANITIZE "" CACHE STRING "Sanitizer build: address (ASan+UBSan) | thread (TSan) | empty")
 set(MFX_NAM_DIR   "" CACHE PATH "Local NeuralAmpModelerCore checkout (empty = FetchContent)")
 set(MFX_EIGEN_DIR "" CACHE PATH "Eigen include dir (empty = FetchContent)")
 set(MFX_JUCE_DIR  "" CACHE PATH "Local JUCE checkout (empty = FetchContent)")
+set(MFX_REFERENCE_DIR "" CACHE PATH "Reference (Codex) project root, read-only, for mfx_compare_drive")
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -41,6 +43,14 @@ if(MFX_GIT_COMMIT STREQUAL "nogit" AND EXISTS "${CMAKE_SOURCE_DIR}/SOURCE_ID")
 endif()
 string(TIMESTAMP MFX_BUILD_TIME "%Y-%m-%dT%H:%M:%SZ" UTC)
 configure_file(src/core/BuildInfo.h.in ${CMAKE_BINARY_DIR}/generated/core/BuildInfo.h @ONLY)
+
+if(MFX_SANITIZE STREQUAL "address")
+  add_compile_options(-fsanitize=address,undefined -fno-omit-frame-pointer -fno-sanitize-recover=undefined)
+  add_link_options(-fsanitize=address,undefined)
+elseif(MFX_SANITIZE STREQUAL "thread")
+  add_compile_options(-fsanitize=thread -fno-omit-frame-pointer)
+  add_link_options(-fsanitize=thread)
+endif()
 
 # ----------------------------------------------------------------------------- DSP core (framework independent)
 add_library(mfx_core STATIC
@@ -116,6 +126,14 @@ if(MFX_BUILD_APPS)
   target_link_libraries(mfx_render PRIVATE mfx_core)
   add_executable(mfx_modeling_study apps/mfx_modeling_study.cpp)
   target_link_libraries(mfx_modeling_study PRIVATE mfx_core)
+  add_executable(mfx_compare_drive apps/mfx_compare_drive.cpp)
+  target_link_libraries(mfx_compare_drive PRIVATE mfx_core)
+  if(MFX_REFERENCE_DIR AND EXISTS "${MFX_REFERENCE_DIR}/cpp/include/effects/CustomDrive.h")
+    target_include_directories(mfx_compare_drive PRIVATE "${MFX_REFERENCE_DIR}/cpp/include")
+    target_compile_definitions(mfx_compare_drive PRIVATE MFX_HAS_REFERENCE=1)
+  else()
+    target_compile_definitions(mfx_compare_drive PRIVATE MFX_HAS_REFERENCE=0)
+  endif()
 endif()
 
 # ----------------------------------------------------------------------------- tests
@@ -130,6 +148,7 @@ if(MFX_BUILD_TESTS)
     tests/audio/test_effects.cpp
     tests/audio/test_custom_drive.cpp
     tests/integration/test_engine.cpp
+    tests/integration/test_concurrency.cpp
     tests/performance/test_performance.cpp)
   target_include_directories(mfx_tests PRIVATE tests)
   target_link_libraries(mfx_tests PRIVATE mfx_core)

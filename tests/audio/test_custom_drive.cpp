@@ -62,14 +62,17 @@ TEST(audio, custom_drive_thd_increases_with_drive) {
 }
 
 TEST(audio, custom_drive_headroom_moves_saturation_onset_not_small_signal_gain) {
-    // (a) small signal (-70 dBFS): headroom must not change the level (< 0.5 dB)
+    // (a) small signal (-70 dBFS): mapping v2 compensates half of the threshold change, so Headroom
+    //     is not a volume knob (v1: full compensation -> it was a pure "clip ceiling" knob, see
+    //     docs/PARAMETER_SPECIFICATION.md): 18 dB threshold span -> 9 dB small-signal span
     std::vector<double> small;
     for (float head : {0.f, 50.f, 100.f}) {
         Settings s; s.drive = 50; s.headroom = head;
         small.push_back(levelDb(render(s, makeSine(48000, 1000, dbToGainD(-70.0), 24000))));
     }
-    CHECK_MSG(std::fabs(small[0] - small[2]) < 0.5, "small-signal level changed by " << small[0] - small[2] << " dB");
-    // (b) saturation onset: input level of 1 dB gain compression rises with headroom by ~24 dB
+    record("headroom_small_signal_span", small[0] - small[2], "dB");
+    CHECK_MSG(std::fabs(small[0] - small[2] - 9.0) < 1.0, "small-signal level changed by " << small[0] - small[2] << " dB");
+    // (b) saturation onset: input level of 1 dB gain compression rises with headroom by ~18 dB (v2)
     auto onset = [](float head) {
         for (double in = -90.0; in <= 0.0; in += 1.0) {
             Settings s; s.drive = 50; s.headroom = head; s.tone = 50;
@@ -82,18 +85,19 @@ TEST(audio, custom_drive_headroom_moves_saturation_onset_not_small_signal_gain) 
     const double o0 = onset(0.f), o100 = onset(100.f);
     record("onset_1dB_compression_headroom0", o0, "dBFS");
     record("onset_1dB_compression_headroom100", o100, "dBFS");
-    CHECK_MSG(o100 - o0 > 18.0 && o100 - o0 < 30.0, "onset shift " << o100 - o0 << " dB");
+    CHECK_MSG(o100 - o0 > 14.0 && o100 - o0 < 24.0, "onset shift " << o100 - o0 << " dB");
     // (c) ceiling (very hot input) rises with headroom
     Settings lo; lo.drive = 100; lo.headroom = 0;
     Settings hi = lo; hi.headroom = 100;
     const auto x = makeSine(48000, 1000, 1.0, 24000);
     const double c0 = levelDb(render(lo, x)), c100 = levelDb(render(hi, x));
     record("ceiling_rise_headroom_0_to_100", c100 - c0, "dB");
-    CHECK_MSG(c100 - c0 > 18.0, "ceiling change " << c100 - c0);
+    CHECK_MSG(c100 - c0 > 6.0, "ceiling change " << c100 - c0);
 }
 
 TEST(audio, custom_drive_drive_and_headroom_are_independent_axes) {
-    // Drive: small-signal gain grows ~48 dB, ceiling nearly constant (< 3 dB)
+    // Drive: small-signal gain grows 30.6 dB (v2: -6..+30 dB pre-gain, 15 % output compensation),
+    // ceiling nearly constant (< 3 dB)
     Settings a; a.drive = 0; a.headroom = 50;
     Settings b = a; b.drive = 100;
     const auto tiny = makeSine(48000, 1000, dbToGainD(-90.0), 24000);
@@ -104,7 +108,7 @@ TEST(audio, custom_drive_drive_and_headroom_are_independent_axes) {
     const double dCeil = levelDb(render(b, hot)) - levelDb(render(a2, hot));
     record("drive_small_signal_gain_range", dSmall, "dB");
     record("drive_ceiling_change_60_to_100", dCeil, "dB");
-    CHECK_NEAR(dSmall, 48.0, 1.0);
+    CHECK_NEAR(dSmall, 36.0 * 0.85, 1.0);
     CHECK_MSG(std::fabs(dCeil) < 3.0, "ceiling changed " << dCeil);
 }
 
@@ -133,16 +137,25 @@ TEST(audio, custom_drive_grain_changes_texture_not_only_level) {
 }
 
 TEST(audio, custom_drive_crunch_hardens_knee) {
-    // input level chosen to sit around the knee (u ~ Vth), where the knee shape is defined
-    Settings soft; soft.drive = 25; soft.crunch = 0; soft.grain = 0;
-    Settings hard = soft; hard.crunch = 100;
-    const auto x = makeSine(48000, 500, dbToGainD(-24.0), 48000);
-    const auto hs = harm(render(soft, x), 500), hh = harm(render(hard, x), 500);
-    // harder knee -> relatively more high-order harmonics (7th..9th re 3rd)
-    const double hoSoft = hs.harmonicsDb[7] - hs.harmonicsDb[3], hoHard = hh.harmonicsDb[7] - hh.harmonicsDb[3];
-    record("h7_minus_h3_crunch0", hoSoft, "dB");
-    record("h7_minus_h3_crunch100", hoHard, "dB");
-    CHECK(hoHard > hoSoft + 3.0);
+    // knee hardness = input span between 1 dB and 6 dB of gain compression (narrower = harder).
+    // (v1 used h7-h3 at one level; with the v2 analytic knee + residual slope both settings converge
+    //  to the same square-wave harmonic ratios at high drive, so the static compression curve is the
+    //  direct, level-independent measure of what Crunch is specified to do.)
+    auto kneeWidth = [](float crunch) {
+        Settings s; s.drive = 60; s.crunch = crunch; s.grain = 0;
+        const double g0 = levelDb(render(s, makeSine(48000, 500, dbToGainD(-80.0), 9600))) + 80.0;
+        double in1 = 0, in6 = 0; bool f1 = false;
+        for (double in = -60.0; in <= 6.0; in += 0.5) {
+            const double g = levelDb(render(s, makeSine(48000, 500, dbToGainD(in), 9600))) - in;
+            if (!f1 && g0 - g > 1.0) { in1 = in; f1 = true; }
+            if (g0 - g > 6.0) { in6 = in; break; }
+        }
+        return in6 - in1;
+    };
+    const double wSoft = kneeWidth(0.f), wHard = kneeWidth(100.f);
+    record("knee_width_1_to_6dB_crunch0", wSoft, "dB");
+    record("knee_width_1_to_6dB_crunch100", wHard, "dB");
+    CHECK_MSG(wSoft - wHard > 3.0, "soft " << wSoft << " hard " << wHard);
 }
 
 TEST(audio, custom_drive_tight_mid_tone_small_signal_responses) {
@@ -181,7 +194,7 @@ TEST(audio, custom_drive_latency_matches_dry_alignment) {
 TEST(audio, custom_drive_parameter_changes_are_smooth_and_reach_dsp) {
     CustomDrive d;
     d.prepare({48000.0, 128, 1});
-    CHECK_NEAR(d.physical().gainDb, 12.0, 1e-6); // default drive 25 -> 12 dB
+    CHECK_NEAR(d.physical().gainDb, 3.0, 1e-6); // default drive 25 -> +3 dB (mapping v2)
     auto x = makeSine(48000, 200, 0.2, 48000);
     std::vector<float> y = x;
     double maxJump = 0.0, steadyJump = 0.0;
@@ -201,7 +214,7 @@ TEST(audio, custom_drive_parameter_changes_are_smooth_and_reach_dsp) {
     };
     steadyJump = std::max(d2(12000, 24000), d2(36000, 48000));
     maxJump = d2(24064, 27000);
-    CHECK_NEAR(d.physical().gainDb, 48.0, 1e-4); // value propagated to DSP after smoothing
+    CHECK_NEAR(d.physical().gainDb, 30.0, 1e-4); // value propagated to DSP after smoothing
     record("transition_curvature_ratio", maxJump / steadyJump);
     CHECK_MSG(maxJump < 2.5 * steadyJump, "curvature " << maxJump << " steady " << steadyJump);
 }
@@ -217,4 +230,24 @@ TEST(audio, custom_drive_runtime_oversampling_switch_is_safe) {
     }
     CHECK(allFinite(y));
     CHECK(analysis::peak(y.data(), y.size()) < 4.0);
+}
+
+TEST(audio, custom_drive_diagnostics_report_gain_staging) {
+    CustomDrive d;
+    d.setParam("drive", 50.f); d.setParam("headroom", 50.f);
+    d.prepare({48000.0, 256, 1});
+    d.setDiagnosticsEnabled(true);
+    auto x = makeSine(48000, 440, dbToGainD(-12.0), 24000);
+    processMono(d, x);
+    const auto g = d.readDiagnostics();
+    record("diag_in_peak_db", g.inPeakDb, "dBFS");
+    record("diag_clip_in_over_vth_db", g.clipInPeakOverVthDb, "dB");
+    record("diag_gain_reduction_db", g.gainReductionDb, "dB");
+    CHECK_NEAR(g.inPeakDb, -12.0, 0.1);
+    CHECK_NEAR(g.appliedDriveDb, 12.0, 0.01);       // -6 + 36*0.5
+    CHECK_NEAR(g.appliedVthDb, -9.0, 0.01);         // -18 + 18*0.5
+    CHECK(g.clipInPeakOverVthDb > 5.0);             // -12 + 12 dB drive (+mid/emphasis) vs -9 dBFS threshold
+    CHECK(g.gainReductionDb < -1.0);
+    const auto z = d.readDiagnostics();             // reset after read
+    CHECK(z.inPeakDb < -170.0);
 }

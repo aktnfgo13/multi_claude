@@ -26,6 +26,25 @@ inline float asymSigmoid(float u, float p, float vp, float vn) {
     return u >= 0.0f ? vp * algebraicSigmoid(u / vp, p) : vn * algebraicSigmoid(u / vn, p);
 }
 
+/// Analytic variable-knee family (no |z|^p kink at zero -> fast harmonic decay, less aliasing):
+///   f2 = z/sqrt(1+z^2), f4 = z/(1+z^4)^(1/4), f6 = z/(1+z^6)^(1/6); knee p in [2,6] blends neighbours.
+struct KneeWeights { float w2 = 1, w4 = 0, w6 = 0; };
+inline KneeWeights kneeWeights(float p) {
+    p = clampv(p, 2.0f, 6.0f);
+    KneeWeights k;
+    if (p <= 4.0f) { const float w = (p - 2.0f) * 0.5f; k.w2 = 1.0f - w; k.w4 = w; k.w6 = 0.0f; }
+    else { const float w = (p - 4.0f) * 0.5f; k.w2 = 0.0f; k.w4 = 1.0f - w; k.w6 = w; }
+    return k;
+}
+inline float kneeCurve(float z, const KneeWeights& k) {
+    const float z2 = z * z;
+    float y = 0.0f;
+    if (k.w2 != 0.0f) y += k.w2 * z / std::sqrt(1.0f + z2);
+    if (k.w4 != 0.0f) y += k.w4 * z / std::sqrt(std::sqrt(1.0f + z2 * z2));
+    if (k.w6 != 0.0f) y += k.w6 * z / std::cbrt(std::sqrt(1.0f + z2 * z2 * z2));
+    return y;
+}
+
 inline float hardClip(float u, float lim = 1.0f) { return clampv(u, -lim, lim); }
 
 /// Fast rational tanh approximation (max error ~2e-4), clamped.

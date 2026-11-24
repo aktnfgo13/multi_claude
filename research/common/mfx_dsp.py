@@ -174,17 +174,23 @@ KNOBS = ["drive", "headroom", "tone", "tight", "crunch", "grain", "mid"]
 DEFAULTS = dict(drive=25, headroom=50, tone=50, tight=50, crunch=50, grain=50, mid=50, mix=100, level=-6, oversampling=1)
 
 
+PRE_CLIP_LP_HZ = 7200.0
+
+
 def custom_drive_mapping(k: dict) -> dict:
+    """Mapping v2 (mirror of src/dsp/drive/CustomDrive.cpp customDriveMapping)."""
     n = lambda v: min(max(float(v) / 100.0, 0.0), 1.0)
     d, h, t, ti = n(k["drive"]), n(k["headroom"]), n(k["tone"]), n(k["tight"])
     cr, g, m = n(k["crunch"]), n(k["grain"]), (n(k["mid"]) - 0.5) * 2.0
     p = {}
-    p["gain_db"] = 48.0 * d
-    p["vth"] = 10.0 ** ((-24.0 + 24.0 * h) / 20.0)
-    p["p"] = 1.5 * (10.0 / 1.5) ** cr
-    a = 0.45 * g
-    p["vp"], p["vn"] = p["vth"] * (1 + a), p["vth"] * (1 - a)
-    p["emph_db"], p["emph_hz"] = 15.0 * g, 1500.0
+    p["gain_db"] = -6.0 + 36.0 * d
+    vth_db = -18.0 + 18.0 * h
+    p["vth"] = 10.0 ** (vth_db / 20.0)
+    p["p"] = 2.0 + 4.0 * cr * cr
+    p["kappa"] = (0.12 + 0.5 * h) * (1.4 - 1.3 * cr)
+    p["beta"] = 0.6 * g
+    p["vp"] = p["vn"] = p["vth"]
+    p["emph_db"], p["emph_hz"] = 5.0 * g, 1500.0
     p["tight_hz"], p["tight_q"] = 30.0 * (900.0 / 30.0) ** ti, 0.6
     p["mid_hz"] = 700.0 * 2.0 ** (0.5 * m)
     p["mid_db"] = 10.0 * m
@@ -192,10 +198,31 @@ def custom_drive_mapping(k: dict) -> dict:
     p["mid_post_db"] = 3.0 * m
     p["tilt_db"], p["tilt_hz"] = 12.0 * (t - 0.5), 800.0
     p["fizz_hz"] = 2500.0 * (14000.0 / 2500.0) ** t
-    p["c2"] = 1.0 + 2.0 * cr
-    p["bias_depth"] = 0.15 + 0.25 * g
-    p["makeup_db"] = 12.0
+    p["c2"] = 1.0 + 0.3 * cr
+    p["bias_depth"] = 0.1 + 0.2 * g
+    p["makeup_db"] = -0.5 * vth_db - 0.15 * p["gain_db"]
     return p
+
+
+def knee_weights(pk):
+    pk = float(F32(min(max(pk, 2.0), 6.0)))
+    if pk <= 4.0:
+        w = (pk - 2.0) * 0.5
+        return (1.0 - w, w, 0.0)
+    w = (pk - 4.0) * 0.5
+    return (0.0, 1.0 - w, w)
+
+
+def knee_curve(z, w):
+    z2 = z * z
+    y = 0.0
+    if w[0] != 0.0:
+        y += w[0] * z / math.sqrt(1.0 + z2)
+    if w[1] != 0.0:
+        y += w[1] * z / math.sqrt(math.sqrt(1.0 + z2 * z2))
+    if w[2] != 0.0:
+        y += w[2] * z / math.pow(math.sqrt(1.0 + z2 * z2 * z2), 1.0 / 3.0)
+    return y
 
 
 def _alg_sigmoid(u, p):
@@ -216,7 +243,7 @@ class CustomDriveRef:
         self.knob = {k: LinearSmoothed(fs, 0.03, self.params[k]) for k in KNOBS}
         self.mix = LinearSmoothed(fs, 0.02, F32(self.params["mix"]) / F32(100))
         self.level = LinearSmoothed(fs, 0.02, F32(10.0 ** (self.params["level"] * 0.05)))
-        self.f = {k: Filter() for k in ["dc", "tight", "mid", "emph", "deemph", "midpost", "tlo", "thi", "fizz"]}
+        self.f = {k: Filter() for k in ["dc", "tight", "mid", "prelp", "emph", "deemph", "midpost", "tlo", "thi", "fizz"]}
         self.os = Oversampler(self.os_idx)
         self.bias = 0.0
         self.dc_x1 = 0.0
@@ -234,6 +261,7 @@ class CustomDriveRef:
         f["tight"].set(design_biquad("hp", fs, p["tight_hz"], p["tight_q"]))
         f["mid"].set(design_biquad("peak", fs, p["mid_hz"], p["mid_q"], p["mid_db"]))
         f["emph"].set(design_biquad("hs1", fso, p["emph_hz"], 0.7071, p["emph_db"]))
+        f["prelp"].set(design_biquad("lp", fso, min(PRE_CLIP_LP_HZ, 0.45 * fso), 0.7071))
         f["deemph"].set(design_biquad("hs1", fso, p["emph_hz"], 0.7071, -p["emph_db"]))
         f["midpost"].set(design_biquad("peak", fs, p["mid_hz"], p["mid_q"], p["mid_post_db"]))
         f["tlo"].set(design_biquad("ls1", fs, p["tilt_hz"], 0.7071, -0.5 * p["tilt_db"]))
@@ -243,6 +271,15 @@ class CustomDriveRef:
         self.vth, self.vp, self.vn = float(F32(p["vth"])), float(F32(p["vp"])), float(F32(p["vn"]))
         self.pk, self.c2 = float(F32(p["p"])), float(F32(p["c2"]))
         self.depth = float(F32(p["bias_depth"]))
+        self.kappa = float(F32(p["kappa"]))
+        self.beta = float(F32(p["beta"]))
+        self.w = knee_weights(self.pk)
+        bz, k, w = self.beta, self.kappa, self.w
+        b2 = bz * bz; b4 = b2 * b2; b6 = b4 * b2
+        f0 = w[0] * bz / math.sqrt(1 + b2) + w[1] * bz / (1 + b4) ** 0.25 + w[2] * bz / (1 + b6) ** (1 / 6) + k * math.asinh(bz)
+        df = w[0] * (1 + b2) ** -1.5 + w[1] * (1 + b4) ** -1.25 + w[2] * (1 + b6) ** (-7 / 6) + k / math.sqrt(1 + b2)
+        self.f0 = float(F32(f0))
+        self.slope_inv = float(F32(1.0 / max(df, 1e-3)))
         self.makeup = float(F32(10.0 ** (p["makeup_db"] / 20.0)))
         self.kc = 1.0 - math.exp(-1.0 / (0.002 * fso))
         self.kr = 1.0 - math.exp(-1.0 / (0.150 * fso))
@@ -259,18 +296,21 @@ class CustomDriveRef:
             raise NotImplementedError(name)
 
     def _nonlinear(self, u):
-        g, vth, vp, vn, pk, c2, depth = self.g, self.vth, self.vp, self.vn, self.pk, self.c2, self.depth
-        e = self.f["emph"](u * g)
+        vth, vp, c2, depth = self.vth, self.vp, self.c2, self.depth
+        kappa, beta, w, f0, si = self.kappa, self.beta, self.w, self.f0, self.slope_inv
+        e = self.f["emph"](self.f["prelp"](u * self.g))
         y = np.empty_like(e)
         b = self.bias
-        s = 1.25 * vp
+        s = 2.0 * vp
+        w2 = (1.0, 0.0, 0.0)
         for i, v in enumerate(e):
             v = v - b * vth
-            yy = vp * _alg_sigmoid(v / vp, pk) if v >= 0 else vn * _alg_sigmoid(v / vn, pk)
+            z = v / vth + beta
+            yy = vth * (knee_curve(z, w) + kappa * math.asinh(z) - f0) * si
             over = min(max(0.0, v / vp - 1.0), 2.0)
             tgt = depth * over
             b += (self.kc if tgt > b else self.kr) * (tgt - b)
-            y[i] = s * _alg_sigmoid(c2 * yy / s, 2.0) / c2
+            y[i] = s * knee_curve(c2 * yy / s, w2) / c2
         self.bias = b if abs(b) >= 1e-15 else 0.0
         return self.f["deemph"](y)
 

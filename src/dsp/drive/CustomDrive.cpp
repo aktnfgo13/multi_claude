@@ -8,7 +8,7 @@ namespace mfx {
 
 static const char* kOsChoices[] = {"1x", "2x", "4x", "8x"};
 
-CustomDrivePhysical customDriveMapping(const CustomDriveKnobs& k) {
+CustomDrivePhysical customDriveMappingV1(const CustomDriveKnobs& k) {
     auto n = [](float v) { return clampv((double)v / 100.0, 0.0, 1.0); };
     const double d = n(k.drive), h = n(k.headroom), t = n(k.tone), ti = n(k.tight);
     const double cr = n(k.crunch), g = n(k.grain), m = (n(k.mid) - 0.5) * 2.0;
@@ -33,6 +33,43 @@ CustomDrivePhysical customDriveMapping(const CustomDriveKnobs& k) {
     p.secondStage = 1.0 + 2.0 * cr;
     p.biasDepth = 0.15 + 0.25 * g;
     p.makeupDb = 12.0;
+    p.kappa = 0.0;
+    return p;
+}
+
+// v2: gain staging for real guitar levels (peaks around -7 dBFS), a clipping curve that keeps a
+// logarithmic slope above the knee (feedback-clipper-like: playing dynamics survive saturation,
+// less brick-wall compression and fewer high-order products), narrower Headroom span with partial
+// level compensation (Headroom is not a volume knob), gentler Grain emphasis (aliasing).
+static constexpr double kPreClipLpHz = 7200.0;
+
+CustomDrivePhysical customDriveMapping(const CustomDriveKnobs& k) {
+    auto n = [](float v) { return clampv((double)v / 100.0, 0.0, 1.0); };
+    const double d = n(k.drive), h = n(k.headroom), t = n(k.tone), ti = n(k.tight);
+    const double cr = n(k.crunch), g = n(k.grain), m = (n(k.mid) - 0.5) * 2.0;
+    CustomDrivePhysical p{};
+    p.gainDb = -6.0 + 36.0 * d;
+    const double vthDb = -18.0 + 18.0 * h;
+    p.vth = std::pow(10.0, vthDb / 20.0);
+    p.p = 2.0 + 4.0 * cr * cr;                  // analytic knee family, 2 (soft) .. 6 (hard); default 50 -> 3
+    p.kappa = (0.12 + 0.5 * h) * (1.4 - 1.3 * cr);   // crunch 0: wide (dynamic) knee, 100: firm
+    p.beta = 0.6 * g;                            // operating-point offset -> even harmonics
+    p.vp = p.vth;
+    p.vn = p.vth;
+    p.emphasisDb = 5.0 * g;
+    p.emphasisHz = 1500.0;
+    p.tightHz = 30.0 * std::pow(900.0 / 30.0, ti);
+    p.tightQ = 0.6;
+    p.midPreHz = 700.0 * std::pow(2.0, 0.5 * m);
+    p.midPreDb = 10.0 * m;
+    p.midPreQ = m >= 0 ? 0.9 + 0.5 * m : 0.7;
+    p.midPostDb = 3.0 * m;
+    p.tiltDb = 12.0 * (t - 0.5);
+    p.tiltHz = 800.0;
+    p.fizzHz = 2500.0 * std::pow(14000.0 / 2500.0, t);
+    p.secondStage = 1.0 + 0.3 * cr;
+    p.biasDepth = 0.1 + 0.2 * g;
+    p.makeupDb = -0.5 * vthDb - 0.15 * p.gainDb;
     return p;
 }
 
@@ -65,7 +102,7 @@ void CustomDrive::onReset() {
     os_.reset();
     for (auto& b : dryBuf_) std::fill(std::begin(b), std::end(b), 0.0f);
     dryPos_[0] = dryPos_[1] = 0;
-    for (Biquad* b : {&dcIn_, &tightHp_, &midPre_, &emph_, &deemph_, &midPost_, &tiltLo_, &tiltHi_, &fizz_}) b->reset();
+    for (Biquad* b : {&dcIn_, &tightHp_, &midPre_, &preLp_, &emph_, &deemph_, &midPost_, &tiltLo_, &tiltHi_, &fizz_}) b->reset();
     dcOut_.reset();
     bias_[0] = bias_[1] = 0.0f;
     fadeIn_ = 0;
@@ -77,7 +114,7 @@ void CustomDrive::setOversampling(int idx) {
     osIndex_ = idx;
     os_.setFactorIndex(idx);
     os_.reset();
-    emph_.reset(); deemph_.reset();
+    emph_.reset(); deemph_.reset(); preLp_.reset();
     fadeIn_ = fadeLen_;
 }
 
@@ -108,6 +145,8 @@ void CustomDrive::updateCoefficients() {
     tightHp_.design(FilterType::HighPass, fs, phys_.tightHz, phys_.tightQ);
     midPre_.design(FilterType::Peak, fs, phys_.midPreHz, phys_.midPreQ, phys_.midPreDb);
     emph_.design(FilterType::HighShelf1, fsOs, phys_.emphasisHz, 0.7071, phys_.emphasisDb);
+    // pre-clip band limit (v2): feedback-cap style roll-off, keeps >7 kHz content from driving the clipper
+    preLp_.design(FilterType::LowPass, fsOs, std::min(kPreClipLpHz, 0.45 * fsOs), 0.7071, 0.0);
     deemph_.design(FilterType::HighShelf1, fsOs, phys_.emphasisHz, 0.7071, -phys_.emphasisDb);
     midPost_.design(FilterType::Peak, fs, phys_.midPreHz, phys_.midPreQ, phys_.midPostDb);
     tiltLo_.design(FilterType::LowShelf1, fs, phys_.tiltHz, 0.7071, -0.5 * phys_.tiltDb);
@@ -120,6 +159,20 @@ void CustomDrive::updateCoefficients() {
     p_ = (float)phys_.p;
     c2_ = (float)phys_.secondStage;
     depth_ = (float)phys_.biasDepth;
+    kappa_ = (float)phys_.kappa;
+    invKappa_ = 1.0f / (1.0f + kappa_);
+    beta_ = (float)phys_.beta;
+    knee_ = nl::kneeWeights(p_);
+    {   // core(z) = f(z+beta) - f(beta), f = knee + kappa*asinh; normalise slope at z = 0 to 1 (analytic, double)
+        const double bz = beta_, k = kappa_;
+        const double b2 = bz * bz, b4 = b2 * b2, b6 = b4 * b2;
+        const double f = knee_.w2 * bz / std::sqrt(1.0 + b2) + knee_.w4 * bz / std::pow(1.0 + b4, 0.25)
+                       + knee_.w6 * bz / std::pow(1.0 + b6, 1.0 / 6.0) + k * std::asinh(bz);
+        const double df = knee_.w2 * std::pow(1.0 + b2, -1.5) + knee_.w4 * std::pow(1.0 + b4, -1.25)
+                        + knee_.w6 * std::pow(1.0 + b6, -7.0 / 6.0) + k / std::sqrt(1.0 + b2);
+        f0_ = (float)f;
+        slope0Inv_ = (float)(1.0 / std::max(df, 1e-3));
+    }
     makeup_ = (float)dbToGainD(phys_.makeupDb);
     biasCharge_ = 1.0f - onePoleCoeff(kBiasChargeSec, fsOs);
     biasRelease_ = 1.0f - onePoleCoeff(kBiasReleaseSec, fsOs);
@@ -152,24 +205,42 @@ void CustomDrive::onProcess(AudioBlock& block) {
                 v = tightHp_.process(v, c);
                 t[i] = midPre_.process(v, c);
             }
+            const bool diag = diagOn_.load(std::memory_order_relaxed);
+            float dPk = 0, dSq = 0, dZ = 0, dY = 0, dLin = 0;
+            if (diag) for (int i = 0; i < L; ++i) { const float a = std::fabs(x[i]); dPk = std::max(dPk, a); dSq += x[i] * x[i]; }
             // nonlinear section (oversampled)
             float* u = os_.upsample(t, L, c);
             float b = bias_[c];
             const float invC2 = 1.0f / c2_;
             for (int i = 0; i < L * F; ++i) {
-                float v = emph_.process(u[i] * gLin_, c);
+                float v = emph_.process(preLp_.process(u[i] * gLin_, c), c);
                 v -= b * vth_;
-                float y = nl::asymSigmoid(v, p_, vp_, vn_);
+                const float z = v / vth_ + beta_;
+                // analytic knee + logarithmic residual slope (kappa), operating point beta, unity small-signal slope
+                float y = vth_ * (nl::kneeCurve(z, knee_) + kappa_ * std::asinh(z) - f0_) * slope0Inv_;
+                if (diag) { dZ = std::max(dZ, std::fabs(v)); }
                 // grid-conduction style bias: positive overdrive charges the coupling state
                 const float over = std::min(std::max(0.0f, v / vp_ - 1.0f), 2.0f);
                 const float target = depth_ * over;
                 b += (target > b ? biasCharge_ : biasRelease_) * (target - b);
                 // second soft stage (crunch), unity small-signal slope
-                const float s = 1.25f * vp_;
-                y = s * nl::algebraicSigmoid(c2_ * y / s, 2.0f) * invC2;
+                const float s = 2.0f * vp_;
+                y = s * nl::kneeCurve(c2_ * y / s, nl::KneeWeights{}) * invC2;
+                if (diag) { dY = std::max(dY, std::fabs(y)); dLin = std::max(dLin, std::fabs(v)); }
                 u[i] = deemph_.process(y, c);
             }
             bias_[c] = flushDenorm(b);
+            if (diag) {
+                auto maxStore = [](std::atomic<float>& a, float v) { if (v > a.load(std::memory_order_relaxed)) a.store(v, std::memory_order_relaxed); };
+                maxStore(dInPeak_, dPk);
+                dInSq_.store(dInSq_.load(std::memory_order_relaxed) + dSq, std::memory_order_relaxed);
+                dInN_.store(dInN_.load(std::memory_order_relaxed) + (float)L, std::memory_order_relaxed);
+                maxStore(dClipIn_, dZ);
+                maxStore(dClipOut_, dY);
+                maxStore(dLin_, dLin);
+                const float ap[5] = {gLin_, vth_, makeup_, kappa_, p_};
+                for (int k = 0; k < 5; ++k) dApplied_[k].store(ap[k], std::memory_order_relaxed);
+            }
             os_.downsample(t, L, c);
             // post section (base rate) + mix with latency aligned dry
             for (int i = 0; i < L; ++i) {
@@ -186,6 +257,26 @@ void CustomDrive::onProcess(AudioBlock& block) {
             }
         }
     }
+}
+
+CustomDrive::Diagnostics CustomDrive::readDiagnostics(bool reset) noexcept {
+    auto db = [](float v) { return v > 1e-9f ? 20.0f * std::log10(v) : -180.0f; };
+    Diagnostics d{};
+    const float n = dInN_.load(std::memory_order_relaxed);
+    d.inPeakDb = db(dInPeak_.load(std::memory_order_relaxed));
+    d.inRmsDb = n > 0 ? db(std::sqrt(dInSq_.load(std::memory_order_relaxed) / n)) : -180.0f;
+    float ap[5];
+    for (int k = 0; k < 5; ++k) ap[k] = dApplied_[k].load(std::memory_order_relaxed);
+    d.clipInPeakOverVthDb = db(dClipIn_.load(std::memory_order_relaxed)) - db(ap[1]);
+    d.clipOutPeakDb = db(dClipOut_.load(std::memory_order_relaxed));
+    d.gainReductionDb = db(dClipOut_.load(std::memory_order_relaxed)) - db(dLin_.load(std::memory_order_relaxed));
+    d.appliedDriveDb = db(ap[0]);
+    d.appliedVthDb = db(ap[1]);
+    d.appliedMakeupDb = db(ap[2]);
+    d.appliedKappa = ap[3];
+    d.appliedKnee = ap[4];
+    if (reset) for (auto* a : {&dInPeak_, &dInSq_, &dInN_, &dClipIn_, &dClipOut_, &dLin_}) a->store(0.0f, std::memory_order_relaxed);
+    return d;
 }
 
 } // namespace mfx
