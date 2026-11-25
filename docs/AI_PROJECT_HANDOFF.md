@@ -1,6 +1,6 @@
 # AI 프로젝트 인수인계 (MFX Claude)
 
-- 갱신일: 2026-11-25 · GitHub `aktnfgo13/multi_claude` `main` · 버전 **0.7.0** (v0.7 커밋은 `git log`로 확인, 직전 v0.6.1 = `ef6c9da`)
+- 갱신일: 2026-11-25 · GitHub `aktnfgo13/multi_claude` `main` · 버전 **0.7.0** (구현 `8b8f942`, 이후 로그 커밋은 `git log`, 직전 v0.6.1 = `ef6c9da`)
 - 대상: ChatGPT / Claude / Codex 등 후속 개발 AI. 추측하지 말고 이 문서와 링크된 파일을 근거로 진행하세요.
 
 ## Quick Context
@@ -13,7 +13,7 @@
 - 측정 요약: 게이트 임계 ±0.1 dB·개폐 0/s(히스 6 dB)·어택 −0.7 dB·서스테인 0 dB, 026.wav 조용한 구간 −49.5 dB(기존 −10.1); EQ 설계 대비 0.027 dB·타입 전환 클릭 없음;
   BBD 800 ms 비결맞음(앨리어싱) v1 +7.0 dB → v2 2 chips −20.6 dB(대역 1.2 → 1.7 kHz), −70 dBFS 컴팬더 오차 −17 → 0 dB, 110 % 발진 0.49 유지.
 - 호환성: 팩토리 01–09, BBD v1, 기존 noise_gate/parametric_eq/graphic_eq/filter 출력이 v0.6.1과 **비트 동일**. 파라미터 id·AU ID 불변. 기존 저장의 BBD는 v1로 열림.
-- 검증 환경: Linux x86_64 (C++ 130/130, ASan 0건, pluginval strictness 7 PASS). arm64 VM 결과는 INTEGRATION_REPORT 참고. macOS 네이티브 v0.5–v0.7 미확인.
+- 검증 환경: Linux x86_64 (C++ 130/130, ASan 0건, pluginval strictness 7 PASS), Linux arm64 VM on 사용자 Mac (130/130, `tests/results/arm64_linux_vm_tests_v07.txt` — macOS 네이티브 아님). macOS 네이티브 v0.5–v0.7 미확인.
 - 청취·화면 미확인: Premium Gate/EQ/BBD v2 청취, EQ 곡선 표시, Logic 로딩·자동화(K-051). 깨끗한 실제 DI 없음(K-052).
 - 남은 문제: K-048(호스트 자동화 슬롯당 16개), K-049(BBD v1 컴팬더 바닥), K-050(EQ cramping), K-047(M2 고역 특성), K-039(Tape 메모리).
 - v0.8 방향: Mac/Logic 확인·청취 반영 → 호스트 파라미터 레이아웃 설계 → 깨끗한 DI·리앰프 측정 → EQ 정합 설계·BBD 잡음 바닥 → 출시 준비(설치·서명·Windows).

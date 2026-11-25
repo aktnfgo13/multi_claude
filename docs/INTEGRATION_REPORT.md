@@ -205,6 +205,7 @@ python3 research/spice/run_spice.py tolerance …     → E-018
 | C++ 전체 | PASS 130/130 | `cpp_tests.json` |
 | ASan (v0.7 관련) | PASS 0건 | `sanitizer_asan_v07.txt` |
 | pluginval strictness 7 (VST3 Linux, GUI 테스트 제외) | PASS | `pluginval_vst3_linux_strict7_v07.txt` |
+| Linux arm64 VM (사용자 Mac, g++ 11.4, macOS 네이티브 아님) | PASS 130/130 | `arm64_linux_vm_tests_v07.txt` |
 | EQ 응답 곡선 화면, macOS·auval·Logic, 청취 | NOT TESTED | K-051 |
 
 026.wav 게이트 비교(게이트 단독, 임계 −52 dBFS / −46 dBFS):
