@@ -176,4 +176,5 @@ python3 research/spice/run_spice.py tolerance …     → E-018
 | C++ 전체 | PASS 113/113 | `cpp_tests.json` |
 | ASan (v0.6 관련 테스트) | PASS 0건 | `sanitizer_asan_v06.txt` |
 | pluginval strictness 7 (VST3 Linux, GUI 테스트 제외) | PASS | `pluginval_vst3_linux_strict7_v06.txt` |
+| Linux arm64 VM (사용자 Mac, g++ 11.4) | PASS 113/113 | `arm64_linux_vm_tests_v06.txt` |
 | macOS v0.6 빌드·auval·Logic, 청취 | NOT TESTED | K-045 |

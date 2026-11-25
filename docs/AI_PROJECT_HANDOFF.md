@@ -1,6 +1,6 @@
 # AI 프로젝트 인수인계 (MFX Claude)
 
-- 갱신일: 2026-11-25 · GitHub `aktnfgo13/multi_claude` `main` · 버전 **0.6.0** (v0.6 커밋은 `git log`로 확인, 직전 v0.5 = `5b32e1a`)
+- 갱신일: 2026-11-25 · GitHub `aktnfgo13/multi_claude` `main` · 버전 **0.6.0** (구현 커밋 `d7d40e1`, 이후 로그 커밋은 `git log`, 직전 v0.5 = `5b32e1a`)
 - 대상: ChatGPT / Claude / Codex 등 후속 개발 AI. 추측하지 말고 이 문서와 링크된 파일을 근거로 진행하세요.
 
 ## Quick Context
@@ -12,7 +12,7 @@
   ④ 기존 `delay`에 Cross FB·L/R FB·Width·Free R Time(기본값 중립) ⑤ 팩토리 08/09.
 - 이전 버전 DSP: Custom Drive v1/v2/v2+ADAA(+보정), AB763 M1/M2, Premium Plate, Cabinet IR, NAM 로더, 기존 이펙트 25종.
 - 보존 확인: 팩토리 01–07, `delay` 9개 모드×라우팅, compressor, limiter, Premium Plate 출력이 v0.5와 **비트 동일**. 파라미터 id·AU ID 불변.
-- 검증 환경: Linux x86_64 (C++ 113/113, ASan 0건, pluginval strictness 7 PASS). arm64 VM·macOS 네이티브 v0.6은 아래 E절·INTEGRATION_REPORT 참고.
+- 검증 환경: Linux x86_64 (C++ 113/113, ASan 0건, pluginval strictness 7 PASS), Linux arm64 VM on 사용자 Mac (113/113, `tests/results/arm64_linux_vm_tests_v06.txt`). macOS 네이티브 v0.6 미확인.
 - 미검증: **v0.5·v0.6 macOS AU 빌드·auval·Logic GUI·청취 전부 NOT TESTED**(사용자 Mac 필요), 실기(테이프 에코·BBD 페달·1176) 비교 없음.
 - 품질 Level: Tape/BBD/FET = 3(청취 전), AB763 M2 = 3, Premium Plate = 2–3, 기존 Delay = 2. Level 4 이상은 실측·청취 필요.
 - 남은 문제: K-039(Tape 메모리 192 kHz 5 MiB), K-040(BBD 장지연 앨리어싱 — 다중 칩 옵션), K-041(FET 계수 추정), K-032(AB763 파라미터), K-045(Mac).
