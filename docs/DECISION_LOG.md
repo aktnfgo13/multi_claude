@@ -61,3 +61,16 @@
 | D-040 | IMPROVE | 앰프 이름은 상표 대신 회로명 "AB763 Normal" 사용. 문서에만 참고 모델(Fender '65 Deluxe Reverb) 표기 | 판매 시 상표 문제 회피 | 제품명 그대로 사용 |
 | D-041 | DEFER | 위상 반전단, 6V6 정밀 모델, Sag, NFB, 출력 트랜스, 톤스택-볼륨 부하 → M2 | 지시서 범위(M1) | — |
 | D-042 | IMPROVE | 프리셋에 `app_version` 기록(정보용) | 이후 저장 파일의 생성 빌드 구분 | — |
+
+## v0.5 Premium Audio Engine (2026-11-25)
+
+| ID | 분류 | 결정 | 이유 | 대안 |
+|---|---|---|---|---|
+| D-043 | IMPROVE | `Effect::legacyValueForMissingParam` + 프리셋 로더: 저장 데이터에 없는 새 파라미터는 이펙트가 지정한 레거시 값으로 | 새 인스턴스는 개선 버전, 기존 저장은 기존 소리(R6). 호스트 상태도 같은 로더 사용 | 기본값을 구버전으로 고정(신규 사용자에게 열화 버전) |
+| D-044 | ADOPT | AB763 `model`(M1/M2), 새 인스턴스 M2, 기존 저장 M1 | M1 비트 동일 확인, M2는 회로 흐름 확장 | 새 type id(사용자가 두 앰프를 구분해야 함) |
+| D-045 | IMPROVE | M2 NFB는 지연 없는 루프 해(선형화 + 닫힌 식) | 1샘플 지연 루프는 fs_OS ≤ 96 kHz에서 발진(측정: 1x +6 dB 발진) | 피드백 대역을 5 kHz로 제한(안정했지만 고역 +31 dB 왜곡된 응답) |
+| D-046 | ADOPT | Custom Drive `adaa_comp`(새 파라미터, 새 인스턴스 On, 기존 저장 Off) | 고역 감쇠·Mix 정렬 오차를 측정상 제거, 앨리어싱 불변 | v2 + ADAA를 직접 수정(v0.4 소리 변경 → 금지) |
+| D-047 | REJECT | 드라이 경로 분수 지연(Hermite 0.5 샘플) 정렬 | 4x에서 15 kHz −2.7 dB 보간 손실(측정) → 웻 경로 정수 패딩으로 대체 | — |
+| D-048 | ADOPT | Premium Plate v1 = Dattorro 토폴로지 + 구간 RT60·저역 배수·ER·변조, 새 type | 기존 `reverb` 보존, 측정 지표 확보 | FDN 확장(기존 블록 변경 위험) |
+| D-049 | KEEP | 구형 Claude AU는 삭제하지 않고 Logic 플러그인 관리자 비활성화 우선, 이동 스크립트는 사용자 실행 | 지시서 안전 원칙 | 자동 이동/삭제 |
+| D-050 | DEFER | Shimmer/Bloom/Freeze, 정밀 Spring, BBD/Tape 물리 모델, FET 컴프레서, NEON | 이번 사이클 범위 외(Amp M2·Plate 우선) | — |

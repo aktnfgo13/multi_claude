@@ -18,6 +18,13 @@
 블랙페이스 계열 Normal 채널 회로 모델: Volume / Treble / Bass(0–10) + Level·Oversampling. Volume 5 근처까지 클린, 7 이상에서 브레이크업.
 Cabinet 블록(IR 또는 내장 시뮬레이션)을 뒤에 두세요(팩토리 프리셋 "Blackface Normal").
 
+## v0.5 추가
+* **AB763 Normal Model**: M2(새 기본) = 위상반전단·6V6 출력관·전원 Sag·네거티브 피드백·스피커 부하 반응. 볼륨을 올릴수록 출력단이 눌리고,
+  세게 칠 때 순간적으로 전압이 처집니다. 예전 프로젝트/프리셋(06)은 M1로 열립니다.
+* **Custom Drive ADAA Compensation**: Model이 "v2 + ADAA"일 때 고역 손실과 Mix 사용 시 위상 차이를 보정(새 인스턴스 기본 On).
+* **Premium Plate**: 새 리버브. Decay(RT60), Pre-Delay, Size, Damping(고역 감쇠), Bass Decay(저역 잔향 배수), Crossover, Diffusion,
+  Mod Depth/Rate, Early, Low Cut, Width, Mix. 팩토리 프리셋 07 "Blackface M2 Plate".
+
 ## Visualize (파형 · 스펙트럼)
 상단 **Effects / Visualize** 버튼으로 화면을 전환합니다. Visualize를 열었을 때만 분석이 동작하며, 소리에는 영향이 없습니다.
 * 표시: Input(체인 입력, 입력 게인 적용 후) / Output(체인 출력) / Overlay. 입력은 체인 지연만큼 늦춰 출력과 맞춰 그립니다.

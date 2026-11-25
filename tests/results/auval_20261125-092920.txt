@@ -1,0 +1,2213 @@
+
+    AU Validation Tool
+    Version: 1.10.0 
+    Copyright 2003-2019, Apple Inc. All Rights Reserved.
+    Specify -h (-help) for command options
+
+--------------------------------------------------
+VALIDATING AUDIO UNIT: 'aumf' - 'McL1' - 'MfxL'
+--------------------------------------------------
+Manufacturer String: MFX Lab
+AudioUnit Name: MFX Claude
+Component Version: 0.4.0 (0x400)
+
+* * PASS
+--------------------------------------------------
+TESTING OPEN TIMES:
+COLD:
+Time to open AudioUnit:         3.960 ms
+WARM:
+Time to open AudioUnit:         0.954  ms
+This AudioUnit is a version 2 implementation.
+FIRST TIME:
+Time for initialization:        0.109 ms
+
+* * PASS
+--------------------------------------------------
+VERIFYING DEFAULT SCOPE FORMATS:
+Input Scope Bus Configuration:
+ Default Bus Count:1
+    Bus Name: Input
+    Default Format: AudioStreamBasicDescription:  1 ch,  44100 Hz, Float32
+    Has Channel Layouts: 0x640001 0x650002 0x660002 0x670002 0x6A0002 
+    Default Layout:
+	Tag=0x640001, Num Chan Descs=0
+
+Output Scope Bus Configuration:
+ Default Bus Count:1
+    Bus Name: Output
+    Default Format: AudioStreamBasicDescription:  2 ch,  44100 Hz, Float32, deinterleaved
+    Has Channel Layouts: 0x640001 0x650002 0x660002 0x670002 0x6A0002 
+    Default Layout:
+	Tag=0x650002, Num Chan Descs=0
+
+* * PASS
+--------------------------------------------------
+VERIFYING REQUIRED PROPERTIES:
+
+* * PASS
+--------------------------------------------------
+VERIFYING RECOMMENDED PROPERTIES:
+  VERIFYING PROPERTY: Latency
+    PASS
+  VERIFYING PROPERTY: Tail Time
+    PASS
+  VERIFYING PROPERTY: Bypass Effect
+    PASS
+
+* * PASS
+--------------------------------------------------
+VERIFYING OPTIONAL PROPERTIES:
+
+* * PASS
+--------------------------------------------------
+VERIFYING SPECIAL PROPERTIES:
+
+VERIFYING CUSTOM UI
+Cocoa Views Available: 1
+  JUCE_AUCocoaViewClass_cbc4c1a36f8304a6
+    PASS
+
+HAS FACTORY PRESETS
+    ID:   0    Name: Clean Studio
+    ID:   1    Name: Crunch Rhythm
+    ID:   2    Name: High Gain Lead
+    ID:   3    Name: Ambient Swells
+    ID:   4    Name: Custom Drive Showcase
+    ID:   5    Name: Blackface Normal
+
+VERIFYING CLASS INFO
+    PASS
+
+TESTING HOST CALLBACKS
+    PASS
+
+* * PASS
+--------------------------------------------------
+PUBLISHED PARAMETER INFO:
+
+# # # 275 Global Scope Parameters:
+Parameter ID:51
+Name: S1 Noise Gate Bypass
+Parameter Type: Indexed
+Values: Minimum = Active, Default = Active, Maximum = Bypassed
+Flags: Values Have Strings, High Resolution, Readable, Writable 
+Parameter has Value Strings
+Num Strings = 2
+Value: 0,  String: Active
+Value: 1,  String: Bypassed
+  -parameter PASS
+
+Parameter ID:52
+Name: S1 Threshold
+Parameter Type: Generic
+Values: Minimum = -96.0 dB, Default = -60.0 dB, Maximum = 0.00 dB
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:53
+Name: S1 Hysteresis
+Parameter Type: Generic
+Values: Minimum = 0.00 dB, Default = 6.00 dB, Maximum = 20.0 dB
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:54
+Name: S1 Attack
+Parameter Type: Generic
+Values: Minimum = 0.10 ms, Default = 1.00 ms, Maximum = 50.0 ms
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:55
+Name: S1 Hold
+Parameter Type: Generic
+Values: Minimum = 0.00 ms, Default = 20.0 ms, Maximum = 500 ms
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:56
+Name: S1 Release
+Parameter Type: Generic
+Values: Minimum = 5.00 ms, Default = 120 ms, Maximum = 2000 ms
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:57
+Name: S1 Range
+Parameter Type: Generic
+Values: Minimum = -96.0 dB, Default = -80.0 dB, Maximum = 0.00 dB
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1567
+Name: S1 (unused 7)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1568
+Name: S1 (unused 8)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1569
+Name: S1 (unused 9)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1570
+Name: S1 (unused 10)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1571
+Name: S1 (unused 11)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1572
+Name: S1 (unused 12)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1573
+Name: S1 (unused 13)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1574
+Name: S1 (unused 14)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1575
+Name: S1 (unused 15)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1576
+Name: S1 (unused 16)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1598
+Name: S2 Compressor Bypass
+Parameter Type: Indexed
+Values: Minimum = Active, Default = Active, Maximum = Bypassed
+Flags: Values Have Strings, High Resolution, Readable, Writable 
+Parameter has Value Strings
+Num Strings = 2
+Value: 0,  String: Active
+Value: 1,  String: Bypassed
+  -parameter PASS
+
+Parameter ID:1599
+Name: S2 Threshold
+Parameter Type: Generic
+Values: Minimum = -60.0 dB, Default = -20.0 dB, Maximum = 0.00 dB
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1600
+Name: S2 Ratio
+Parameter Type: Generic
+Values: Minimum = 1.00 :1, Default = 4.00 :1, Maximum = 20.0 :1
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1601
+Name: S2 Knee
+Parameter Type: Generic
+Values: Minimum = 0.00 dB, Default = 6.00 dB, Maximum = 24.0 dB
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1602
+Name: S2 Attack
+Parameter Type: Generic
+Values: Minimum = 0.10 ms, Default = 10.0 ms, Maximum = 200 ms
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1603
+Name: S2 Release
+Parameter Type: Generic
+Values: Minimum = 10.0 ms, Default = 150 ms, Maximum = 2000 ms
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1604
+Name: S2 Makeup
+Parameter Type: Generic
+Values: Minimum = 0.00 dB, Default = 0.00 dB, Maximum = 30.0 dB
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1605
+Name: S2 Mix
+Parameter Type: Generic
+Values: Minimum = 0.00 %, Default = 100 %, Maximum = 100 %
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1606
+Name: S2 (unused 8)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1607
+Name: S2 (unused 9)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1629
+Name: S2 (unused 10)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1630
+Name: S2 (unused 11)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1631
+Name: S2 (unused 12)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1632
+Name: S2 (unused 13)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1633
+Name: S2 (unused 14)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1634
+Name: S2 (unused 15)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1635
+Name: S2 (unused 16)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1636
+Name: S3 Amp Bypass
+Parameter Type: Indexed
+Values: Minimum = Active, Default = Active, Maximum = Bypassed
+Flags: Values Have Strings, High Resolution, Readable, Writable 
+Parameter has Value Strings
+Num Strings = 2
+Value: 0,  String: Active
+Value: 1,  String: Bypassed
+  -parameter PASS
+
+Parameter ID:1637
+Name: S3 Model
+Parameter Type: Indexed
+Values: Minimum = Clean, Default = Crunch, Maximum = Custom
+Flags: Values Have Strings, High Resolution, Readable, Writable 
+Parameter has Value Strings
+Num Strings = 4
+Value: 0,  String: Clean
+Value: 1,  String: Crunch
+Value: 2,  String: High Gain
+Value: 3,  String: Custom
+  -parameter PASS
+
+Parameter ID:1638
+Name: S3 Gain
+Parameter Type: Generic
+Values: Minimum = 0.00 %, Default = 50.0 %, Maximum = 100 %
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1660
+Name: S3 Bass
+Parameter Type: Generic
+Values: Minimum = 0.00 %, Default = 50.0 %, Maximum = 100 %
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1661
+Name: S3 Mid
+Parameter Type: Generic
+Values: Minimum = 0.00 %, Default = 50.0 %, Maximum = 100 %
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1662
+Name: S3 Treble
+Parameter Type: Generic
+Values: Minimum = 0.00 %, Default = 50.0 %, Maximum = 100 %
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1663
+Name: S3 Presence
+Parameter Type: Generic
+Values: Minimum = 0.00 %, Default = 40.0 %, Maximum = 100 %
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1664
+Name: S3 Depth
+Parameter Type: Generic
+Values: Minimum = 0.00 %, Default = 40.0 %, Maximum = 100 %
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1665
+Name: S3 Master
+Parameter Type: Generic
+Values: Minimum = 0.00 %, Default = 50.0 %, Maximum = 100 %
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1666
+Name: S3 Sag
+Parameter Type: Generic
+Values: Minimum = 0.00 %, Default = 50.0 %, Maximum = 100 %
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1667
+Name: S3 Bright
+Parameter Type: Indexed
+Values: Minimum = Off, Default = Off, Maximum = On
+Flags: Values Have Strings, High Resolution, Readable, Writable 
+Parameter has Value Strings
+Num Strings = 2
+Value: 0,  String: Off
+Value: 1,  String: On
+  -parameter PASS
+
+Parameter ID:1668
+Name: S3 Mix
+Parameter Type: Generic
+Values: Minimum = 0.00 %, Default = 100 %, Maximum = 100 %
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1669
+Name: S3 Level
+Parameter Type: Generic
+Values: Minimum = -40.0 dB, Default = 0.00 dB, Maximum = 40.0 dB
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1691
+Name: S3 Oversampling
+Parameter Type: Indexed
+Values: Minimum = 1x, Default = 2x, Maximum = 8x
+Flags: Values Have Strings, High Resolution, Readable, Writable 
+Parameter has Value Strings
+Num Strings = 4
+Value: 0,  String: 1x
+Value: 1,  String: 2x
+Value: 2,  String: 4x
+Value: 3,  String: 8x
+  -parameter PASS
+
+Parameter ID:1692
+Name: S3 (unused 14)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1693
+Name: S3 (unused 15)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1694
+Name: S3 (unused 16)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1695
+Name: S4 Cabinet / IR Bypass
+Parameter Type: Indexed
+Values: Minimum = Active, Default = Active, Maximum = Bypassed
+Flags: Values Have Strings, High Resolution, Readable, Writable 
+Parameter has Value Strings
+Num Strings = 2
+Value: 0,  String: Active
+Value: 1,  String: Bypassed
+  -parameter PASS
+
+Parameter ID:1696
+Name: S4 Source
+Parameter Type: Indexed
+Values: Minimum = Built-in Sim, Default = Built-in Sim, Maximum = User IR
+Flags: Values Have Strings, High Resolution, Readable, Writable 
+Parameter has Value Strings
+Num Strings = 2
+Value: 0,  String: Built-in Sim
+Value: 1,  String: User IR
+  -parameter PASS
+
+Parameter ID:1697
+Name: S4 Sim Model
+Parameter Type: Indexed
+Values: Minimum = 4x12 Closed, Default = 4x12 Closed, Maximum = 1x12 Combo
+Flags: Values Have Strings, High Resolution, Readable, Writable 
+Parameter has Value Strings
+Num Strings = 3
+Value: 0,  String: 4x12 Closed
+Value: 1,  String: 2x12 Open
+Value: 2,  String: 1x12 Combo
+  -parameter PASS
+
+Parameter ID:1698
+Name: S4 Low Cut
+Parameter Type: Generic
+Values: Minimum = 20.0 Hz, Default = 60.0 Hz, Maximum = 500 Hz
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1699
+Name: S4 High Cut
+Parameter Type: Generic
+Values: Minimum = 2.00 kHz, Default = 12.00 kHz, Maximum = 20.00 kHz
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1700
+Name: S4 IR Level
+Parameter Type: Generic
+Values: Minimum = -24.0 dB, Default = 0.00 dB, Maximum = 24.0 dB
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1722
+Name: S4 IR Mix
+Parameter Type: Generic
+Values: Minimum = 0.00 %, Default = 100 %, Maximum = 100 %
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1723
+Name: S4 Normalize
+Parameter Type: Indexed
+Values: Minimum = Off, Default = On, Maximum = On
+Flags: Values Have Strings, High Resolution, Readable, Writable 
+Parameter has Value Strings
+Num Strings = 2
+Value: 0,  String: Off
+Value: 1,  String: On
+  -parameter PASS
+
+Parameter ID:1724
+Name: S4 (unused 8)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1725
+Name: S4 (unused 9)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1726
+Name: S4 (unused 10)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1727
+Name: S4 (unused 11)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1728
+Name: S4 (unused 12)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1729
+Name: S4 (unused 13)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1730
+Name: S4 (unused 14)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1731
+Name: S4 (unused 15)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1753
+Name: S4 (unused 16)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1754
+Name: S5 Chorus Bypass
+Parameter Type: Indexed
+Values: Minimum = Active, Default = Active, Maximum = Bypassed
+Flags: Values Have Strings, High Resolution, Readable, Writable 
+Parameter has Value Strings
+Num Strings = 2
+Value: 0,  String: Active
+Value: 1,  String: Bypassed
+  -parameter PASS
+
+Parameter ID:1755
+Name: S5 Rate
+Parameter Type: Generic
+Values: Minimum = 0.05 Hz, Default = 0.80 Hz, Maximum = 8.00 Hz
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1756
+Name: S5 Depth
+Parameter Type: Generic
+Values: Minimum = 0.00 %, Default = 50.0 %, Maximum = 100 %
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1757
+Name: S5 Delay
+Parameter Type: Generic
+Values: Minimum = 3.00 ms, Default = 12.0 ms, Maximum = 30.0 ms
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1758
+Name: S5 Mix
+Parameter Type: Generic
+Values: Minimum = 0.00 %, Default = 50.0 %, Maximum = 100 %
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1759
+Name: S5 Stereo Spread
+Parameter Type: Generic
+Values: Minimum = 0.00 %, Default = 50.0 %, Maximum = 100 %
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1760
+Name: S5 (unused 6)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1761
+Name: S5 (unused 7)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1762
+Name: S5 (unused 8)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1784
+Name: S5 (unused 9)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1785
+Name: S5 (unused 10)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1786
+Name: S5 (unused 11)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1787
+Name: S5 (unused 12)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1788
+Name: S5 (unused 13)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1789
+Name: S5 (unused 14)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1790
+Name: S5 (unused 15)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1791
+Name: S5 (unused 16)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1792
+Name: S6 Reverb Bypass
+Parameter Type: Indexed
+Values: Minimum = Active, Default = Active, Maximum = Bypassed
+Flags: Values Have Strings, High Resolution, Readable, Writable 
+Parameter has Value Strings
+Num Strings = 2
+Value: 0,  String: Active
+Value: 1,  String: Bypassed
+  -parameter PASS
+
+Parameter ID:1793
+Name: S6 Type
+Parameter Type: Indexed
+Values: Minimum = Room, Default = Hall, Maximum = Ambient
+Flags: Values Have Strings, High Resolution, Readable, Writable 
+Parameter has Value Strings
+Num Strings = 5
+Value: 0,  String: Room
+Value: 1,  String: Hall
+Value: 2,  String: Plate
+Value: 3,  String: Spring
+Value: 4,  String: Ambient
+  -parameter PASS
+
+Parameter ID:1815
+Name: S6 Decay
+Parameter Type: Generic
+Values: Minimum = 0.20 s, Default = 2.20 s, Maximum = 20.0 s
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1816
+Name: S6 Pre-Delay
+Parameter Type: Generic
+Values: Minimum = 0.00 ms, Default = 15.0 ms, Maximum = 200 ms
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1817
+Name: S6 Size
+Parameter Type: Generic
+Values: Minimum = 0.00 %, Default = 50.0 %, Maximum = 100 %
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1818
+Name: S6 Damping
+Parameter Type: Generic
+Values: Minimum = 0.00 %, Default = 40.0 %, Maximum = 100 %
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1819
+Name: S6 Low Cut
+Parameter Type: Generic
+Values: Minimum = 20.0 Hz, Default = 120 Hz, Maximum = 1.00 kHz
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1820
+Name: S6 High Cut
+Parameter Type: Generic
+Values: Minimum = 1.00 kHz, Default = 9.00 kHz, Maximum = 20.00 kHz
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1821
+Name: S6 Modulation
+Parameter Type: Generic
+Values: Minimum = 0.00 %, Default = 25.0 %, Maximum = 100 %
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1822
+Name: S6 Mix
+Parameter Type: Generic
+Values: Minimum = 0.00 %, Default = 25.0 %, Maximum = 100 %
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1823
+Name: S6 Width
+Parameter Type: Generic
+Values: Minimum = 0.00 %, Default = 100 %, Maximum = 100 %
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1824
+Name: S6 (unused 11)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48625
+Name: S6 (unused 12)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48626
+Name: S6 (unused 13)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48627
+Name: S6 (unused 14)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48628
+Name: S6 (unused 15)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48629
+Name: S6 (unused 16)
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48630
+Name: Slot 7 Bypass
+Parameter Type: Indexed
+Values: Minimum = Active, Default = Active, Maximum = Bypassed
+Flags: Values Have Strings, High Resolution, Readable, Writable 
+Parameter has Value Strings
+Num Strings = 2
+Value: 0,  String: Active
+Value: 1,  String: Bypassed
+  -parameter PASS
+
+Parameter ID:48631
+Name: Slot 7 P1
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48632
+Name: Slot 7 P2
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48633
+Name: Slot 7 P3
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48634
+Name: Slot 7 P4
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48656
+Name: Slot 7 P5
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48657
+Name: Slot 7 P6
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48658
+Name: Slot 7 P7
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48659
+Name: Slot 7 P8
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48660
+Name: Slot 7 P9
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48661
+Name: Slot 7 P10
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48662
+Name: Slot 7 P11
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48663
+Name: Slot 7 P12
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48664
+Name: Slot 7 P13
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48665
+Name: Slot 7 P14
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48687
+Name: Slot 7 P15
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48688
+Name: Slot 7 P16
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48689
+Name: Slot 8 Bypass
+Parameter Type: Indexed
+Values: Minimum = Active, Default = Active, Maximum = Bypassed
+Flags: Values Have Strings, High Resolution, Readable, Writable 
+Parameter has Value Strings
+Num Strings = 2
+Value: 0,  String: Active
+Value: 1,  String: Bypassed
+  -parameter PASS
+
+Parameter ID:48690
+Name: Slot 8 P1
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48691
+Name: Slot 8 P2
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48692
+Name: Slot 8 P3
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48693
+Name: Slot 8 P4
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48694
+Name: Slot 8 P5
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48695
+Name: Slot 8 P6
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48696
+Name: Slot 8 P7
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48718
+Name: Slot 8 P8
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48719
+Name: Slot 8 P9
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48720
+Name: Slot 8 P10
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48721
+Name: Slot 8 P11
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48722
+Name: Slot 8 P12
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48723
+Name: Slot 8 P13
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48724
+Name: Slot 8 P14
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48725
+Name: Slot 8 P15
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48726
+Name: Slot 8 P16
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48727
+Name: Slot 9 Bypass
+Parameter Type: Indexed
+Values: Minimum = Active, Default = Active, Maximum = Bypassed
+Flags: Values Have Strings, High Resolution, Readable, Writable 
+Parameter has Value Strings
+Num Strings = 2
+Value: 0,  String: Active
+Value: 1,  String: Bypassed
+  -parameter PASS
+
+Parameter ID:48749
+Name: Slot 9 P1
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48750
+Name: Slot 9 P2
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48751
+Name: Slot 9 P3
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48752
+Name: Slot 9 P4
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48753
+Name: Slot 9 P5
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48754
+Name: Slot 9 P6
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48755
+Name: Slot 9 P7
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48756
+Name: Slot 9 P8
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48757
+Name: Slot 9 P9
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48758
+Name: Slot 9 P10
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48780
+Name: Slot 9 P11
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48781
+Name: Slot 9 P12
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48782
+Name: Slot 9 P13
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48783
+Name: Slot 9 P14
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48784
+Name: Slot 9 P15
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48785
+Name: Slot 9 P16
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48786
+Name: Slot 10 Bypass
+Parameter Type: Indexed
+Values: Minimum = Active, Default = Active, Maximum = Bypassed
+Flags: Values Have Strings, High Resolution, Readable, Writable 
+Parameter has Value Strings
+Num Strings = 2
+Value: 0,  String: Active
+Value: 1,  String: Bypassed
+  -parameter PASS
+
+Parameter ID:48787
+Name: Slot 10 P1
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48788
+Name: Slot 10 P2
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48789
+Name: Slot 10 P3
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48811
+Name: Slot 10 P4
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48812
+Name: Slot 10 P5
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48813
+Name: Slot 10 P6
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48814
+Name: Slot 10 P7
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48815
+Name: Slot 10 P8
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48816
+Name: Slot 10 P9
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48817
+Name: Slot 10 P10
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48818
+Name: Slot 10 P11
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48819
+Name: Slot 10 P12
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48820
+Name: Slot 10 P13
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48842
+Name: Slot 10 P14
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48843
+Name: Slot 10 P15
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48844
+Name: Slot 10 P16
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48845
+Name: Slot 11 Bypass
+Parameter Type: Indexed
+Values: Minimum = Active, Default = Active, Maximum = Bypassed
+Flags: Values Have Strings, High Resolution, Readable, Writable 
+Parameter has Value Strings
+Num Strings = 2
+Value: 0,  String: Active
+Value: 1,  String: Bypassed
+  -parameter PASS
+
+Parameter ID:48846
+Name: Slot 11 P1
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48847
+Name: Slot 11 P2
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48848
+Name: Slot 11 P3
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48849
+Name: Slot 11 P4
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48850
+Name: Slot 11 P5
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48851
+Name: Slot 11 P6
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48873
+Name: Slot 11 P7
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48874
+Name: Slot 11 P8
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48875
+Name: Slot 11 P9
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48876
+Name: Slot 11 P10
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48877
+Name: Slot 11 P11
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48878
+Name: Slot 11 P12
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48879
+Name: Slot 11 P13
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48880
+Name: Slot 11 P14
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48881
+Name: Slot 11 P15
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48882
+Name: Slot 11 P16
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48904
+Name: Slot 12 Bypass
+Parameter Type: Indexed
+Values: Minimum = Active, Default = Active, Maximum = Bypassed
+Flags: Values Have Strings, High Resolution, Readable, Writable 
+Parameter has Value Strings
+Num Strings = 2
+Value: 0,  String: Active
+Value: 1,  String: Bypassed
+  -parameter PASS
+
+Parameter ID:48905
+Name: Slot 12 P1
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48906
+Name: Slot 12 P2
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48907
+Name: Slot 12 P3
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48908
+Name: Slot 12 P4
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48909
+Name: Slot 12 P5
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48910
+Name: Slot 12 P6
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48911
+Name: Slot 12 P7
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48912
+Name: Slot 12 P8
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:48913
+Name: Slot 12 P9
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49586
+Name: Slot 12 P10
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49587
+Name: Slot 12 P11
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49588
+Name: Slot 12 P12
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49589
+Name: Slot 12 P13
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49590
+Name: Slot 12 P14
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49591
+Name: Slot 12 P15
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49592
+Name: Slot 12 P16
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49593
+Name: Slot 13 Bypass
+Parameter Type: Indexed
+Values: Minimum = Active, Default = Active, Maximum = Bypassed
+Flags: Values Have Strings, High Resolution, Readable, Writable 
+Parameter has Value Strings
+Num Strings = 2
+Value: 0,  String: Active
+Value: 1,  String: Bypassed
+  -parameter PASS
+
+Parameter ID:49594
+Name: Slot 13 P1
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49595
+Name: Slot 13 P2
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49617
+Name: Slot 13 P3
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49618
+Name: Slot 13 P4
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49619
+Name: Slot 13 P5
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49620
+Name: Slot 13 P6
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49621
+Name: Slot 13 P7
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49622
+Name: Slot 13 P8
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49623
+Name: Slot 13 P9
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49624
+Name: Slot 13 P10
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49625
+Name: Slot 13 P11
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49626
+Name: Slot 13 P12
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49648
+Name: Slot 13 P13
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49649
+Name: Slot 13 P14
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49650
+Name: Slot 13 P15
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49651
+Name: Slot 13 P16
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49652
+Name: Slot 14 Bypass
+Parameter Type: Indexed
+Values: Minimum = Active, Default = Active, Maximum = Bypassed
+Flags: Values Have Strings, High Resolution, Readable, Writable 
+Parameter has Value Strings
+Num Strings = 2
+Value: 0,  String: Active
+Value: 1,  String: Bypassed
+  -parameter PASS
+
+Parameter ID:49653
+Name: Slot 14 P1
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49654
+Name: Slot 14 P2
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49655
+Name: Slot 14 P3
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49656
+Name: Slot 14 P4
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49657
+Name: Slot 14 P5
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49679
+Name: Slot 14 P6
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49680
+Name: Slot 14 P7
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49681
+Name: Slot 14 P8
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49682
+Name: Slot 14 P9
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49683
+Name: Slot 14 P10
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49684
+Name: Slot 14 P11
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49685
+Name: Slot 14 P12
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49686
+Name: Slot 14 P13
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49687
+Name: Slot 14 P14
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49688
+Name: Slot 14 P15
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49710
+Name: Slot 14 P16
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49711
+Name: Slot 15 Bypass
+Parameter Type: Indexed
+Values: Minimum = Active, Default = Active, Maximum = Bypassed
+Flags: Values Have Strings, High Resolution, Readable, Writable 
+Parameter has Value Strings
+Num Strings = 2
+Value: 0,  String: Active
+Value: 1,  String: Bypassed
+  -parameter PASS
+
+Parameter ID:49712
+Name: Slot 15 P1
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49713
+Name: Slot 15 P2
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49714
+Name: Slot 15 P3
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49715
+Name: Slot 15 P4
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49716
+Name: Slot 15 P5
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49717
+Name: Slot 15 P6
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49718
+Name: Slot 15 P7
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49719
+Name: Slot 15 P8
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49741
+Name: Slot 15 P9
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49742
+Name: Slot 15 P10
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49743
+Name: Slot 15 P11
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49744
+Name: Slot 15 P12
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49745
+Name: Slot 15 P13
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49746
+Name: Slot 15 P14
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49747
+Name: Slot 15 P15
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49748
+Name: Slot 15 P16
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49749
+Name: Slot 16 Bypass
+Parameter Type: Indexed
+Values: Minimum = Active, Default = Active, Maximum = Bypassed
+Flags: Values Have Strings, High Resolution, Readable, Writable 
+Parameter has Value Strings
+Num Strings = 2
+Value: 0,  String: Active
+Value: 1,  String: Bypassed
+  -parameter PASS
+
+Parameter ID:49750
+Name: Slot 16 P1
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49772
+Name: Slot 16 P2
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49773
+Name: Slot 16 P3
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49774
+Name: Slot 16 P4
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49775
+Name: Slot 16 P5
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49776
+Name: Slot 16 P6
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49777
+Name: Slot 16 P7
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49778
+Name: Slot 16 P8
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49779
+Name: Slot 16 P9
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49780
+Name: Slot 16 P10
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49781
+Name: Slot 16 P11
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49803
+Name: Slot 16 P12
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49804
+Name: Slot 16 P13
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49805
+Name: Slot 16 P14
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49806
+Name: Slot 16 P15
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:49807
+Name: Slot 16 P16
+Parameter Type: Generic
+Values: Minimum = 0.000, Default = 0.500, Maximum = 1.000
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:362457124
+Name: Parallel A/B Mix
+Parameter Type: Generic
+Values: Minimum = 0.00, Default = 0.50, Maximum = 1.00
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1322673149
+Name: Output Gain
+Parameter Type: Generic
+Values: Minimum = -36.00, Default = -0.00, Maximum = 12.00
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Parameter ID:1386281684
+Name: Input Gain
+Parameter Type: Generic
+Values: Minimum = -24.00, Default = -0.00, Maximum = 24.00
+Flags: Values Have Strings, High Resolution, Can Ramp, Readable, Writable 
+  -parameter PASS
+
+Testing that parameters retain value across reset and initialization
+  PASS
+
+* * PASS
+--------------------------------------------------
+FORMAT TESTS:
+
+Reported Channel Capabilities (explicit):
+      [1, 1]  [1, 2]  [2, 1]  [2, 2]  
+
+Input/Output Channel Handling:
+1-1   1-2   1-4   1-5   1-6   1-7   1-8   2-2   2-4   2-5   2-6   2-7   2-8   4-4   4-5   5-5   6-6   7-7   8-8
+X     X                                   X                                                                       
+
+# # AudioChannelLayouts (5), Input Scope:
+ChannelLayout is Writable: T
+The Unit publishes the following Channel Layouts:
+  0x640001, 0x650002, 0x660002, 0x670002, 0x6A0002, 
+
+Is Audio Channel Layout Available:
+Mono    Stereo  Binau.  AU_4    Ambi.   AU_5    AU_5_0  AU_6    AU_6_0  AU_7_0  AU_7_0F AU_8    AU_5_1  AU_6_1  AU_7_1  AU_7_1F 
+X       X       X                                                                                                               
+
+Current Format:AudioStreamBasicDescription:  1 ch,  44100 Hz, Float32
+Current Format Tag = 0x640001, New Format Tag = 0x640001, Successsful
+
+Current Format:AudioStreamBasicDescription:  1 ch,  44100 Hz, Float32
+Current Format Tag = 0x640001, New Format Tag = 0x650002, Success - did not reset format with mis-matched layout
+
+Current Format:AudioStreamBasicDescription:  1 ch,  44100 Hz, Float32
+Current Format Tag = 0x640001, New Format Tag = 0x6A0002, Success - did not reset format with mis-matched layout
+
+# # AudioChannelLayouts (5), Output Scope:
+ChannelLayout is Writable: T
+The Unit publishes the following Channel Layouts:
+  0x640001, 0x650002, 0x660002, 0x670002, 0x6A0002, 
+
+Is Audio Channel Layout Available:
+Mono    Stereo  Binau.  AU_4    Ambi.   AU_5    AU_5_0  AU_6    AU_6_0  AU_7_0  AU_7_0F AU_8    AU_5_1  AU_6_1  AU_7_1  AU_7_1F 
+X       X       X                                                                                                               
+
+Current Format:AudioStreamBasicDescription:  2 ch,  44100 Hz, Float32, deinterleaved
+Current Format Tag = 0x650002, New Format Tag = 0x640001, Success - did not reset format with mis-matched layout
+
+Current Format:AudioStreamBasicDescription:  2 ch,  44100 Hz, Float32, deinterleaved
+Current Format Tag = 0x650002, New Format Tag = 0x650002, Successsful
+
+Current Format:AudioStreamBasicDescription:  2 ch,  44100 Hz, Float32, deinterleaved
+Current Format Tag = 0x650002, New Format Tag = 0x6A0002, Successsful
+
+* * PASS
+--------------------------------------------------
+RENDER TESTS:
+
+Input Format: AudioStreamBasicDescription:  1 ch,  44100 Hz, Float32
+Output Format: AudioStreamBasicDescription:  2 ch,  44100 Hz, Float32, deinterleaved
+Render Test at 512 frames
+Slicing Render Test at 64 frames
+  PASS
+
+
+Render Test at 64 frames, sample rate: 22050 Hz
+Render Test at 137 frames, sample rate: 96000 Hz
+Render Test at 4096 frames, sample rate: 48000 Hz
+Render Test at 4096 frames, sample rate: 192000 Hz
+Render Test at 4096 frames, sample rate: 11025 Hz
+Render Test at 512 frames, sample rate: 44100 Hz
+  PASS
+
+1 Channel Test:
+Render Test at 512 frames
+  PASS
+
+1 to 2 Channel Render Test at 256 frames
+  PASS
+
+Checking connection semantics:
+Connection format:
+AudioStreamBasicDescription:  1 ch,  44100 Hz, Float32
+  PASS
+
+Bad Max Frames - Render should fail
+  PASS
+
+Checking parameter setting
+Using AudioUnitSetParameter
+Using AudioUnitScheduleParameter
+  PASS
+
+Checking ramped parameter scheduling
+  PASS
+
+Test MIDI
+  PASS
+
+* * PASS
+--------------------------------------------------
+AU VALIDATION SUCCEEDED.
+--------------------------------------------------

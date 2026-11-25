@@ -1,20 +1,20 @@
 # AI 프로젝트 인수인계 (MFX Claude)
 
-- 갱신일: 2026-11-25 · 저장소 GitHub `aktnfgo13/multi_claude` `main` · 버전 0.4.0 (커밋 SHA는 `git log -1`; v0.4 = gap v1 커밋 `3042507` 다음 커밋)
+- 갱신일: 2026-11-25 · GitHub `aktnfgo13/multi_claude` `main` · 버전 **0.5.0** (SHA: v0.5 커밋 = `0518cc3` 다음, `git log -1`로 확인)
 - 대상: ChatGPT / Claude / Codex 등 후속 개발 AI. 추측하지 말고 이 문서와 링크된 파일을 근거로 진행하세요.
 
 ## Quick Context
-- 제품: 기타 멀티이펙터 플러그인 **MFX Claude 0.4.0** (AU/VST3/Standalone, JUCE 8) + 향후 ARM 하드웨어. 상업 판매 목표(출시 전 제품명·JUCE 라이선스 정리 필요).
-- 코어 `mfx_core` = JUCE·OS 독립 C++20. 필수 요구 `AGENTS.md` R1–R6. Codex(`~/multi_effects`)는 읽기 전용 참고.
-- 플러그인 ID 고정: MFX Claude / MfxL / McL1. Mac에 Codex·v0.1 MultiEffects AU 공존(삭제 금지).
-- v0.4 신규: Custom Drive `model`(v1 legacy = v0.1 비트 동일 / v2 기본 / v2 + ADAA), 새 앰프 `amp_ab763`(AB763 Normal M1: 12AX7 부하선 표 ×2, Yeh 톤스택, 볼륨 테이퍼, 파워 소프트 포화), 팩토리 프리셋 06.
-- 이전(gap v1, `3042507`): 분석 탭 + 파형/스펙트럼, 입력 표시 보완, 캐비닛 IR 참조 복원 — 사용자 Mac 빌드·78/78·auval PASS.
-- 최신 검증(v0.4): C++ 86/86 (Linux x86_64 + 사용자 Mac의 Linux arm64 VM), ASan(audio) 0건, pluginval strictness 7 PASS, 팩토리 01–05 출력 비트 동일, 콜백 할당/해제 0.
-- ADAA 효과(2x, 3953 Hz 스트레스): D75 −32.0 → −51.8 dB, D100 −27.4 → −47.9 dB, 음색 지표 동일, CPU +21 %.
-- 미검증: v0.4 Mac AU·auval·Logic(K-031), Windows(K-015), AB763 실기 비교(K-029).
-- 다음 우선순위: ① v0.4 Mac 1회 검증 ② AB763 M2(PI·6V6·Sag·NFB·OT) ③ 출시 준비(제품명·JUCE·서명) ④ UI 디자인 토큰/레이아웃 정리.
-- 보호 대상: Custom Drive v1/v2 소리, 기존 25종 이펙트·`amp`·NAM, 팩토리 프리셋, 설치된 AU(Claude·Codex·v0.1), Codex 프로젝트, Logic 프로젝트, 스냅샷.
-- 읽을 파일: `AGENTS.md` → 이 문서 → `docs/KNOWN_ISSUES.md` → `docs/DSP_SPECIFICATION.md`(Custom Drive·AB763 절).
+- 제품: 기타 멀티이펙터 **MFX Claude 0.5.0** (AU/VST3/Standalone, JUCE 8, 코어 JUCE·OS 독립 C++20). 필수 규칙 `AGENTS.md` R1–R6.
+- v0.5 구현 DSP: ① AB763 **M2**(LTP 위상반전, 6V6 푸시풀 Koren, 그리드 블로킹, 정류관 Sag, 지연 없는 NFB 루프, OT + 반응성 스피커 부하) — 새 인스턴스 기본, 기존 저장은 M1
+  ② Custom Drive `adaa_comp`(ADAA 고역·드라이/웻 정렬 보정) ③ 새 리버브 `reverb_plate_premium`(Dattorro 탱크 + 주파수별 RT60 + ER + 변조) ④ 프리셋 07.
+- 기존 기능 보존: 팩토리 01–06, Custom Drive v1/v2/v2+ADAA(보정 Off), AB763 M1, Legacy reverb 출력이 v0.4와 **비트 동일**(cmp 확인). 파라미터 id·AU ID 불변.
+- 테스트 플랫폼: Linux x86_64 (C++ 97/97, ASan audio 0건, pluginval strictness 7 PASS). v0.5의 arm64/macOS 결과는 아래 E절 참고.
+- Mac/Logic: v0.4는 사용자 Mac에서 빌드·86/86·auval PASS(2026-11-25). **v0.5 macOS·Logic GUI 미확인**. 구형 Claude AU(Mfxp) 중복은 플러그인 관리자 비활성화 안내.
+- 품질 Level(`docs/AUDIO_QUALITY_TARGETS.md`): AB763 M2 = 3(실측 전), Custom Drive = 2, Premium Plate = 2–3, Legacy amp = 1–2. Level 4 이상은 실측·청취 필요.
+- 남은 문제: AB763 M2 파라미터 문헌/근사값·SPICE·실측 없음(K-032), Plate 초기 밀도(K-035), parity 미러 범위(K-027), 원문 연구 자료 미확보(K-038).
+- 다음 목표: v0.5 Mac/Logic 확인 → 리앰프/DI 측정 인프라 + AB763 SPICE 비교 → Plate 청취 튜닝·Shimmer/Freeze → Delay/Dynamics → 출시 준비.
+- 보호 대상: 위 비트 동일 항목, 설치된 AU(Claude·Codex·구형), Codex 프로젝트, Logic 프로젝트, 스냅샷.
+- 읽을 파일: `AGENTS.md` → 이 문서 → `docs/KNOWN_ISSUES.md` → `docs/DSP_SPECIFICATION.md`(AB763 M2·ADAA·Plate) → `docs/TECHNICAL_RESEARCH.md`.
 
 ## A. 프로젝트 개요
 | 항목 | 내용 |
@@ -42,6 +42,10 @@
 | NAM 로더 | 구현(SR 불일치 시 바이패스) | 이전 | `src/neural/NamAmp.*` |
 | **Custom Drive Model (v1/v2/v2+ADAA)** | 구현 | **v0.4** | `src/dsp/drive/CustomDrive.*`, `src/dsp/nonlinear/Nonlinear.*`(`kneeAntiderivative`) |
 | **AB763 Normal M1 앰프** (`amp_ab763`) | 구현, Logic 미검증 | **v0.4** | `src/dsp/amp/AB763Amp.*`, `presets/factory/06_Blackface_Normal.json` |
+| **AB763 M2** (`model` = 1) | 구현, Logic 미검증 | **v0.5** | `AB763Amp::m2Power/m2Forward`, `presets/factory/07_Blackface_M2_Plate.json` |
+| **Custom Drive ADAA 보정** (`adaa_comp`) | 구현 | **v0.5** | `CustomDrive::processNonlinearAdaa` |
+| **Premium Plate v1** (`reverb_plate_premium`) | 구현, 청취 미검증 | **v0.5** | `src/dsp/reverb/PremiumPlate.*`, `tools/benchmark/reverb_metrics.py` |
+| **저장 호환 훅** | 구현 | **v0.5** | `Effect::legacyValueForMissingParam`, `src/presets/Preset.cpp` |
 
 ## C. 아키텍처
 ```
@@ -90,6 +94,20 @@ src/plugin    JUCE AudioProcessor/Editor (얇은 래퍼)       src/ui  JUCE 컴�
 | `tests/audio/test_amp_ab763.cpp`(신규), `tests/performance/test_performance.cpp` | 테스트 7 + 할당 1 |
 | `presets/factory/06_Blackface_Normal.json` (신규) | gate → AB763 → cabinet → reverb |
 호환성: 기존 파라미터 index·type id 불변, 팩토리 01–05 출력 비트 동일, `model` 없는 상태 → v2.
+
+## D-3. v0.5 변경 (2026-11-25)
+| 파일 | 변경 |
+|---|---|
+| `src/core/Effect.h`, `src/presets/Preset.cpp` | `legacyValueForMissingParam` 훅, 누락 파라미터 처리 |
+| `src/dsp/amp/AB763Amp.*` | `model` 파라미터(index 6), M2 전력단·Sag·NFB(지연 없는 해)·부하, NaN 가드 |
+| `src/dsp/drive/CustomDrive.*` | `adaa_comp`(index 11), FIR 보정·웻 패딩·정수 드라이 정렬, 지연 보고 |
+| `src/dsp/filters/Biquad.h` | `state1()` (지연 없는 루프 해법용, 동작 변화 없음) |
+| `src/dsp/reverb/PremiumPlate.*` (신규), `src/engine/EffectFactory.cpp`, `CMakeLists.txt` | 새 리버브, 버전 0.5.0 |
+| `apps/mfx_compare_drive.cpp` | `--claude-adaa-comp` |
+| `tests/audio/test_amp_ab763.cpp`, `tests/audio/test_reverb_premium.cpp`(신규), `tests/performance/test_performance.cpp` | 테스트 +11 |
+| `tools/benchmark/reverb_metrics.py`(신규), `scripts/macos_legacy_au_disable.sh`(신규, 미실행) | 측정 도구, 구형 AU 숨김(사용자 실행) |
+| `presets/factory/07_Blackface_M2_Plate.json` (신규) | |
+| `docs/AUDIO_QUALITY_TARGETS.md`, `docs/TECHNICAL_RESEARCH.md` (신규) + 기존 문서 갱신 | |
 
 ## E. 테스트 및 검증 (이번 작업, Linux x86_64 클라우드, Release)
 | 명령 | 결과 |

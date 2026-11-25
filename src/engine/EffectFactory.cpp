@@ -4,6 +4,7 @@
 
 #include "dsp/amp/AmpSim.h"
 #include "dsp/amp/AB763Amp.h"
+#include "dsp/reverb/PremiumPlate.h"
 #include "dsp/cabinet/Cabinet.h"
 #include "dsp/delay/Delay.h"
 #include "dsp/drive/CustomDrive.h"
@@ -35,7 +36,7 @@ const std::vector<Entry>& entries() {
         {"amp", mk<AmpSim>}, {"amp_ab763", mk<AB763Amp>}, {"nam_amp", mk<NamAmp>}, {"cabinet", mk<Cabinet>},
         {"chorus", mk<Chorus>}, {"flanger", mk<Flanger>}, {"phaser", mk<Phaser>},
         {"tremolo", mk<Tremolo>}, {"vibrato", mk<Vibrato>},
-        {"delay", mk<Delay>}, {"reverb", mk<Reverb>},
+        {"delay", mk<Delay>}, {"reverb", mk<Reverb>}, {"reverb_plate_premium", mk<PremiumPlate>},
     };
     return e;
 }

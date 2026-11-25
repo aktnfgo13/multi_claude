@@ -62,6 +62,14 @@
   v0.1 시절 저장한 **JSON 프리셋 파일**은 형식이 같아 자동 구분이 불가능합니다 → 로드 후 Model을 v1로 바꾸면 됩니다.
   v0.4부터 프리셋에 `app_version`을 기록해 이후에는 구분 가능합니다.
 
+### v0.5: 추가 파라미터와 저장 호환 (`legacyValueForMissingParam`)
+| 이펙트 | 파라미터(추가 위치) | 새 인스턴스 기본 | 저장값에 없을 때 | 이유 |
+|---|---|---|---|---|
+| Custom Drive | `adaa_comp` (index 11, Toggle) | On | Off (v0.4 소리) | v2 + ADAA의 고역 감쇠·드라이/웻 정렬 보정. v1·v2 소리에는 영향 없음 |
+| AB763 Normal | `model` (index 6, M1/M2) | M2 | M1 (v0.4 소리) | 기존 프리셋 06·v0.4 Logic 프로젝트 보존 |
+| Premium Plate | 새 type `reverb_plate_premium` | — | — | 기존 `reverb` 무변경 |
+프리셋 로더는 저장 데이터에 없는 파라미터에 대해 이펙트가 지정한 "레거시 값"을 넣습니다(`src/presets/Preset.cpp`).
+
 ### 기존 프리셋 영향과 조치
 
 합성 Karplus-Strong DI(피크 −7.2 dBFS, 녹음 아님)로 Custom Drive 블록만 렌더해 측정했습니다
@@ -79,7 +87,7 @@ v2에서 값을 그대로 두면 02/03 프리셋의 출력이 14–19 dB 낮아�
   **청감 확인이 필요합니다(사용자 확인 항목).**
 * v0.1 사용자 프리셋은 마이그레이션하지 않습니다(미출시, D-017). 필요하면 `customDriveMappingV1`로 변환 도구를 만들 수 있습니다.
 
-## 3. 이펙트별 파라미터 (자동 생성, v0.4)
+## 3. 이펙트별 파라미터 (자동 생성, v0.5)
 
 ### `utility` — Gain / Volume
 
@@ -189,6 +197,7 @@ v2에서 값을 그대로 두면 02/03 프리셋의 출력이 14–19 dB 낮아�
 | `level` | Level | -24…12 | -6 | dB | linear |
 | `oversampling` | Oversampling | 1x / 2x / 4x / 8x | 1 |  | linear |
 | `model` | Model | v1 (legacy) / v2 / v2 + ADAA | 1 |  | linear |
+| `adaa_comp` | ADAA Compensation | 0…1 | 1 |  | linear |
 
 ### `ddsp_drive` — DDSP Drive (research)
 
@@ -280,6 +289,7 @@ v2에서 값을 그대로 두면 02/03 프리셋의 출력이 14–19 dB 낮아�
 | `mix` | Mix | 0…100 | 100 | % | linear |
 | `level` | Level | -40…40 | 0 | dB | linear |
 | `oversampling` | Oversampling | 1x / 2x / 4x / 8x | 1 |  | linear |
+| `model` | Model | M1 / M2 (PI + 6V6 + sag + NFB + load) | 1 |  | linear |
 
 ### `nam_amp` — NAM Amp
 
@@ -382,4 +392,22 @@ v2에서 값을 그대로 두면 02/03 프리셋의 출력이 14–19 dB 낮아�
 | `modulation` | Modulation | 0…100 | 25 | % | linear |
 | `mix` | Mix | 0…100 | 25 | % | linear |
 | `width` | Width | 0…100 | 100 | % | linear |
+
+### `reverb_plate_premium` — Premium Plate
+
+| id | 이름 | 범위 | 기본값 | 단위 | 스케일 |
+|---|---|---|---|---|---|
+| `decay_s` | Decay | 0.300000012…20 | 2.5 | s | log |
+| `predelay_ms` | Pre-Delay | 0…250 | 20 | ms | linear |
+| `size` | Size | 50…150 | 100 | % | linear |
+| `damping_hz` | Damping | 1000…18000 | 6500 | Hz | log |
+| `bass_mult` | Bass Decay | 0.5…2 | 1.20000005 | :1 | linear |
+| `crossover_hz` | Crossover | 100…1000 | 300 | Hz | log |
+| `diffusion` | Diffusion | 0…100 | 100 | % | linear |
+| `mod_depth` | Mod Depth | 0…100 | 30 | % | linear |
+| `mod_rate_hz` | Mod Rate | 0.100000001…3 | 0.800000012 | Hz | log |
+| `early` | Early | 0…100 | 15 | % | linear |
+| `lowcut_hz` | Low Cut | 20…500 | 80 | Hz | log |
+| `width` | Width | 0…100 | 100 | % | linear |
+| `mix` | Mix | 0…100 | 30 | % | linear |
 

@@ -31,7 +31,14 @@
 | K-025 | OPEN | P2 | 새 IR 상태 형식(`mfx-ir:1`)은 v0.2.0 이하 빌드에서 경로로 읽히지 않음(경고 후 내장 시뮬레이션). 이전 형식(경로 문자열)은 새 빌드에서 그대로 읽힘 | 하위 호환은 유지, 상위 호환 없음 |
 | K-026 | FIXED (gap v1) / OPEN (v0.4) | P1 | gap v1은 사용자 Mac에서 빌드·테스트 78/78·auval PASS(`tests/results/macos_verify_20261124-174619.txt`). v0.4 후보는 macOS AU 빌드·auval 미확인(작업 환경에서 macOS 툴체인 실행 불가). 코어·테스트는 사용자 Mac의 Linux arm64 VM에서 78/78 PASS, `~/multi_effects_claude` 반영 완료 | 사용자 Mac에서 `scripts/macos_build_install_verify.sh` |
 | K-027 | OPEN | P2 | Custom Drive `v2 + ADAA` 경로는 Python 미러·parity 대상이 아님(v2만 parity) | 필요 시 `mfx_dsp.py`에 ADAA 경로 추가 |
-| K-028 | OPEN | P2 | ADAA는 단마다 오버샘플 반 샘플 군지연 추가(정수 지연 보고에 미반영). Mix < 100 %에서 고역 위상 차 미세 | 분수 지연 보정 검토 |
-| K-029 | OPEN | P1 | AB763 M1: 위상반전단·6V6·Sag·NFB·OT·톤스택 부하 미모델, 회복단 캐소드 조건 가정, 입력 0 dBFS = 1 V 가정. 실제 앰프와 비교 측정 없음 | M2, 실측 |
+| K-028 | FIXED (v0.5, `adaa_comp`) | P2 | ADAA는 단마다 오버샘플 반 샘플 군지연 추가(정수 지연 보고에 미반영). Mix < 100 %에서 고역 위상 차 미세 | 분수 지연 보정 검토 |
+| K-029 | MITIGATED (v0.5 M2: PI·6V6·Sag·NFB·OT·부하) | P1 | AB763 M1: 위상반전단·6V6·Sag·NFB·OT·톤스택 부하 미모델, 회복단 캐소드 조건 가정, 입력 0 dBFS = 1 V 가정. 실제 앰프와 비교 측정 없음 | M2, 실측 |
 | K-030 | OPEN | P2 | ADAA 경로는 샘플당 double 연산(Cortex-M 등 단정밀 FPU 하드웨어에서 비용 큼) | 하드웨어 후보 확정 시 float 버전 검토 |
-| K-031 | OPEN | P1 | v0.4 후보의 Logic 실사용(AB763 선택·Model 전환·프리셋) 미확인 | 사용자 Mac 1회 검증 |
+| K-031 | PARTIAL (v0.4 Mac 빌드·86/86·auval PASS, Logic GUI 미확인) | P1 | v0.4 후보의 Logic 실사용(AB763 선택·Model 전환·프리셋) 미확인 | 사용자 Mac 1회 검증 |
+| K-032 | OPEN | P1 | AB763 M2의 6V6 Koren 파라미터·PI 전달곡선·PI 입력 분압(0.14)·그리드 전도 계수는 문헌/근사값. SPICE·실측 비교 없음 | SPICE 기준 회로, 실측 |
+| K-033 | OPEN | P2 | AB763 M2 1x 오버샘플링에서는 피드백 대역 제한(0.2·fs)으로 고역 응답이 2x 이상과 다름 | 2x 이상 사용(기본 2x) |
+| K-034 | OPEN | P2 | AB763 M2는 M1보다 같은 볼륨에서 약 6 dB 큼(출력 스케일 차) | Level로 보정, 청취 후 정규화 결정 |
+| K-035 | OPEN | P2 | Premium Plate 초기 에코 밀도(NED 50 ms 0.54)가 Legacy FDN(0.97)보다 낮음 — 플레이트 특성인지 청취 필요 | 입력 확산 단 추가 검토 |
+| K-036 | OPEN | P2 | 구형 Claude AU(MultiEffects, Mfxp)가 Logic 목록에 중복 표시 | 플러그인 관리자에서 비활성화(BUILD_GUIDE §2-1), 필요 시 이동 스크립트 |
+| K-037 | OPEN | P1 | v0.5 후보의 macOS 네이티브 빌드·auval·Logic 미확인 | 사용자 Mac 1회 |
+| K-038 | OPEN | P2 | "Premium Audio Quality Standard"·"기술 연구 통합 보고서" 원문 미확보(지시서 요약만 반영) | 원문 제공 시 AUDIO_QUALITY_TARGETS/TECHNICAL_RESEARCH 갱신 |

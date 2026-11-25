@@ -139,10 +139,11 @@ TEST(performance, no_heap_allocation_or_free_ab763_and_custom_drive_adaa) {
     cd->setParam("model", 2.0f);
     cd->setParam("drive", 90.0f);
     e.addEffect(std::move(cd));
-    auto amp = createEffect("amp_ab763");
+    auto amp = createEffect("amp_ab763");   // default model: M2 (PI, 6V6, sag, NFB, load)
     amp->setParam("volume", 8.0f);
     e.addEffect(std::move(amp));
     e.addEffect(createEffect("cabinet"));
+    e.addEffect(createEffect("reverb_plate_premium"));
     std::vector<float> x = makeNoise(512, 0.5), l(512), r(512);
     const float* in[1] = {x.data()};
     float* out[2] = {l.data(), r.data()};

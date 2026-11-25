@@ -14,9 +14,24 @@
 //   -> power section M1: phase inverter + 6V6 pair as one symmetric soft saturation (knee family p=3)
 //   -> output scaling -> [down-sample] -> DC block -> Mix / Level (common drive parameters)
 //
-// Deferred to M2 (documented in DSP_SPECIFICATION): long-tailed-pair phase inverter, 6V6 push-pull
-// model with crossover, sag (rectifier/B+), negative feedback loop, output transformer, cathode-bypass
-// blocking dynamics, tone-stack loading by the volume pot.
+// Model M2 (v0.5, parameter "model" = 1, default for NEW instances; saves without "model" load as M1):
+//   same preamp, then
+//   -> long-tailed-pair phase inverter (differential soft limiting, 82k/100k plate-load imbalance,
+//      NFB injected at the second grid)
+//   -> 2 x coupling 0.1uF into 220k grid leaks with grid conduction (blocking / bias-shift state)
+//   -> 6V6 pair, fixed bias -34 V, Koren beam-tetrode model, plate voltage = B+ -/+ half primary swing
+//      (pentode knee -> power-tube saturation), class AB crossover from each tube cutting off
+//   -> push-pull difference current -> output transformer (Raa 6.6k : 8 ohm, primary-inductance HPF,
+//      leakage LPF) -> reactive speaker load Z(s) = Re + lossy Le + parallel-RLC resonance (current drive:
+//      the load voltage follows the impedance curve)
+//   -> negative feedback from the 8-ohm tap (820 / 47 ohm divider) to the phase inverter
+//   -> sag: tube-rectifier B+ node (charging only through the rectifier resistance, discharged by the
+//      tube currents, 20 uF reservoir); B+ sets plate/screen voltages and scales the preamp (slow RC)
+//   All loops use a one-(oversampled-)sample delay; every state is bounded and finite-checked.
+//   Approximations (not component-level): the phase inverter transfer curve, screen current (10 % of
+//   plate), rectifier as a resistor + diode, preamp B+ scaling of the static tables.
+// Not modelled (yet): rectifier ripple, cathode-bypass dynamics of the preamp, tone-stack loading by the
+// volume pot, transformer core saturation, speaker cone (acoustic) -> Cabinet block.
 #pragma once
 
 #include <vector>
@@ -65,6 +80,15 @@ private:
 class AB763Amp : public OversampledDrive {
 public:
     enum P { kVolume, kTreble, kBass, kNumOwn };
+    static constexpr int kModelParam = kNumOwn + 3; // after mix, level, oversampling (appended, R6)
+    enum Model { kM1 = 0, kM2 = 1 };
+    int model() const { return model_; }
+    bool legacyValueForMissingParam(int index, float& v) const override {
+        if (index == kModelParam) { v = (float)kM1; return true; } // saves from v0.4 keep the M1 sound
+        return false;
+    }
+    /// M2 diagnostics for tests (audio thread writes, relaxed): B+ [V], min plate voltage [V].
+    float lastSupplyVolts() const { return bPlus_[0]; }
     AB763Amp();
     const char* typeId() const override { return "amp_ab763"; }
     const char* displayName() const override { return "AB763 Normal (M1)"; }
@@ -76,7 +100,14 @@ public:
     static double volumeTaper(double knob0to10);       // 1M audio taper
     static double bassTaper(double knob0to10);         // audio taper (Yeh: exp((x-1)*3.4))
 
+    static constexpr double kSupplyIdle = 420.0;   // B+ at idle with M2 (unloaded source ~ 450 V)
+    static constexpr double kRaa = 6600.0, kTurns = 28.72; // primary impedance, turns ratio (6.6k : 8)
+    static constexpr double kNfb = 47.0 / (820.0 + 47.0);
+    static constexpr double kFbBandwidth = 20000.0;  // NFB loop low-pass (approximation, see DSP_SPECIFICATION)
+    static constexpr double kPiInput = 0.14;        // recovery stage -> phase inverter network (approx.)
+
 protected:
+    void onParametersChanged(bool immediate) override;
     void prepareDsp(double fs, double fsOs) override;
     void resetDsp() override;
     void updateDsp(double fs, double fsOs) override;
@@ -92,6 +123,24 @@ private:
     float volGain_ = 0.0f;
     nl::KneeWeights powerKnee_;
     bool tablesBuilt_ = false;
+    int model_ = kM2;
+    float m1Power(float v) const;
+    float m2Power(float v, int ch);
+    float m2Forward(float vd, int ch);    // PI -> grids -> 6V6 pair -> secondary current (commits states)
+    // ---- M2 state (per channel)
+    Biquad gridA_, gridB_;                 // 0.1uF / 220k coupling (applied to the PI outputs)
+    Biquad otHp_, otLp_;                   // transformer primary inductance / leakage
+    Biquad spkRes_, spkLe_;                // speaker impedance parts
+    Biquad fbLp_;                          // NFB loop band limit (keeps the discrete loop stable at every rate)
+    float bias_[kMaxChannels][2] = {};     // grid-conduction charge on the coupling caps (blocking)
+    float vPrim_[kMaxChannels] = {};       // primary voltage, previous sample
+    float vSpk_[kMaxChannels] = {};        // speaker voltage, previous sample (NFB)
+    float bPlus_[kMaxChannels] = {420.0f, 420.0f};
+    float preScale_[kMaxChannels] = {1.0f, 1.0f};
+    float dtOs_ = 1.0f / 96000.0f, gridDecay_ = 0.0f, preAlpha_ = 0.0f;
+    // delay-free NFB loop: linearised forward transconductance (secant, bounded) and last operating point
+    float g0_ = -1.0f, gEst_[kMaxChannels] = {-1.0f, -1.0f}, vdPrev_[kMaxChannels] = {}, iPrev_[kMaxChannels] = {};
+    float iSecLast_[kMaxChannels] = {};
 };
 
 } // namespace mfx

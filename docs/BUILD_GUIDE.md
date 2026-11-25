@@ -38,6 +38,20 @@ bash scripts/macos_build_install_verify.sh
 
 창 오른쪽 아래에 버전·커밋 ID가 표시됩니다(`mfx_render --version`도 동일). 저장소가 git이 아니면 `SOURCE_ID` 파일 내용을 씁니다.
 
+### 2-1. 구형 Claude AU 중복 정리 (v0.5 확인 결과)
+설치 상태(사용자 Mac, 2026-11-25 Info.plist 읽기 확인):
+| 번들 | Bundle ID | AU (type subtype manu) | 버전 | 처리 |
+|---|---|---|---|---|
+| `MFX Claude.component` | com.mfxlab.mfxclaude | aumf McL1 MfxL | 0.4.0 | **현재 사용** — ID 고정, 업데이트는 같은 번들을 교체(스크립트가 이전 번들을 `_mfx_claude_backup/`에 보관) |
+| `Multi Effects.component` | com.multieffects.plugin | aufx Mfx6 Mefx | 0.8.0 | Codex — 건드리지 않음 |
+| `MultiEffects.component` (+ `VST3/MultiEffects.vst3`) | com.multieffects.mfx | aumf Mfx1 Mfxp | 0.1.0 | 구형 Claude — 중복 표시 원인 |
+권장 순서(삭제 없음):
+1. **Logic 설정 → 플러그인 관리자**에서 제조사 "MultiEffects Project"의 "MultiEffects" **사용 체크 해제** → 목록에서 숨겨지고 파일은 그대로.
+   그 AU를 쓰던 옛 프로젝트를 열 때는 다시 체크하면 됩니다.
+2. 파일까지 검색 경로에서 빼고 싶으면 `bash scripts/macos_legacy_au_disable.sh`(미리보기) → `--apply`(날짜 폴더로 이동, 삭제 아님)
+   → 되돌리기 `--restore <폴더>`. Bundle ID가 `com.multieffects.mfx`일 때만 이동합니다. 실행은 사용자가 결정합니다.
+3. 새 ID를 만들지 않습니다(네 번째 플러그인 금지). 다음 빌드도 MfxL/McL1, 버전만 증가.
+
 ### Logic 체크리스트 (사용자 확인)
 1. Logic 설정 → 플러그인 관리자에서 "MFX Lab: MFX Claude"가 "성공"으로 표시되는가
 2. 모노 오디오 트랙 → Audio FX → Audio Units → MFX Lab → MFX Claude 로드

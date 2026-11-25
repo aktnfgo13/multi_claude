@@ -45,6 +45,8 @@ public:
     void process(float* data, int n, int ch) {
         for (int i = 0; i < n; ++i) data[i] = process(data[i], ch);
     }
+    /// Delay-free loop solving: the next output is b0*x + state1(ch) (transposed direct form II).
+    float state1(int ch) const { return z1_[ch]; }
     void processBlock(AudioBlock& b) {
         for (int c = 0; c < b.numChannels; ++c) process(b.ch[c], b.numSamples, c);
     }

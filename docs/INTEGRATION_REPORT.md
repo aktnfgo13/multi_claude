@@ -139,3 +139,23 @@ python3 research/spice/run_spice.py tolerance …     → E-018
 | pluginval strictness 7 (VST3 Linux) | PASS | `pluginval_vst3_linux_strict7_v04.txt` |
 | arm64 (사용자 Mac의 Linux VM) 코어+테스트 | PASS 86/86 | `tests/results/arm64_linux_vm_tests_v04.txt` |
 | macOS AU 빌드·auval·Logic | NOT TESTED | 사용자 Mac 1회 검증 대기(K-031) |
+
+---
+# 추가: v0.5 Premium Audio Engine (2026-11-25)
+
+| 항목 | 상태 | 근거 |
+|---|---|---|
+| v0.4 Mac 네이티브(사용자 실행) | PASS: 빌드, 86/86, auval | `tests/results/macos_verify_20261125-092920.txt` |
+| 설치 AU 식별 확인(읽기 전용) | DONE | BUILD_GUIDE §2-1 |
+| 팩토리 01–06 = v0.4 출력 | PASS (비트 동일) | v0.4 빌드(0518cc3) vs 후보 cmp |
+| Custom Drive v1/v2/v2+ADAA(보정 Off) = v0.4 | PASS (비트 동일) | cmp |
+| AB763 M1 = v0.4 | PASS (비트 동일) | cmp |
+| Legacy reverb = v0.4 | PASS (비트 동일) | cmp |
+| AB763 M2 (구조·NFB·부하·Sag·SR 독립·극단 입력) | PASS | `ab763_m2_*` 6개 |
+| Custom Drive ADAA 보정·수치 안정성 | PASS | `custom_drive_adaa_*` 2개 |
+| Premium Plate (RT60, 주파수별 감쇠, NED, 상관, 안정성, 트레일, 메모리) | PASS | `premium_plate_*` 4개 |
+| 콜백 할당/해제 0 (M2 + Plate + ADAA + 모델 전환) | PASS | performance |
+| C++ 전체 | PASS 97/97 | `cpp_tests.json` |
+| ASan/UBSan (audio) | PASS 0건 | `sanitizer_asan_v05_audio.txt` |
+| pluginval strictness 7 (VST3 Linux) | PASS | `pluginval_vst3_linux_strict7_v05.txt` |
+| macOS v0.5 빌드·auval·Logic | NOT TESTED | K-037 |

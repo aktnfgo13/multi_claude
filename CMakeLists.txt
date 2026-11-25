@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.24)
-project(MultiEffects VERSION 0.4.0 LANGUAGES C CXX)
+project(MultiEffects VERSION 0.5.0 LANGUAGES C CXX)
 
 # ----------------------------------------------------------------------------- options
 option(MFX_BUILD_TESTS   "Build C++ tests"                                   ON)
@@ -72,6 +72,7 @@ add_library(mfx_core STATIC
   src/dsp/modulation/Modulation.cpp
   src/dsp/delay/Delay.cpp
   src/dsp/reverb/Reverb.cpp
+  src/dsp/reverb/PremiumPlate.cpp
   src/dsp/utility/Tuner.cpp
   src/dsp/utility/Resample.cpp
   src/dsp/analysis/Analysis.cpp
@@ -150,6 +151,7 @@ if(MFX_BUILD_TESTS)
     tests/audio/test_effects.cpp
     tests/audio/test_custom_drive.cpp
     tests/audio/test_amp_ab763.cpp
+    tests/audio/test_reverb_premium.cpp
     tests/integration/test_engine.cpp
     tests/integration/test_concurrency.cpp
   tests/integration/test_analysis.cpp

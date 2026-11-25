@@ -1,0 +1,766 @@
+== MFX Claude macOS verify 20261125-092920
+ProductName:		macOS
+ProductVersion:		27.0.1
+BuildVersion:		26A434
+arm64
+Xcode 27.0
+cmake version 4.4.4
+source id: 0518cc3
+CMake Warning (author) at /opt/homebrew/share/cmake/Modules/FetchContent.cmake:1968 (message):
+  Calling FetchContent_Populate(namcore) is deprecated, call
+  FetchContent_MakeAvailable(namcore) instead.  Policy CMP0169 can be set to
+  OLD to allow FetchContent_Populate(namcore) to be called directly for now,
+  but the ability to call it with declared details will be removed completely
+  in a future version.
+Call Stack (most recent call first):
+  CMakeLists.txt:100 (FetchContent_Populate)
+This warning is for project developers.  Use -Wno-author to suppress it.
+
+CMake Warning (author) at /opt/homebrew/share/cmake/Modules/FetchContent.cmake:1968 (message):
+  Calling FetchContent_Populate(eigen) is deprecated, call
+  FetchContent_MakeAvailable(eigen) instead.  Policy CMP0169 can be set to
+  OLD to allow FetchContent_Populate(eigen) to be called directly for now,
+  but the ability to call it with declared details will be removed completely
+  in a future version.
+Call Stack (most recent call first):
+  CMakeLists.txt:107 (FetchContent_Populate)
+This warning is for project developers.  Use -Wno-author to suppress it.
+
+-- Configuring juceaide
+-- Building juceaide
+-- Exporting juceaide
+-- Testing juceaide
+-- Finished setting up juceaide
+-- Configuring done (1.4s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/kimhyuntae/multi_effects_claude/build-mac
+[0/2] Re-checking globbed directories...
+[1/117] Generating juce_binarydata_MultiEffectsPresets/JuceLibraryCode/BinaryData1.cpp, juce_binarydata_MultiEffectsPresets/JuceLibraryCode/BinaryData2.cpp, juce_binarydata_MultiEffectsPresets/JuceLibraryCode/BinaryData3.cpp, juce_binarydata_MultiEffectsPresets/JuceLibraryCode/BinaryData4.cpp, juce_binarydata_MultiEffectsPresets/JuceLibraryCode/BinaryData5.cpp, juce_binarydata_MultiEffectsPresets/JuceLibraryCode/BinaryData6.cpp, juce_binarydata_MultiEffectsPresets/JuceLibraryCode/BinaryData.h
+[2/113] Building CXX object CMakeFiles/mfx_core.dir/src/core/Common.cpp.o
+[3/113] Building CXX object CMakeFiles/mfx_core.dir/src/dsp/nonlinear/Nonlinear.cpp.o
+[4/113] Building CXX object CMakeFiles/mfx_core.dir/src/core/Parameter.cpp.o
+[5/113] Building CXX object CMakeFiles/mfx_core.dir/src/dsp/gain/Utility.cpp.o
+[6/113] Building CXX object CMakeFiles/mfx_core.dir/src/dsp/dynamics/Dynamics.cpp.o
+[7/113] Building CXX object CMakeFiles/mfx_core.dir/src/dsp/amp/AmpSim.cpp.o
+[8/113] Building CXX object CMakeFiles/mfx_core.dir/src/dsp/filters/Biquad.cpp.o
+[9/113] Building CXX object CMakeFiles/mfx_core.dir/src/dsp/filters/EQ.cpp.o
+[10/113] Building CXX object CMakeFiles/mfx_core.dir/src/dsp/oversampling/Oversampler.cpp.o
+[11/113] Building CXX object CMakeFiles/mfx_core.dir/src/dsp/drive/CustomDrive.cpp.o
+[12/113] Building CXX object CMakeFiles/mfx_core.dir/src/dsp/fft/FFT.cpp.o
+[13/113] Building CXX object CMakeFiles/mfx_core.dir/src/dsp/drive/Drives.cpp.o
+In file included from /Users/kimhyuntae/multi_effects_claude/src/dsp/drive/Drives.cpp:1:
+/Users/kimhyuntae/multi_effects_claude/src/dsp/drive/Drives.h:100:11: warning: private field 'clean_' is not used [-Wunused-private-field]
+  100 |     float clean_[kMaxChannels] = {0, 0};
+      |           ^
+1 warning generated.
+[14/113] Building CXX object CMakeFiles/mfx_core.dir/src/dsp/utility/Resample.cpp.o
+[15/113] Building CXX object CMakeFiles/mfx_core.dir/src/dsp/amp/AB763Amp.cpp.o
+[16/113] Building CXX object CMakeFiles/mfx_core.dir/src/dsp/modulation/Modulation.cpp.o
+[17/113] Building CXX object CMakeFiles/mfx_core.dir/src/dsp/utility/Tuner.cpp.o
+[18/113] Building CXX object CMakeFiles/mfx_core.dir/src/dsp/delay/Delay.cpp.o
+[19/113] Building CXX object CMakeFiles/mfx_core.dir/src/dsp/cabinet/Convolver.cpp.o
+[20/113] Building CXX object src/plugin/CMakeFiles/MultiEffectsPresets.dir/juce_binarydata_MultiEffectsPresets/JuceLibraryCode/BinaryData1.cpp.o
+[21/113] Building CXX object src/plugin/CMakeFiles/MultiEffectsPresets.dir/juce_binarydata_MultiEffectsPresets/JuceLibraryCode/BinaryData6.cpp.o
+[22/113] Building CXX object CMakeFiles/mfx_core.dir/src/dsp/reverb/Reverb.cpp.o
+[23/113] Building CXX object CMakeFiles/mfx_core.dir/src/dsp/analysis/Analysis.cpp.o
+[24/113] Building CXX object CMakeFiles/mfx_core.dir/src/dsp/cabinet/Cabinet.cpp.o
+[25/113] Building CXX object CMakeFiles/mfx_core.dir/src/engine/Engine.cpp.o
+[26/113] Building CXX object CMakeFiles/mfx_core.dir/src/engine/AnalysisWorker.cpp.o
+[27/113] Building CXX object CMakeFiles/mfx_core.dir/src/engine/EffectFactory.cpp.o
+[28/113] Building CXX object src/plugin/CMakeFiles/MultiEffects.dir/__/__/_deps/juce-src/modules/juce_audio_processors/juce_audio_processors_ara.cpp.o
+[29/113] Building CXX object src/plugin/CMakeFiles/MultiEffects.dir/__/__/_deps/juce-src/modules/juce_audio_processors/juce_audio_processors_lv2_libs.cpp.o
+[30/113] Building CXX object CMakeFiles/mfx_core.dir/src/platform/WavFile.cpp.o
+[31/113] Building CXX object CMakeFiles/mfx_core.dir/src/presets/Json.cpp.o
+[32/113] Building CXX object CMakeFiles/mfx_core.dir/src/neural/NamAmp.cpp.o
+[33/113] Building CXX object CMakeFiles/mfx_core.dir/src/presets/Preset.cpp.o
+[34/113] Linking CXX static library libmfx_core.a
+[35/113] Building C object src/plugin/CMakeFiles/MultiEffects.dir/__/__/_deps/juce-src/modules/juce_graphics/juce_graphics_Sheenbidi.c.o
+[36/113] Building CXX object src/plugin/CMakeFiles/MultiEffects.dir/__/ui/LookAndFeel.cpp.o
+[37/113] Building CXX object src/plugin/CMakeFiles/MultiEffects.dir/__/__/_deps/juce-src/modules/juce_core/juce_core_CompilationTime.cpp.o
+[38/113] Building CXX object src/plugin/CMakeFiles/MultiEffects.dir/PluginProcessor.cpp.o
+In file included from /Users/kimhyuntae/multi_effects_claude/src/plugin/PluginProcessor.cpp:1:
+In file included from /Users/kimhyuntae/multi_effects_claude/src/plugin/PluginProcessor.h:9:
+In file included from /Users/kimhyuntae/multi_effects_claude/src/engine/Engine.h:22:
+/Users/kimhyuntae/multi_effects_claude/src/core/Smoothed.h:17:15: warning: comparing floating point with == or != is unsafe [-Wfloat-equal]
+   17 |         if (v == target_) return;
+      |             ~ ^  ~~~~~~~
+1 warning generated.
+[39/113] Building CXX object src/plugin/CMakeFiles/MultiEffects.dir/PluginEditor.cpp.o
+In file included from /Users/kimhyuntae/multi_effects_claude/src/plugin/PluginEditor.cpp:1:
+In file included from /Users/kimhyuntae/multi_effects_claude/src/plugin/PluginEditor.h:5:
+In file included from /Users/kimhyuntae/multi_effects_claude/src/plugin/PluginProcessor.h:9:
+In file included from /Users/kimhyuntae/multi_effects_claude/src/engine/Engine.h:22:
+/Users/kimhyuntae/multi_effects_claude/src/core/Smoothed.h:17:15: warning: comparing floating point with == or != is unsafe [-Wfloat-equal]
+   17 |         if (v == target_) return;
+      |             ~ ^  ~~~~~~~
+/Users/kimhyuntae/multi_effects_claude/src/plugin/PluginEditor.cpp:120:124: warning: implicit conversion turns floating-point number into integer: 'float' to 'int' [-Wfloat-conversion]
+  120 |     g.drawText(juce::String("v") + build::version + " " + build::gitCommit, (float)getWidth() - 230.0f, (float)getHeight() - 16.0f, 220.0f, 14.0f, juce::Justification::centredRight);
+      |       ~~~~~~~~                                                                                          ~~~~~~~~~~~~~~~~~~~^~~~~~~
+/Users/kimhyuntae/multi_effects_claude/src/plugin/PluginEditor.cpp:120:95: warning: implicit conversion turns floating-point number into integer: 'float' to 'int' [-Wfloat-conversion]
+  120 |     g.drawText(juce::String("v") + build::version + " " + build::gitCommit, (float)getWidth() - 230.0f, (float)getHeight() - 16.0f, 220.0f, 14.0f, juce::Justification::centredRight);
+      |       ~~~~~~~~                                                              ~~~~~~~~~~~~~~~~~~^~~~~~~~
+3 warnings generated.
+[40/113] Building CXX object src/plugin/CMakeFiles/MultiEffects.dir/__/ui/ChainView.cpp.o
+In file included from /Users/kimhyuntae/multi_effects_claude/src/ui/ChainView.cpp:1:
+In file included from /Users/kimhyuntae/multi_effects_claude/src/ui/ChainView.h:10:
+In file included from /Users/kimhyuntae/multi_effects_claude/src/plugin/PluginProcessor.h:9:
+In file included from /Users/kimhyuntae/multi_effects_claude/src/engine/Engine.h:22:
+/Users/kimhyuntae/multi_effects_claude/src/core/Smoothed.h:17:15: warning: comparing floating point with == or != is unsafe [-Wfloat-equal]
+   17 |         if (v == target_) return;
+      |             ~ ^  ~~~~~~~
+/Users/kimhyuntae/multi_effects_claude/src/ui/ChainView.cpp:30:43: warning: implicit conversion from 'int' to 'float' may lose precision [-Wimplicit-int-float-conversion]
+   30 |     const float rowH = juce::jmin(86.0f, (getHeight() - 12.0f) / (float)rows.size());
+      |                                           ^~~~~~~~~~~ ~
+2 warnings generated.
+[41/113] Building CXX object src/plugin/CMakeFiles/MultiEffects.dir/__/ui/AnalysisView.cpp.o
+In file included from /Users/kimhyuntae/multi_effects_claude/src/ui/AnalysisView.cpp:1:
+In file included from /Users/kimhyuntae/multi_effects_claude/src/ui/AnalysisView.h:12:
+In file included from /Users/kimhyuntae/multi_effects_claude/src/engine/Engine.h:22:
+/Users/kimhyuntae/multi_effects_claude/src/core/Smoothed.h:17:15: warning: comparing floating point with == or != is unsafe [-Wfloat-equal]
+   17 |         if (v == target_) return;
+      |             ~ ^  ~~~~~~~
+1 warning generated.
+[42/113] Building CXX object src/plugin/CMakeFiles/MultiEffects.dir/__/ui/ParamPanel.cpp.o
+In file included from /Users/kimhyuntae/multi_effects_claude/src/ui/ParamPanel.cpp:1:
+In file included from /Users/kimhyuntae/multi_effects_claude/src/ui/ParamPanel.h:7:
+In file included from /Users/kimhyuntae/multi_effects_claude/src/plugin/PluginProcessor.h:9:
+In file included from /Users/kimhyuntae/multi_effects_claude/src/engine/Engine.h:22:
+/Users/kimhyuntae/multi_effects_claude/src/core/Smoothed.h:17:15: warning: comparing floating point with == or != is unsafe [-Wfloat-equal]
+   17 |         if (v == target_) return;
+      |             ~ ^  ~~~~~~~
+1 warning generated.
+[43/113] Building CXX object src/plugin/CMakeFiles/MultiEffects.dir/__/__/_deps/juce-src/modules/juce_data_structures/juce_data_structures.mm.o
+[44/113] Building CXX object src/plugin/CMakeFiles/MultiEffects.dir/__/__/_deps/juce-src/modules/juce_events/juce_events.mm.o
+[45/113] Linking CXX static library src/plugin/libMultiEffectsPresets.a
+[46/113] Building CXX object src/plugin/CMakeFiles/MultiEffects.dir/__/__/_deps/juce-src/modules/juce_gui_extra/juce_gui_extra.mm.o
+[47/113] Building CXX object CMakeFiles/mfx_render.dir/apps/mfx_render.cpp.o
+[48/113] Building CXX object src/plugin/CMakeFiles/MultiEffects.dir/__/__/_deps/juce-src/modules/juce_audio_devices/juce_audio_devices.mm.o
+[49/113] Building CXX object src/plugin/CMakeFiles/MultiEffects.dir/__/__/_deps/juce-src/modules/juce_audio_utils/juce_audio_utils.mm.o
+[50/113] Building CXX object src/plugin/CMakeFiles/MultiEffects.dir/__/__/_deps/juce-src/modules/juce_audio_basics/juce_audio_basics.mm.o
+[51/113] Building CXX object CMakeFiles/mfx_modeling_study.dir/apps/mfx_modeling_study.cpp.o
+[52/113] Building CXX object src/plugin/CMakeFiles/MultiEffects.dir/__/__/_deps/juce-src/modules/juce_audio_processors/juce_audio_processors.mm.o
+[53/113] Building CXX object CMakeFiles/mfx_tests.dir/tests/main.cpp.o
+[54/113] Building CXX object CMakeFiles/mfx_tests.dir/tests/unit/test_core.cpp.o
+[55/113] Building CXX object CMakeFiles/mfx_tests.dir/tests/unit/test_nonlinear.cpp.o
+[56/113] Building CXX object CMakeFiles/mfx_tests.dir/tests/unit/test_filters.cpp.o
+[57/113] Building CXX object CMakeFiles/mfx_tests.dir/tests/unit/test_presets.cpp.o
+[58/113] Building CXX object CMakeFiles/mfx_compare_drive.dir/apps/mfx_compare_drive.cpp.o
+[59/113] Building CXX object CMakeFiles/mfx_tests.dir/tests/audio/test_effects.cpp.o
+[60/113] Building CXX object CMakeFiles/mfx_tests.dir/tests/audio/test_amp_ab763.cpp.o
+[61/113] Building CXX object CMakeFiles/mfx_tests.dir/tests/audio/test_custom_drive.cpp.o
+[62/113] Linking CXX executable mfx_render
+[63/113] Linking CXX executable mfx_modeling_study
+[64/113] Linking CXX executable mfx_compare_drive
+[65/113] Building CXX object src/plugin/CMakeFiles/MultiEffects.dir/__/__/_deps/juce-src/modules/juce_dsp/juce_dsp.mm.o
+[66/113] Building CXX object CMakeFiles/mfx_tests.dir/tests/integration/test_engine.cpp.o
+[67/113] Building CXX object CMakeFiles/mfx_tests.dir/tests/integration/test_concurrency.cpp.o
+[68/113] Building CXX object CMakeFiles/mfx_tests.dir/tests/performance/test_performance.cpp.o
+[69/113] Building CXX object src/plugin/CMakeFiles/MultiEffects.dir/__/__/_deps/juce-src/modules/juce_audio_formats/juce_audio_formats.mm.o
+[70/113] Building CXX object CMakeFiles/mfx_tests.dir/tests/integration/test_analysis.cpp.o
+[71/113] Linking CXX executable mfx_tests
+[72/113] Building CXX object src/plugin/CMakeFiles/MultiEffects.dir/__/__/_deps/juce-src/modules/juce_core/juce_core.mm.o
+[73/113] Building CXX object src/plugin/CMakeFiles/MultiEffects.dir/__/__/_deps/juce-src/modules/juce_graphics/juce_graphics.mm.o
+[74/113] Building CXX object src/plugin/CMakeFiles/MultiEffects.dir/__/__/_deps/juce-src/modules/juce_graphics/juce_graphics_Harfbuzz.cpp.o
+In file included from /Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/juce_graphics_Harfbuzz.cpp:91:
+In file included from /Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb.hh:547:
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'hb_hashmap_t<unsigned int, hb_vector_t<unsigned int>>::item_t' [-Wnontrivial-memcall]
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:186:38: note: in instantiation of function template specialization 'Crap<hb_hashmap_t<unsigned int, hb_vector_t<unsigned int>>::item_t>' requested here
+  186 |   static Type & get_crap () { return Crap<Type> (); }
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:192:33: note: in instantiation of member function 'CrapHelper<hb_hashmap_t<unsigned int, hb_vector_t<unsigned int>>::item_t>::get_crap' requested here
+  192 |   static Type & get () { return Crap (Type); }
+      |                                 ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:188:38: note: expanded from macro 'Crap'
+  188 | #define Crap(Type) CrapHelper<Type>::get_crap ()
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-array.hh:83:36: note: in instantiation of member function 'CrapOrNullHelper<hb_hashmap_t<unsigned int, hb_vector_t<unsigned int>>::item_t>::get' requested here
+   83 |     if (unlikely (!length)) return CrapOrNull (Type);
+      |                                    ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:198:50: note: expanded from macro 'CrapOrNull'
+  198 | #define CrapOrNull(Type) CrapOrNullHelper<Type>::get ()
+      |                                                  ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-iter.hh:89:41: note: in instantiation of member function 'hb_array_t<hb_hashmap_t<unsigned int, hb_vector_t<unsigned int>>::item_t>::__item__' requested here
+   89 |   item_t operator * () { return thiz()->__item__ (); }
+      |                                         ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-iter.hh:456:55: note: in instantiation of member function 'hb_iter_t<hb_array_t<hb_hashmap_t<unsigned int, hb_vector_t<unsigned int>>::item_t>, hb_hashmap_t<unsigned int, hb_vector_t<unsigned int>>::item_t &>::operator*' requested here
+  456 |   { while (it && !hb_has (p.get (), hb_get (f.get (), *it))) ++it; }
+      |                                                       ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-iter.hh:482:12: note: in instantiation of member function 'hb_filter_iter_t<hb_array_t<hb_hashmap_t<unsigned int, hb_vector_t<unsigned int>>::item_t>, bool (item_t::*)() const, const (unnamed struct at /Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-algs.hh:228:1) &>::hb_filter_iter_t' requested here
+  482 |   { return hb_filter_iter_t<Iter, Pred, Proj> (it, p, f); }
+      |            ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-iter.hh:369:51: note: in instantiation of function template specialization 'hb_filter_iter_factory_t<bool (item_t::*)() const, const (unnamed struct at /Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-algs.hh:228:1) &>::operator()<hb_array_t<hb_hashmap_t<unsigned int, hb_vector_t<unsigned int>>::item_t>, nullptr>' requested here
+  369 | operator | (Lhs&& lhs, Rhs&& rhs) HB_AUTO_RETURN (std::forward<Rhs> (rhs) (std::forward<Lhs> (lhs)))
+      |                                                   ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-meta.hh:76:55: note: expanded from macro 'HB_AUTO_RETURN'
+   76 | #define HB_AUTO_RETURN(E) -> decltype ((E)) { return (E); }
+      |                                                       ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-map.hh:424:5: note: in instantiation of function template specialization 'operator|<hb_array_t<hb_hashmap_t<unsigned int, hb_vector_t<unsigned int>>::item_t>, hb_filter_iter_factory_t<bool (item_t::*)() const, const (unnamed struct at /Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-algs.hh:228:1) &>, nullptr>' requested here
+  424 |     | hb_filter (&item_t::is_real)
+      |     ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-meta.hh:76:55: note: expanded from macro 'HB_AUTO_RETURN'
+   76 | #define HB_AUTO_RETURN(E) -> decltype ((E)) { return (E); }
+      |                                                       ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-map.hh:448:13: note: in instantiation of member function 'hb_hashmap_t<unsigned int, hb_vector_t<unsigned int>>::iter_items' requested here
+  448 |     + this->iter_items ()
+      |             ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-meta.hh:76:55: note: expanded from macro 'HB_AUTO_RETURN'
+   76 | #define HB_AUTO_RETURN(E) -> decltype ((E)) { return (E); }
+      |                                                       ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-multimap.hh:78:36: note: in instantiation of member function 'hb_hashmap_t<unsigned int, hb_vector_t<unsigned int>>::values_ref' requested here
+   78 |     for (const auto &m : multiples.values_ref ())
+      |                                    ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: note: explicitly cast the pointer to silence this warning
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+      |           (void*)
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'hb_hashmap_t<unsigned int, Triple>' [-Wnontrivial-memcall]
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:186:38: note: in instantiation of function template specialization 'Crap<hb_hashmap_t<unsigned int, Triple>>' requested here
+  186 |   static Type & get_crap () { return Crap<Type> (); }
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-vector.hh:219:30: note: in instantiation of member function 'CrapHelper<hb_hashmap_t<unsigned int, Triple>>::get_crap' requested here
+  219 |       return std::addressof (Crap (Type));
+      |                              ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:188:38: note: expanded from macro 'Crap'
+  188 | #define Crap(Type) CrapHelper<Type>::get_crap ()
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-ot-layout-common.hh:2688:15: note: in instantiation of function template specialization 'hb_vector_t<hb_hashmap_t<unsigned int, Triple>>::push<hb_hashmap_t<unsigned int, Triple>>' requested here
+ 2688 |       regions.push (std::move (axis_tuples));
+      |               ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: note: explicitly cast the pointer to silence this warning
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+      |           (void*)
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'hb_inc_bimap_t' [-Wnontrivial-memcall]
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:186:38: note: in instantiation of function template specialization 'Crap<hb_inc_bimap_t>' requested here
+  186 |   static Type & get_crap () { return Crap<Type> (); }
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-vector.hh:210:30: note: in instantiation of member function 'CrapHelper<hb_inc_bimap_t>::get_crap' requested here
+  210 |       return std::addressof (Crap (Type));
+      |                              ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:188:38: note: expanded from macro 'Crap'
+  188 | #define Crap(Type) CrapHelper<Type>::get_crap ()
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-ot-layout-common.hh:3351:40: note: in instantiation of member function 'hb_vector_t<hb_inc_bimap_t>::push' requested here
+ 3351 |       hb_inc_bimap_t *map = inner_maps.push ();
+      |                                        ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: note: explicitly cast the pointer to silence this warning
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+      |           (void*)
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'OT::tuple_delta_t' [-Wnontrivial-memcall]
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:186:38: note: in instantiation of function template specialization 'Crap<OT::tuple_delta_t>' requested here
+  186 |   static Type & get_crap () { return Crap<Type> (); }
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-vector.hh:219:30: note: in instantiation of member function 'CrapHelper<OT::tuple_delta_t>::get_crap' requested here
+  219 |       return std::addressof (Crap (Type));
+      |                              ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:188:38: note: expanded from macro 'Crap'
+  188 | #define Crap(Type) CrapHelper<Type>::get_crap ()
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../OT/glyf/../../hb-ot-var-common.hh:331:11: note: in instantiation of function template specialization 'hb_vector_t<OT::tuple_delta_t>::push<const OT::tuple_delta_t &>' requested here
+  331 |       out.push (*this);
+      |           ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: note: explicitly cast the pointer to silence this warning
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+      |           (void*)
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'hb_hashmap_t<const hb_vector_t<bool> *, hb_vector_t<char>>::item_t' [-Wnontrivial-memcall]
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:186:38: note: in instantiation of function template specialization 'Crap<hb_hashmap_t<const hb_vector_t<bool> *, hb_vector_t<char>>::item_t>' requested here
+  186 |   static Type & get_crap () { return Crap<Type> (); }
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:192:33: note: in instantiation of member function 'CrapHelper<hb_hashmap_t<const hb_vector_t<bool> *, hb_vector_t<char>>::item_t>::get_crap' requested here
+  192 |   static Type & get () { return Crap (Type); }
+      |                                 ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:188:38: note: expanded from macro 'Crap'
+  188 | #define Crap(Type) CrapHelper<Type>::get_crap ()
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-array.hh:83:36: note: in instantiation of member function 'CrapOrNullHelper<hb_hashmap_t<const hb_vector_t<bool> *, hb_vector_t<char>>::item_t>::get' requested here
+   83 |     if (unlikely (!length)) return CrapOrNull (Type);
+      |                                    ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:198:50: note: expanded from macro 'CrapOrNull'
+  198 | #define CrapOrNull(Type) CrapOrNullHelper<Type>::get ()
+      |                                                  ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-iter.hh:89:41: note: in instantiation of member function 'hb_array_t<hb_hashmap_t<const hb_vector_t<bool> *, hb_vector_t<char>>::item_t>::__item__' requested here
+   89 |   item_t operator * () { return thiz()->__item__ (); }
+      |                                         ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-iter.hh:456:55: note: in instantiation of member function 'hb_iter_t<hb_array_t<hb_hashmap_t<const hb_vector_t<bool> *, hb_vector_t<char>>::item_t>, hb_hashmap_t<const hb_vector_t<bool> *, hb_vector_t<char>>::item_t &>::operator*' requested here
+  456 |   { while (it && !hb_has (p.get (), hb_get (f.get (), *it))) ++it; }
+      |                                                       ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-iter.hh:482:12: note: in instantiation of member function 'hb_filter_iter_t<hb_array_t<hb_hashmap_t<const hb_vector_t<bool> *, hb_vector_t<char>>::item_t>, bool (item_t::*)() const, const (unnamed struct at /Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-algs.hh:228:1) &>::hb_filter_iter_t' requested here
+  482 |   { return hb_filter_iter_t<Iter, Pred, Proj> (it, p, f); }
+      |            ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-iter.hh:369:51: note: in instantiation of function template specialization 'hb_filter_iter_factory_t<bool (item_t::*)() const, const (unnamed struct at /Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-algs.hh:228:1) &>::operator()<hb_array_t<hb_hashmap_t<const hb_vector_t<bool> *, hb_vector_t<char>>::item_t>, nullptr>' requested here
+  369 | operator | (Lhs&& lhs, Rhs&& rhs) HB_AUTO_RETURN (std::forward<Rhs> (rhs) (std::forward<Lhs> (lhs)))
+      |                                                   ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-meta.hh:76:55: note: expanded from macro 'HB_AUTO_RETURN'
+   76 | #define HB_AUTO_RETURN(E) -> decltype ((E)) { return (E); }
+      |                                                       ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-map.hh:424:5: note: in instantiation of function template specialization 'operator|<hb_array_t<hb_hashmap_t<const hb_vector_t<bool> *, hb_vector_t<char>>::item_t>, hb_filter_iter_factory_t<bool (item_t::*)() const, const (unnamed struct at /Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-algs.hh:228:1) &>, nullptr>' requested here
+  424 |     | hb_filter (&item_t::is_real)
+      |     ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-meta.hh:76:55: note: expanded from macro 'HB_AUTO_RETURN'
+   76 | #define HB_AUTO_RETURN(E) -> decltype ((E)) { return (E); }
+      |                                                       ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-map.hh:428:13: note: in instantiation of member function 'hb_hashmap_t<const hb_vector_t<bool> *, hb_vector_t<char>>::iter_items' requested here
+  428 |     + this->iter_items ()
+      |             ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-meta.hh:76:55: note: expanded from macro 'HB_AUTO_RETURN'
+   76 | #define HB_AUTO_RETURN(E) -> decltype ((E)) { return (E); }
+      |                                                       ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../OT/glyf/../../hb-ot-var-common.hh:1153:43: note: in instantiation of member function 'hb_hashmap_t<const hb_vector_t<bool> *, hb_vector_t<char>>::iter_ref' requested here
+ 1153 |       for (const auto& _ : point_data_map.iter_ref ())
+      |                                           ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: note: explicitly cast the pointer to silence this warning
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+      |           (void*)
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'OT::TupleVariationData::tuple_variations_t' [-Wnontrivial-memcall]
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:186:38: note: in instantiation of function template specialization 'Crap<OT::TupleVariationData::tuple_variations_t>' requested here
+  186 |   static Type & get_crap () { return Crap<Type> (); }
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-vector.hh:219:30: note: in instantiation of member function 'CrapHelper<OT::TupleVariationData::tuple_variations_t>::get_crap' requested here
+  219 |       return std::addressof (Crap (Type));
+      |                              ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:188:38: note: expanded from macro 'Crap'
+  188 | #define Crap(Type) CrapHelper<Type>::get_crap ()
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../OT/glyf/../../hb-ot-var-common.hh:1611:12: note: in instantiation of function template specialization 'hb_vector_t<OT::TupleVariationData::tuple_variations_t>::push<OT::TupleVariationData::tuple_variations_t>' requested here
+ 1611 |       vars.push (std::move (var_data_tuples));
+      |            ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: note: explicitly cast the pointer to silence this warning
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+      |           (void*)
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'hb_vector_t<int>' [-Wnontrivial-memcall]
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:186:38: note: in instantiation of function template specialization 'Crap<hb_vector_t<int>>' requested here
+  186 |   static Type & get_crap () { return Crap<Type> (); }
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-vector.hh:159:14: note: in instantiation of member function 'CrapHelper<hb_vector_t<int>>::get_crap' requested here
+  159 |       return Crap (Type);
+      |              ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:188:38: note: expanded from macro 'Crap'
+  188 | #define Crap(Type) CrapHelper<Type>::get_crap ()
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../OT/glyf/../../hb-ot-var-common.hh:1741:23: note: in instantiation of member function 'hb_vector_t<hb_vector_t<int>>::operator[]' requested here
+ 1741 |       if (!(delta_rows[i].resize (num_cols))) return false;
+      |                       ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: note: explicitly cast the pointer to silence this warning
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+      |           (void*)
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'OT::delta_row_encoding_t' [-Wnontrivial-memcall]
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:186:38: note: in instantiation of function template specialization 'Crap<OT::delta_row_encoding_t>' requested here
+  186 |   static Type & get_crap () { return Crap<Type> (); }
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-vector.hh:219:30: note: in instantiation of member function 'CrapHelper<OT::delta_row_encoding_t>::get_crap' requested here
+  219 |       return std::addressof (Crap (Type));
+      |                              ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:188:38: note: expanded from macro 'Crap'
+  188 | #define Crap(Type) CrapHelper<Type>::get_crap ()
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../OT/glyf/../../hb-ot-var-common.hh:1784:19: note: in instantiation of function template specialization 'hb_vector_t<OT::delta_row_encoding_t>::push<OT::delta_row_encoding_t>' requested here
+ 1784 |         encodings.push (std::move (obj));
+      |                   ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: note: explicitly cast the pointer to silence this warning
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+      |           (void*)
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'OT::index_map_subset_plan_t' [-Wnontrivial-memcall]
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:186:38: note: in instantiation of function template specialization 'Crap<OT::index_map_subset_plan_t>' requested here
+  186 |   static Type & get_crap () { return Crap<Type> (); }
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-vector.hh:159:14: note: in instantiation of member function 'CrapHelper<OT::index_map_subset_plan_t>::get_crap' requested here
+  159 |       return Crap (Type);
+      |              ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:188:38: note: expanded from macro 'Crap'
+  188 | #define Crap(Type) CrapHelper<Type>::get_crap ()
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../OT/glyf/../../hb-ot-var-hvar-table.hh:207:20: note: in instantiation of member function 'hb_vector_t<OT::index_map_subset_plan_t>::operator[]' requested here
+  207 |     index_map_plans[0].init (*index_maps[0], outer_map, inner_sets, plan, false);
+      |                    ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: note: explicitly cast the pointer to silence this warning
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+      |           (void*)
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'hb_set_t' [-Wnontrivial-memcall]
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:186:38: note: in instantiation of function template specialization 'Crap<hb_set_t>' requested here
+  186 |   static Type & get_crap () { return Crap<Type> (); }
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-vector.hh:159:14: note: in instantiation of member function 'CrapHelper<hb_set_t>::get_crap' requested here
+  159 |       return Crap (Type);
+      |              ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:188:38: note: expanded from macro 'Crap'
+  188 | #define Crap(Type) CrapHelper<Type>::get_crap ()
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-subset-cff-common.hh:387:21: note: in instantiation of member function 'hb_vector_t<hb_set_t>::operator[]' requested here
+  387 |       local_closures[i].clear();
+      |                     ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: note: explicitly cast the pointer to silence this warning
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+      |           (void*)
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'CFF::parsed_cs_str_t' [-Wnontrivial-memcall]
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:186:38: note: in instantiation of function template specialization 'Crap<CFF::parsed_cs_str_t>' requested here
+  186 |   static Type & get_crap () { return Crap<Type> (); }
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-vector.hh:159:14: note: in instantiation of member function 'CrapHelper<CFF::parsed_cs_str_t>::get_crap' requested here
+  159 |       return Crap (Type);
+      |              ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:188:38: note: expanded from macro 'Crap'
+  188 | #define Crap(Type) CrapHelper<Type>::get_crap ()
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-subset-cff-common.hh:604:33: note: in instantiation of member function 'hb_vector_t<CFF::parsed_cs_str_t>::operator[]' requested here
+  604 |           return &(*parsed_local_subrs)[context.subr_num];
+      |                                        ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: note: explicitly cast the pointer to silence this warning
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+      |           (void*)
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'CFF::cff2_font_dict_values_t' [-Wnontrivial-memcall]
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:186:38: note: in instantiation of function template specialization 'Crap<CFF::cff2_font_dict_values_t>' requested here
+  186 |   static Type & get_crap () { return Crap<Type> (); }
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-ot-cff2-table.hh:456:25: note: in instantiation of member function 'CrapHelper<CFF::cff2_font_dict_values_t>::get_crap' requested here
+  456 |         if (unlikely (font == &Crap (cff2_font_dict_values_t))) goto fail;
+      |                                ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:188:38: note: expanded from macro 'Crap'
+  188 | #define Crap(Type) CrapHelper<Type>::get_crap ()
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb.hh:272:47: note: expanded from macro 'unlikely'
+  272 | #define unlikely(expr) __builtin_expect (bool(expr), 0)
+      |                                               ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-ot-cff2-table.hh:516:39: note: in instantiation of member function 'OT::cff2::accelerator_templ_t<CFF::cff2_private_dict_opset_t, CFF::cff2_private_dict_values_base_t<CFF::dict_val_t>>::accelerator_templ_t' requested here
+  516 |     accelerator_t (hb_face_t *face) : accelerator_templ_t (face) {}
+      |                                       ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: note: explicitly cast the pointer to silence this warning
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+      |           (void*)
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'CFF::cff2_private_dict_values_base_t<CFF::dict_val_t>' [-Wnontrivial-memcall]
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:186:38: note: in instantiation of function template specialization 'Crap<CFF::cff2_private_dict_values_base_t<CFF::dict_val_t>>' requested here
+  186 |   static Type & get_crap () { return Crap<Type> (); }
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-vector.hh:159:14: note: in instantiation of member function 'CrapHelper<CFF::cff2_private_dict_values_base_t<CFF::dict_val_t>>::get_crap' requested here
+  159 |       return Crap (Type);
+      |              ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:188:38: note: expanded from macro 'Crap'
+  188 | #define Crap(Type) CrapHelper<Type>::get_crap ()
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-ot-cff2-table.hh:464:2: note: in instantiation of member function 'hb_vector_t<CFF::cff2_private_dict_values_base_t<CFF::dict_val_t>>::operator[]' requested here
+  464 |         privateDicts[i].init ();
+      |         ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-ot-cff2-table.hh:516:39: note: in instantiation of member function 'OT::cff2::accelerator_templ_t<CFF::cff2_private_dict_opset_t, CFF::cff2_private_dict_values_base_t<CFF::dict_val_t>>::accelerator_templ_t' requested here
+  516 |     accelerator_t (hb_face_t *face) : accelerator_templ_t (face) {}
+      |                                       ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: note: explicitly cast the pointer to silence this warning
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+      |           (void*)
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'CFF::cff2_private_dict_values_base_t<CFF::op_str_t>' [-Wnontrivial-memcall]
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:186:38: note: in instantiation of function template specialization 'Crap<CFF::cff2_private_dict_values_base_t<CFF::op_str_t>>' requested here
+  186 |   static Type & get_crap () { return Crap<Type> (); }
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-vector.hh:159:14: note: in instantiation of member function 'CrapHelper<CFF::cff2_private_dict_values_base_t<CFF::op_str_t>>::get_crap' requested here
+  159 |       return Crap (Type);
+      |              ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:188:38: note: expanded from macro 'Crap'
+  188 | #define Crap(Type) CrapHelper<Type>::get_crap ()
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-ot-cff2-table.hh:464:2: note: in instantiation of member function 'hb_vector_t<CFF::cff2_private_dict_values_base_t<CFF::op_str_t>>::operator[]' requested here
+  464 |         privateDicts[i].init ();
+      |         ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-ot-cff2-table.hh:528:46: note: in instantiation of member function 'OT::cff2::accelerator_templ_t<CFF::cff2_private_dict_opset_subset_t, CFF::cff2_private_dict_values_base_t<CFF::op_str_t>>::accelerator_templ_t' requested here
+  528 |     accelerator_subset_t (hb_face_t *face) : SUPER (face) {}
+      |                                              ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: note: explicitly cast the pointer to silence this warning
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+      |           (void*)
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'CFF::cff1_private_dict_values_base_t<CFF::dict_val_t>' [-Wnontrivial-memcall]
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:186:38: note: in instantiation of function template specialization 'Crap<CFF::cff1_private_dict_values_base_t<CFF::dict_val_t>>' requested here
+  186 |   static Type & get_crap () { return Crap<Type> (); }
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-vector.hh:159:14: note: in instantiation of member function 'CrapHelper<CFF::cff1_private_dict_values_base_t<CFF::dict_val_t>>::get_crap' requested here
+  159 |       return Crap (Type);
+      |              ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:188:38: note: expanded from macro 'Crap'
+  188 | #define Crap(Type) CrapHelper<Type>::get_crap ()
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-ot-cff1-table.hh:1159:2: note: in instantiation of member function 'hb_vector_t<CFF::cff1_private_dict_values_base_t<CFF::dict_val_t>>::operator[]' requested here
+ 1159 |         privateDicts[i].init ();
+      |         ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-ot-cff1-table.hh:1360:39: note: in instantiation of member function 'OT::cff1::accelerator_templ_t<CFF::cff1_private_dict_opset_t, CFF::cff1_private_dict_values_base_t<CFF::dict_val_t>>::accelerator_templ_t' requested here
+ 1360 |     accelerator_t (hb_face_t *face) : SUPER (face)
+      |                                       ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: note: explicitly cast the pointer to silence this warning
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+      |           (void*)
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'CFF::cff1_font_dict_values_t' [-Wnontrivial-memcall]
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:186:38: note: in instantiation of function template specialization 'Crap<CFF::cff1_font_dict_values_t>' requested here
+  186 |   static Type & get_crap () { return Crap<Type> (); }
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-vector.hh:210:30: note: in instantiation of member function 'CrapHelper<CFF::cff1_font_dict_values_t>::get_crap' requested here
+  210 |       return std::addressof (Crap (Type));
+      |                              ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:188:38: note: expanded from macro 'Crap'
+  188 | #define Crap(Type) CrapHelper<Type>::get_crap ()
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-ot-cff1-table.hh:1172:21: note: in instantiation of member function 'hb_vector_t<CFF::cff1_font_dict_values_t>::push' requested here
+ 1172 |           font = fontDicts.push ();
+      |                            ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-ot-cff1-table.hh:1360:39: note: in instantiation of member function 'OT::cff1::accelerator_templ_t<CFF::cff1_private_dict_opset_t, CFF::cff1_private_dict_values_base_t<CFF::dict_val_t>>::accelerator_templ_t' requested here
+ 1360 |     accelerator_t (hb_face_t *face) : SUPER (face)
+      |                                       ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: note: explicitly cast the pointer to silence this warning
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+      |           (void*)
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'CFF::cff1_private_dict_values_base_t<CFF::op_str_t>' [-Wnontrivial-memcall]
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:186:38: note: in instantiation of function template specialization 'Crap<CFF::cff1_private_dict_values_base_t<CFF::op_str_t>>' requested here
+  186 |   static Type & get_crap () { return Crap<Type> (); }
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-vector.hh:159:14: note: in instantiation of member function 'CrapHelper<CFF::cff1_private_dict_values_base_t<CFF::op_str_t>>::get_crap' requested here
+  159 |       return Crap (Type);
+      |              ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:188:38: note: expanded from macro 'Crap'
+  188 | #define Crap(Type) CrapHelper<Type>::get_crap ()
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-ot-cff1-table.hh:1159:2: note: in instantiation of member function 'hb_vector_t<CFF::cff1_private_dict_values_base_t<CFF::op_str_t>>::operator[]' requested here
+ 1159 |         privateDicts[i].init ();
+      |         ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-ot-cff1-table.hh:1494:46: note: in instantiation of member function 'OT::cff1::accelerator_templ_t<CFF::cff1_private_dict_opset_subset_t, CFF::cff1_private_dict_values_base_t<CFF::op_str_t>>::accelerator_templ_t' requested here
+ 1494 |     accelerator_subset_t (hb_face_t *face) : SUPER (face) {}
+      |                                              ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: note: explicitly cast the pointer to silence this warning
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+      |           (void*)
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'hb_vector_t<hb_aat_map_t::range_flags_t, true>' [-Wnontrivial-memcall]
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:186:38: note: in instantiation of function template specialization 'Crap<hb_vector_t<hb_aat_map_t::range_flags_t, true>>' requested here
+  186 |   static Type & get_crap () { return Crap<Type> (); }
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-vector.hh:159:14: note: in instantiation of member function 'CrapHelper<hb_vector_t<hb_aat_map_t::range_flags_t, true>>::get_crap' requested here
+  159 |       return Crap (Type);
+      |              ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:188:38: note: expanded from macro 'Crap'
+  188 | #define Crap(Type) CrapHelper<Type>::get_crap ()
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-aat-layout-morx-table.hh:1357:23: note: in instantiation of member function 'hb_vector_t<hb_vector_t<hb_aat_map_t::range_flags_t, true>>::operator[]' requested here
+ 1357 |       map->chain_flags[i].push (hb_aat_map_t::range_flags_t {chain->compile_flags (mapper),
+      |                       ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-aat-layout.cc:217:10: note: in instantiation of member function 'AAT::mortmorx<AAT::morx, AAT::ExtendedTypes, 1836020344>::compile_flags' requested here
+  217 |     morx.compile_flags (mapper, map);
+      |          ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: note: explicitly cast the pointer to silence this warning
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+      |           (void*)
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'OT::VariationSelectorRecord' [-Wnontrivial-memcall]
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:186:38: note: in instantiation of function template specialization 'Crap<OT::VariationSelectorRecord>' requested here
+  186 |   static Type & get_crap () { return Crap<Type> (); }
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-open-type.hh:722:37: note: in instantiation of member function 'CrapHelper<OT::VariationSelectorRecord>::get_crap' requested here
+  722 |     if (unlikely (i >= len)) return Crap (Type);
+      |                                     ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:188:38: note: expanded from macro 'Crap'
+  188 | #define Crap(Type) CrapHelper<Type>::get_crap ()
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-ot-cmap-table.hh:1328:26: note: in instantiation of member function 'OT::ArrayOf<OT::VariationSelectorRecord, OT::IntType<unsigned int>>::operator[]' requested here
+ 1328 |       c->add_link (record[j].defaultUVS, obj_indices[i].first);
+      |                          ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: note: explicitly cast the pointer to silence this warning
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+      |           (void*)
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'OT::IndexSubtableRecord' [-Wnontrivial-memcall]
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:186:38: note: in instantiation of function template specialization 'Crap<OT::IndexSubtableRecord>' requested here
+  186 |   static Type & get_crap () { return Crap<Type> (); }
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-vector.hh:159:14: note: in instantiation of member function 'CrapHelper<OT::IndexSubtableRecord>::get_crap' requested here
+  159 |       return Crap (Type);
+      |              ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:188:38: note: expanded from macro 'Crap'
+  188 | #define Crap(Type) CrapHelper<Type>::get_crap ()
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/OT/Color/CBDT/CBDT.hh:607:66: note: in instantiation of member function 'hb_vector_t<OT::IndexSubtableRecord>::operator[]' requested here
+  607 |       IndexSubtableRecord* record = c->serializer->embed (records[i]);
+      |                                                                  ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_graphics/fonts/harfbuzz/hb-null.hh:179:11: note: explicitly cast the pointer to silence this warning
+  179 |   memcpy (obj, std::addressof (Null (Type)), sizeof (*obj));
+      |           ^
+      |           (void*)
+20 warnings generated.
+[75/113] Building CXX object src/plugin/CMakeFiles/MultiEffects.dir/__/__/_deps/juce-src/modules/juce_gui_basics/juce_gui_basics.mm.o
+In file included from /Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_gui_basics/juce_gui_basics.mm:35:
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_gui_basics/juce_gui_basics.cpp:61:2: warning: This version of JUCE does not use the splash screen, the flag JUCE_DISPLAY_SPLASH_SCREEN is ignored [-W#pragma-messages]
+   61 |  JUCE_COMPILER_WARNING ("This version of JUCE does not use the splash screen, the flag JUCE_DISPLAY_SPLASH_SCREEN is ignored")
+      |  ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_core/system/juce_PlatformDefs.h:286:38: note: expanded from macro 'JUCE_COMPILER_WARNING'
+  286 |  #define JUCE_COMPILER_WARNING(msg)  _Pragma (JUCE_STRINGIFY (message (msg)))
+      |                                      ^
+<scratch space>:151:2: note: expanded from here
+  151 |  message ("This version of JUCE does not use the splash screen, the flag JUCE_DISPLAY_SPLASH_SCREEN is ignored")
+      |  ^
+In file included from /Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_gui_basics/juce_gui_basics.mm:35:
+In file included from /Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_gui_basics/juce_gui_basics.cpp:169:
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_gui_basics/native/juce_CGMetalLayerRenderer_mac.h:257:66: warning: 'MTLResourceStorageModeManaged' is deprecated: first deprecated in macOS 27.0 - Managed storage has no effect on Apple Silicon, use Shared storage instead [-Wdeprecated-declarations]
+  257 |                                                                  MTLResourceStorageModeManaged
+      |                                                                  ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Metal.framework/Headers/MTLResource.h:177:5: note: 'MTLResourceStorageModeManaged' has been explicitly marked deprecated here
+  177 |     MTLResourceStorageModeManaged API_DEPRECATED("Managed storage has no effect on Apple Silicon, use Shared storage instead", macos(10.11, 27.0), macCatalyst(13.0, 27.0)) API_UNAVAILABLE(ios) = MTLStorageModeManaged << MTLResourceStorageModeShift,
+      |     ^
+In file included from /Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_gui_basics/juce_gui_basics.mm:35:
+In file included from /Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_gui_basics/juce_gui_basics.cpp:169:
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_gui_basics/native/juce_CGMetalLayerRenderer_mac.h:269:39: warning: 'MTLStorageModeManaged' is deprecated: first deprecated in macOS 27.0 - Managed storage has no effect on Apple Silicon, use Shared storage instead [-Wdeprecated-declarations]
+  269 |                                       MTLStorageModeManaged;
+      |                                       ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Metal.framework/Headers/MTLResource.h:85:5: note: 'MTLStorageModeManaged' has been explicitly marked deprecated here
+   85 |     MTLStorageModeManaged API_DEPRECATED("Managed storage has no effect on Apple Silicon, use Shared storage instead", macos(10.11, 27.0), macCatalyst(13.0, 27.0)) API_UNAVAILABLE(ios) = 1,
+      |     ^
+In file included from /Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_gui_basics/juce_gui_basics.mm:35:
+In file included from /Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_gui_basics/juce_gui_basics.cpp:169:
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_gui_basics/native/juce_CGMetalLayerRenderer_mac.h:301:27: warning: 'didModifyRange:' is deprecated: first deprecated in macOS 27.0 - Managed storage has no effect on Apple Silicon, use Shared storage instead [-Wdeprecated-declarations]
+  301 |             [buffer.get() didModifyRange: { 0, buffer.get().length }];
+      |                           ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Metal.framework/Headers/MTLBuffer.h:60:1: note: 'didModifyRange:' has been explicitly marked deprecated here
+   60 | - (void)didModifyRange:(NSRange)range API_DEPRECATED("Managed storage has no effect on Apple Silicon, use Shared storage instead", macos(10.11, 27.0), macCatalyst(13.0, 27.0)) API_UNAVAILABLE(ios);
+      | ^
+In file included from /Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_gui_basics/juce_gui_basics.mm:35:
+In file included from /Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_gui_basics/juce_gui_basics.cpp:187:
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_gui_basics/native/juce_NSViewComponentPeer_mac.mm:1636:23: warning: variable 'target' set but not used [-Wunused-but-set-variable]
+ 1636 |             if (auto* target = findCurrentTextInputTarget())
+      |                       ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_gui_basics/native/juce_NSViewComponentPeer_mac.mm:1900:17: warning: enumeration value 'NSEventTypeMouseCancelled' not explicitly handled in switch [-Wswitch-enum]
+ 1900 |         switch ([e type])
+      |                 ^~~~~~~~
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_gui_basics/native/juce_NSViewComponentPeer_mac.mm:1900:17: note: add missing switch cases
+ 1900 |         switch ([e type])
+      |                 ^
+6 warnings generated.
+[76/113] Linking CXX static library "src/plugin/MultiEffects_artefacts/Release/libMFX Claude_SharedCode.a"
+[77/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_Standalone.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_ARA.cpp.o
+[78/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_Standalone.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_Unity.cpp.o
+[79/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_Standalone.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_AU_2.mm.o
+[80/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_Standalone.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_VST2.mm.o
+[81/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_Standalone.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_AU_1.mm.o
+[82/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_Standalone.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_AUv3.mm.o
+[83/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_Standalone.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_AAX.mm.o
+[84/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_Standalone.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_LV2.mm.o
+[85/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_Standalone.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_VST3.mm.o
+[86/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_Standalone.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_AAX_utils.cpp.o
+[87/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_AU.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_AAX_utils.cpp.o
+[88/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_AU.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_Standalone.cpp.o
+[89/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_AU.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_Unity.cpp.o
+[90/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_AU.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_AAX.mm.o
+[91/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_AU.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_LV2.mm.o
+[92/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_AU.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_ARA.cpp.o
+[93/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_AU.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_AUv3.mm.o
+[94/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_AU.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_VST2.mm.o
+[95/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_AU.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_VST3.mm.o
+[96/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_VST3.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_AAX_utils.cpp.o
+[97/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_VST3.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_ARA.cpp.o
+[98/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_VST3.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_Unity.cpp.o
+[99/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_VST3.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_AU_1.mm.o
+[100/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_VST3.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_AAX.mm.o
+[101/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_VST3.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_Standalone.cpp.o
+[102/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_VST3.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_AU_2.mm.o
+[103/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_VST3.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_LV2.mm.o
+[104/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_VST3.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_AUv3.mm.o
+[105/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_VST3.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_VST2.mm.o
+[106/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_AU.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_AU_2.mm.o
+[107/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_Standalone.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_Standalone.cpp.o
+[108/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_AU.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_AU_1.mm.o
+[109/113] Building CXX object src/plugin/CMakeFiles/MultiEffects_VST3.dir/__/__/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_VST3.mm.o
+In file included from /Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_VST3.mm:35:
+In file included from /Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_audio_plugin_client/juce_audio_plugin_client_VST3.cpp:51:
+In file included from /Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_audio_processors/format_types/juce_VST3Headers.h:153:
+In file included from /Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_audio_processors/format_types/VST3_SDK/base/source/fstring.cpp:41:
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_audio_processors/format_types/VST3_SDK/pluginterfaces/base/fvariant.h:51:31: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'Steinberg::FVariant' [-Wnontrivial-memcall]
+   51 |         inline FVariant () { memset (this, 0, sizeof (FVariant)); }
+      |                                      ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_audio_processors/format_types/VST3_SDK/pluginterfaces/base/fvariant.h:51:31: note: explicitly cast the pointer to silence this warning
+   51 |         inline FVariant () { memset (this, 0, sizeof (FVariant)); }
+      |                                      ^
+      |                                      (void*)
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_audio_processors/format_types/VST3_SDK/pluginterfaces/base/fvariant.h:260:10: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'Steinberg::FVariant' [-Wnontrivial-memcall]
+  260 |         memset (this, 0, sizeof (FVariant));
+      |                 ^
+/Users/kimhyuntae/multi_effects_claude/build-mac/_deps/juce-src/modules/juce_audio_processors/format_types/VST3_SDK/pluginterfaces/base/fvariant.h:260:10: note: explicitly cast the pointer to silence this warning
+  260 |         memset (this, 0, sizeof (FVariant));
+      |                 ^
+      |                 (void*)
+2 warnings generated.
+[110/113] Linking CXX CFBundle shared module "src/plugin/MultiEffects_artefacts/Release/AU/MFX Claude.component/Contents/MacOS/MFX Claude"
+[111/113] Linking CXX executable "src/plugin/MultiEffects_artefacts/Release/Standalone/MFX Claude.app/Contents/MacOS/MFX Claude"
+[112/113] Linking CXX CFBundle shared module "src/plugin/MultiEffects_artefacts/Release/VST3/MFX Claude.vst3/Contents/MacOS/MFX Claude"
+/Users/kimhyuntae/multi_effects_claude/build-mac/src/plugin/MultiEffects_artefacts/Release/VST3/MFX Claude.vst3: code has no resources but signature indicates they must be present
+-- Replacing invalid signature with ad-hoc signature
+/Users/kimhyuntae/multi_effects_claude/build-mac/src/plugin/MultiEffects_artefacts/Release/VST3/MFX Claude.vst3: replacing existing signature
+removing moduleinfo.json
+creating /Users/kimhyuntae/multi_effects_claude/build-mac/src/plugin/MultiEffects_artefacts/Release/VST3/MFX Claude.vst3/Contents/Resources/moduleinfo.json
+RESULT build: PASS
+== core tests
+RESULT mfx_tests: PASS
+[PASS] performance.no_heap_allocation_or_free_ab763_and_custom_drive_adaa     72.4 ms 
+
+86 passed, 0 failed, 184683 checks
+MFX Claude 0.4.0+0518cc3 2026-11-25T00:29:20Z
+build-mac/src/plugin/MultiEffects_artefacts/Release/AU/MFX Claude.component/Contents/MacOS/MFX Claude: Mach-O 64-bit bundle arm64
+backed up existing MFX Claude.component -> /Users/kimhyuntae/Library/Audio/Plug-Ins/_mfx_claude_backup/20261125-092920
+backed up existing MFX Claude.vst3 -> /Users/kimhyuntae/Library/Audio/Plug-Ins/_mfx_claude_backup/20261125-092920
+installed MFX Claude AU + VST3
+other plug-ins present (untouched):
+MFX Claude.component
+Multi Effects.component
+MultiEffects.component
+== auval list
+aufx Mfx6 Mefx  -  Multi Effects: Multi Effects
+aumf McL1 MfxL  -  MFX Lab: MFX Claude
+aumf Mfx1 Mfxp  -  MultiEffects Project: MultiEffects
+== auval -v aumf McL1 MfxL
+RESULT auval: PASS
+AU VALIDATION SUCCEEDED.
+
+Next (manual, Logic Pro): see docs/BUILD_GUIDE.md §2 'Logic 체크리스트' and report each item.
+log written: tests/results/macos_verify_20261125-092920.txt

@@ -31,6 +31,9 @@
 | R-009 | DSP Architecture Search | NOT IMPLEMENTED (타깃 하드웨어 미정) | 수동 후보 비교(E-003)만 수행 |
 | R-010 | 소자 단위 신경망 / 범용 회로 설계 플랫폼 | 장기 후보(범위 외) | — |
 
+## v0.5 우선순위 재조정
+세부는 `docs/TECHNICAL_RESEARCH.md` §5. 요약: ① 측정 인프라(리앰프/DI) ② AB763 SPICE 기준 회로 비교 ③ parity 확장(ADAA·AB763 톤스택/3극관) ④ ARM NEON·float ADAA(하드웨어 확정 후) ⑤ Reverb 청취 튜닝 → Shimmer/Freeze ⑥ Delay/Dynamics 고도화 ⑦ Automated Analog-to-DSP 파이프라인.
+
 ## parity 범위 (과장 금지)
 parity는 "Python 미러와 C++가 같은 수식을 같은 결과로 계산한다"만 증명합니다. 실제 회로·장비와의 일치는 증명하지 않습니다.
 GRU 베이스라인은 NAM이 아닙니다(NAM은 공식 core로 로딩만 검증).

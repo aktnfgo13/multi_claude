@@ -44,6 +44,11 @@ Choice 파라미터 확장 정책, 블록별 메모리 보고, ARMv7 FTZ 경로.
 ## v0.4 Sound Engine Expansion (2026-11-25)
 Custom Drive Model(v1/v2/v2+ADAA), AB763 Normal M1 앰프, 팩토리 프리셋 06 추가. 다음: Mac 1회 검증 → AB763 M2(PI·6V6·Sag·NFB) → 실측 비교.
 
+## v0.5 Premium Audio Engine (2026-11-25)
+AB763 M2(PI·6V6·Sag·NFB·OT/스피커 부하, 지연 없는 NFB 루프), Custom Drive ADAA 보정, Premium Plate v1, 저장 호환 훅, 팩토리 프리셋 07,
+음질 목표·기술 연구 문서. 다음 사이클 우선순위: ① v0.5 Mac/Logic 확인 ② 측정 인프라(리앰프/DI)와 AB763 SPICE 비교
+③ Plate 청취 튜닝·Shimmer/Freeze ④ Delay(BBD/Tape)·Dynamics(FET) ⑤ parity 확장 ⑥ 출시 준비.
+
 ## 다음 마일스톤
 1. M1 (Mac, 사용자): `scripts/macos_build_install_verify.sh` → auval → Logic 체크리스트(BUILD_GUIDE §2) → 결과 로그 전달.
 2. M1b (청취, 사용자): `audio/compare_drive_v2/abx` 블라인드 청취, 프리셋 02/03/05 확인, Custom Drive v2 노브 감각 피드백.

@@ -57,6 +57,20 @@ mfx_render -i <in.wav> -o <out.wav> (--preset <preset.json> | --effect <type> [-
 * CPU는 같은 기계에서 다른 무거운 작업과 동시에 돌리지 않은 실행만 비교에 사용. Mac과 Linux 수치는 섞지 않음.
 * 버퍼 32–512: 엔진은 블록 크기 불변(테스트 `block_size_invariance`), 버퍼별 실시간 여유는 `run_benchmarks.py`.
 
+## 3-2. 앰프 측정 (v0.5, `tests/audio/test_amp_ab763.cpp`)
+* 게인 스테이징·볼륨별 THD/배음(220 Hz, −12 dBFS), 소신호 주파수 응답(re 1 kHz), Sag(B+ 궤적: 유휴, 버스트 강하, 63 % 시간, 200 ms 복귀),
+  SR 독립(44.1/48/96 kHz, 모델별), 극단 입력(+12 dBFS 잡음 + NaN, 44.1–192 kHz, 1x/8x), 프리셋 저장·복원, 콜백 할당 0.
+* 모델 간 비교는 같은 노브 값 기준. 실측 앰프·SPICE 비교는 아직 없음(Level 4 근거 아님).
+
+## 3-3. 리버브 측정 (v0.5, `tools/benchmark/reverb_metrics.py`, `tests/audio/test_reverb_premium.cpp`)
+* 단위 임펄스(mix 100 %, early 0, pre-delay 0) 12 s 렌더.
+* RT60: Schroeder EDC, T20(−5…−25 dB) 선형 적합. 옥타브 대역은 영패딩 FFT 브릭월(순환 겹침 방지).
+* 에코 밀도: NED(Abel & Huang), 20 ms 창, 50/150/400 ms.
+* 스테레오: 0.3–1.3 s 꼬리 L/R 상관.
+* 금속성(metallic) 지표: 0.3–1.3 s 꼬리 스펙트럼에서 좁은 피크 / 1/24 옥타브 평균의 최댓값(dB). 낮을수록 고름. 청감 판단을 대신하지 않음.
+* 안정성: Decay 20 s·Size 150·Mod 최대에서 잡음 1 s 후 10 s, 에너지 감소·유한. 바이패스 트레일, 메모리(바이트) 기록.
+* CPU: `mfx_render` 10 s 스테레오 렌더 3회 최솟값(파일 I/O 포함 상한값).
+
 ## 4. 최종 평가 항목 (실제 장비 확보 후)
 
 ESR / Pre-emphasis ESR / MRSTFT / 배음 스펙트럼 / IMD(SMPTE 60 Hz + 7 kHz 4:1) / 엔벨로프 오차(다이내믹 응답) /

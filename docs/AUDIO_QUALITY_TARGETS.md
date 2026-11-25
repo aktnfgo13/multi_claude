@@ -1,0 +1,54 @@
+# 음질 목표와 품질 Level (AUDIO_QUALITY_TARGETS)
+
+- 작성: 2026-11-25 (v0.5) · 근거: 사용자 v0.5 지시서의 "Premium Audio Quality Standard" 절.
+- **원본 자료 접근 범위:** 사용자가 언급한 원문 "Premium Audio Quality Standard"와
+  "Premium Multi Effects — 기술 연구 및 개발 방향 통합 보고서"는 이 저장소·Claude 프로젝트·업로드 폴더에서 찾지 못했습니다.
+  이 문서는 v0.5 지시서에 포함된 목표표·Level 정의와, 이전에 받은 연구 방향 문서(DDSP/Gray-box, APME 피드백)만 근거로 합니다.
+  원문을 받으면 이 문서를 갱신하십시오(기억으로 재구성하지 않음).
+
+## 1. 목표 벤치마크 (비교 대상이며 달성 주장 아님)
+| 분야 | 벤치마크 | MFX Claude 대응 블록 |
+|---|---|---|
+| American Clean Amp | UAFX Dream '65 | `amp_ab763` (M1/M2) |
+| British Class A | UAFX Ruby '63 | 없음 (`amp` Legacy 모드만) |
+| Tweed | UAFX Woodrow '55 | 없음 |
+| British Lead | UAFX Lion '68 | 없음 (`amp` High Gain은 Legacy) |
+| Drive | Vemuram Jan Ray, Fractal Drive | `custom_drive`, `overdrive`, `distortion`(WDF) |
+| Vintage Reverb | UAFX Golden Reverberator | `reverb` Spring-style(양식화), `reverb_plate_premium` |
+| Ambient Reverb | Strymon BigSky | `reverb` Ambient/Hall(FDN) |
+| Delay | UAFX Starlight, Del-Verb | `delay` (digital/analog-style/tape-style) |
+| Dynamics | UAFX 1176 | `compressor` |
+| Capture | NAM, Quad Cortex | `nam_amp` (공식 NAM core 로더) |
+상용 제품과의 동등성은 실측·블라인드 청취 비교 없이 주장하지 않습니다.
+
+## 2. 품질 Level 정의
+| Level | 정의 | 필요 근거 |
+|---|---|---|
+| 1 | 기본 기능 구현 | 동작 테스트 |
+| 2 | 수학적으로 검증된 DSP | 해석식/기준 구현 대비 수치 검증, parity, SR 독립 |
+| 3 | 물리·음향 특성을 반영한 모델 | 회로·음향 구조를 따른 모델 + 동작 특성 측정(전달곡선, 동특성) |
+| 4 | 실측·청음 기반 최적화 | 실제 장비 측정 데이터 대비 오차, 블라인드 청취 |
+| 5 | 상용 고급 제품과 비교 검증 완료 | 같은 조건의 ABX·지표 비교 |
+
+## 3. 현재 블록 평가 (2026-11-25, v0.5 코드·테스트 기준)
+| 블록 | Level | 근거 / 부족한 점 |
+|---|---|---|
+| Custom Drive v2 | 2 | 해석적 곡선, parity(Python/C++), Codex 대비 공통 하니스 측정. 실측·청취 없음 |
+| Custom Drive v2 + ADAA (+보정) | 2 | 앨리어싱 −15~−20 dB(2x), 고역 감쇠 보정 ±0.1 dB. parity 미러 없음 |
+| AB763 M1 | 2–3 | Koren 12AX7 부하선, Yeh 톤스택(해석식 ±0.35 dB). 파워단 단순 포화 |
+| AB763 M2 | 3 (실측 전) | LTP PI, 6V6 Koren, 그리드 전도·블로킹, 정류관 Sag, 지연 없는 NFB 루프, 반응성 스피커 부하. 회로값 문헌 기반, 실기·SPICE 비교 없음 → Level 4 아님 |
+| Distortion (WDF 다이오드) | 2–3 | ngspice 대비 ESR −65.8 dB (회로 수준, 시뮬레이션) |
+| Overdrive / Fuzz / Boost | 1–2 | 구조 근사, Fuzz는 현상학 모델 |
+| Legacy `amp` | 1–2 | tanh 계열 + EQ, 회로 모델 아님 |
+| Cabinet (IR/분할 컨볼루션) | 2 | 컨볼루션 정확성 테스트. 품질은 IR에 의존 |
+| Premium Plate v1 | 2–3 | Dattorro 토폴로지, RT60 추종(±20 %), 주파수별 감쇠, NED 0.95(400 ms), L/R 상관 ≈ 0. 청취 없음 |
+| Legacy `reverb` 5종 | 2 | FDN + Householder, RT60 기반 |
+| Delay | 1–2 | 분수 지연, 테이프/아날로그 스타일 근사(BBD·테이프 물리 모델 아님) |
+| Compressor | 1–2 | 피드포워드 기본형, FET 특성 모델 아님 |
+| NAM | 2 (로더) | 공식 core, 모델 품질은 캡처에 의존. SR 불일치 시 바이패스 |
+| 실시간/플랫폼 | — | Linux x86_64·arm64 VM 테스트, macOS 네이티브 빌드·auval PASS(v0.4), Logic GUI는 사용자 확인 |
+
+## 4. 다음 Level 상승 조건
+- Level 3 → 4 (AB763, Custom Drive): 실제 앰프/페달 DI·리앰프 측정 데이터, 측정 지연·레벨 보정 후 ESR/MRSTFT·THD 곡선 비교, ABX.
+- Reverb Level 3: IR 기반 비교(상용 플레이트 IR은 라이선스 확인 필요), 청취.
+- 모든 Level 5 주장: 동일 입력·레벨 매칭 ABX와 정량 지표를 함께 공개.

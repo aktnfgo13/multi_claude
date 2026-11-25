@@ -90,6 +90,7 @@ CustomDrive::CustomDrive() {
     ParamInfo md{"model", "Model", 0, 2, (float)kModelV2, ParamUnit::Choice};
     md.choices = kModels; md.numChoices = 3;
     params_.add(md);
+    params_.add({"adaa_comp", "ADAA Compensation", 0, 1, 1, ParamUnit::Toggle});
 }
 
 void CustomDrive::onPrepare(const ProcessSpec& spec) {
@@ -111,6 +112,8 @@ void CustomDrive::onReset() {
     dcOut_.reset();
     bias_[0] = bias_[1] = 0.0f;
     adInit_[0] = adInit_[1] = false;
+    fir1_[0] = fir1_[1] = fir2_[0] = fir2_[1] = 0.0f;
+    for (auto& pb : pad_) std::fill(std::begin(pb), std::end(pb), 0.0f);
     fadeIn_ = 0;
 }
 
@@ -133,6 +136,8 @@ void CustomDrive::onParametersChanged(bool immediate) {
     const float mix = params_.get(kMix) / 100.0f, lvl = dbToGain(params_.get(kLevel));
     if (immediate) { mix_.setImmediate(mix); level_.setImmediate(lvl); }
     else { mix_.setTarget(mix); level_.setTarget(lvl); }
+    const bool comp = params_.getInt(kAdaaComp) != 0;
+    if (comp != adaaComp_) { adaaComp_ = comp; fir1_[0] = fir1_[1] = fir2_[0] = fir2_[1] = 0.0f; if (!immediate) fadeIn_ = fadeLen_; }
     const int md = clampv(params_.getInt(kModel), 0, 2);
     if (md != model_) {
         model_ = md;
@@ -195,6 +200,7 @@ void CustomDrive::updateCoefficients() {
 void CustomDrive::onProcess(AudioBlock& block) {
     const int lat = Oversampler::latencyFor(osIndex_);
     const int F = 1 << osIndex_;
+    const int dExtra = extraLatencyInt();
     for (int start = 0; start < block.numSamples; start += kControlBlock) {
         const int L = std::min(kControlBlock, block.numSamples - start);
         bool smoothing = false;
@@ -248,7 +254,7 @@ void CustomDrive::onProcess(AudioBlock& block) {
                 v = fizz_.process(v, c) * makeup_;
                 float* db = dryBuf_[c];
                 db[dryPos_[c]] = x[i];
-                const float d = db[(dryPos_[c] - lat) & (kDryLen - 1)];
+                const float d = db[(dryPos_[c] - lat - dExtra) & (kDryLen - 1)];
                 dryPos_[c] = (dryPos_[c] + 1) & (kDryLen - 1);
                 x[i] = (d + mixR[i] * (v * fadeR[i] - d)) * lvlR[i];
             }
@@ -358,9 +364,22 @@ void CustomDrive::processNonlinearAdaa(float* u, int n, int c) {
         const double k = std::fabs(dw) > kEps ? (G2 - G2p) / dw : nl::kneeCurveD(0.5 * (w + wp), k2);
         wp = w; G2p = G2;
         y = s * k / c2;
-        u[i] = deemph_.process((float)y, c);
+        float yo = (float)y;
+        if (adaaComp_) { // undo the ADAA (1+z^-1)^2/4 droop: symmetric 3-tap FIR, +1 sample delay
+            const float o = 1.5f * fir1_[c] - 0.25f * (yo + fir2_[c]);
+            fir2_[c] = fir1_[c]; fir1_[c] = yo; yo = o;
+            const int pad = padSamples();
+            if (pad > 0) { // integer pad so the total extra delay is a whole base-rate sample
+                float* pb = pad_[c];
+                pb[padPos_[c]] = yo;
+                yo = pb[(padPos_[c] - pad) & (kPadLen - 1)];
+                padPos_[c] = (padPos_[c] + 1) & (kPadLen - 1);
+            }
+        }
+        u[i] = deemph_.process(yo, c);
     }
     adZ_[c] = zp; adG_[c] = Gp; adW_[c] = wp; adG2_[c] = G2p;
+    fir1_[c] = flushDenorm(fir1_[c]); fir2_[c] = flushDenorm(fir2_[c]);
     bias_[c] = flushDenorm(b);
 }
 

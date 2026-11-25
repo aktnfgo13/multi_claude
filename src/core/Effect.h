@@ -55,6 +55,10 @@ public:
     virtual std::string getExtraState() const { return {}; }
     /// Returns false (and leaves the effect usable) when the state cannot be applied.
     virtual bool setExtraState(const std::string& /*state*/, std::string* /*error*/ = nullptr) { return true; }
+    /// Value a parameter must take when a saved preset/host state does NOT contain it (the state was
+    /// written before the parameter existed). Lets a new parameter default to the new behaviour for new
+    /// instances while old saves keep their old sound (R6). Return false = use the parameter default.
+    virtual bool legacyValueForMissingParam(int /*index*/, float& /*value*/) const { return false; }
     /// Where to look for external files referenced by a state (preset folder, user libraries), and where
     /// to report non-fatal problems (e.g. a file that was found but differs from the saved one).
     struct StateContext {

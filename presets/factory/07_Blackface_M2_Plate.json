@@ -1,0 +1,16 @@
+{
+  "format": "mfx-preset",
+  "version": 1,
+  "name": "Blackface M2 Plate",
+  "input_gain_db": 0,
+  "output_gain_db": 0,
+  "tempo_bpm": 120,
+  "parallel": false,
+  "parallel_mix": 0.5,
+  "chain": [
+    {"type": "noise_gate", "params": {"threshold_db": -70, "range_db": -40, "attack_ms": 1, "release_ms": 120}},
+    {"type": "amp_ab763", "params": {"volume": 5, "treble": 6, "bass": 4, "mix": 100, "level": 0, "oversampling": 1, "model": 1}},
+    {"type": "cabinet", "params": {}},
+    {"type": "reverb_plate_premium", "params": {"decay_s": 2.2, "predelay_ms": 25, "mix": 22, "damping_hz": 6000, "bass_mult": 1.1}}
+  ]
+}

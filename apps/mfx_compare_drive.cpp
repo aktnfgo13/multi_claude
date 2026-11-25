@@ -46,6 +46,7 @@ struct DUT {
 };
 
 static int gClaudeModel = CustomDrive::kModelV2;
+static int gClaudeAdaaComp = 1;
 struct ClaudeDUT : DUT {
     CustomDrive d;
     double fs = 48000; int os = 2;
@@ -57,6 +58,7 @@ struct ClaudeDUT : DUT {
         d.setParam("mid", k.mid); d.setParam("level", k.level); d.setParam("mix", 100);
         d.setParam("oversampling", os == 1 ? 0.f : os == 2 ? 1.f : os == 4 ? 2.f : 3.f);
         d.setParam("model", (float)gClaudeModel);
+        d.setParam("adaa_comp", (float)gClaudeAdaaComp);
         d.prepare({fs, 512, 1}); // parameters applied immediately (identical initial state)
     }
     void process(float* x, int n) override {
@@ -240,6 +242,7 @@ int main(int argc, char** argv) {
         else if (a == "--claude-only") claudeOnly = true;
         else if (a == "--os" && i + 1 < argc) osMain = std::atoi(argv[++i]);
         else if (a == "--claude-model" && i + 1 < argc) gClaudeModel = std::atoi(argv[++i]); // 0 v1, 1 v2, 2 v2+ADAA
+        else if (a == "--claude-adaa-comp" && i + 1 < argc) gClaudeAdaaComp = std::atoi(argv[++i]);
     }
     fs::create_directories(out / "renders");
     fs::create_directories(out / "abx");

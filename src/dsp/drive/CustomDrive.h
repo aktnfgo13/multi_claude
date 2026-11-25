@@ -22,6 +22,7 @@
 #pragma once
 
 #include <atomic>
+#include <cmath>
 #include <vector>
 
 #include "core/Effect.h"
@@ -57,7 +58,7 @@ CustomDrivePhysical customDriveMapping(const CustomDriveKnobs& k);
 
 class CustomDrive : public Effect {
 public:
-    enum P { kDrive, kHeadroom, kTone, kTight, kCrunch, kGrain, kMid, kMix, kLevel, kOversampling, kModel, kNumParams };
+    enum P { kDrive, kHeadroom, kTone, kTight, kCrunch, kGrain, kMid, kMix, kLevel, kOversampling, kModel, kAdaaComp, kNumParams };
     /// Sound model (appended parameter, R6): 0 = v1 (v0.1 mapping + curve, bit-exact),
     /// 1 = v2 (default, v0.2 sound), 2 = v2 + 1st-order ADAA on both clipping stages (v0.4).
     enum Model { kModelV1 = 0, kModelV2 = 1, kModelV2Adaa = 2 };
@@ -66,7 +67,16 @@ public:
     const char* typeId() const override { return "custom_drive"; }
     const char* displayName() const override { return "Custom Drive"; }
     const char* category() const override { return "Drive"; }
-    int latencySamples() const override { return Oversampler::latencyFor(osIndex_); }
+    int latencySamples() const override { return Oversampler::latencyFor(osIndex_) + extraLatencyInt(); }
+    /// v0.5: "adaa_comp" (appended) — with model v2 + ADAA: 3-tap symmetric FIR [-1/4, 3/2, -1/4] at the
+    /// oversampled rate that undoes the ADAA small-signal high-frequency droop, and dry/wet alignment of the
+    /// extra delay (wet padded to a whole base-rate sample, dry delayed by the same integer amount). New instances: on;
+    /// saves without the parameter: off (v0.4 sound).
+    bool legacyValueForMissingParam(int index, float& v) const override {
+        if (index == kAdaaComp) { v = 0.0f; return true; }
+        return false;
+    }
+    bool adaaCompensated() const { return model_ == kModelV2Adaa && adaaComp_; }
 
     /// Exposed for tests / documentation.
     const CustomDrivePhysical& physical() const { return phys_; }
@@ -116,6 +126,15 @@ private:
     int fadeIn_ = 0, fadeLen_ = 1;
     std::vector<float> tmp_;
     int model_ = kModelV2;
+    bool adaaComp_ = true;
+    float fir1_[kMaxChannels] = {0, 0}, fir2_[kMaxChannels] = {0, 0};
+    // ADAA + FIR add 2 oversampled samples; the wet path is padded to a whole base-rate sample so the dry
+    // path stays an integer delay (no interpolation loss): pad = F*ceil(2/F) - 2 oversampled samples.
+    static constexpr int kPadLen = 8;
+    float pad_[kMaxChannels][kPadLen] = {};
+    int padPos_[kMaxChannels] = {0, 0};
+    int extraLatencyInt() const { const int F = 1 << osIndex_; return adaaCompensated() ? (2 + F - 1) / F : 0; }
+    int padSamples() const { const int F = 1 << osIndex_; return F * ((2 + F - 1) / F) - 2; }
     // ADAA state (previous stage inputs and antiderivative values), per channel, double precision
     double adZ_[kMaxChannels] = {0, 0}, adG_[kMaxChannels] = {0, 0};
     double adW_[kMaxChannels] = {0, 0}, adG2_[kMaxChannels] = {0, 0};

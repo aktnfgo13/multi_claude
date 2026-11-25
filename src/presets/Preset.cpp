@@ -72,10 +72,16 @@ PresetLoadReport presetFromJson(Engine& e, const Json& j, const PresetLoadContex
         const std::string type = b.at("type").asString();
         auto fx = createEffect(type);
         if (!fx) { rep.warnings.push_back("unknown effect type '" + type + "' skipped"); slots.push_back(-1); continue; }
+        std::vector<bool> present((size_t)fx->params().size(), false);
         for (const auto& [k, v] : b.at("params").items()) {
             const int idx = fx->params().indexOf(k.c_str());
             if (idx < 0) { rep.warnings.push_back(type + ": unknown parameter '" + k + "' ignored"); continue; }
             fx->params().set(idx, (float)v.asNumber());
+            present[(size_t)idx] = true;
+        }
+        for (int i = 0; i < fx->params().size(); ++i) { // parameters added after the preset was written (R6)
+            float lv;
+            if (!present[(size_t)i] && fx->legacyValueForMissingParam(i, lv)) fx->params().set(i, lv);
         }
         const int slot = e.addEffect(std::move(fx), laneFromString(b.at("lane").asString()));
         if (slot < 0) { rep.warnings.push_back("chain full, '" + type + "' skipped"); slots.push_back(-1); continue; }
