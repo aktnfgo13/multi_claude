@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.24)
-project(MultiEffects VERSION 0.2.0 LANGUAGES C CXX)
+project(MultiEffects VERSION 0.4.0 LANGUAGES C CXX)
 
 # ----------------------------------------------------------------------------- options
 option(MFX_BUILD_TESTS   "Build C++ tests"                                   ON)
@@ -66,6 +66,7 @@ add_library(mfx_core STATIC
   src/dsp/gain/Utility.cpp
   src/dsp/dynamics/Dynamics.cpp
   src/dsp/amp/AmpSim.cpp
+  src/dsp/amp/AB763Amp.cpp
   src/dsp/cabinet/Convolver.cpp
   src/dsp/cabinet/Cabinet.cpp
   src/dsp/modulation/Modulation.cpp
@@ -148,6 +149,7 @@ if(MFX_BUILD_TESTS)
     tests/unit/test_presets.cpp
     tests/audio/test_effects.cpp
     tests/audio/test_custom_drive.cpp
+    tests/audio/test_amp_ab763.cpp
     tests/integration/test_engine.cpp
     tests/integration/test_concurrency.cpp
   tests/integration/test_analysis.cpp

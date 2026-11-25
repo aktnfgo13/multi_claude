@@ -21,6 +21,7 @@
 | Mix | 0–100 % | 100 % | 병렬 클린(지연 정렬) |
 | Level | −24…+12 dB | −6 dB | 출력 |
 | Oversampling | 1x / 2x / 4x / 8x | 2x | 비선형 구간만 |
+| Model (v0.4, 마지막에 추가) | v1 (legacy) / v2 / v2 + ADAA | v2 | v1 = v0.1 소리(비트 동일), v2 = v0.2 소리(기본), v2 + ADAA = v2 곡선 + 1차 ADAA(고게인 앨리어싱 감소) |
 
 ## 2. 매핑 변경 이력
 
@@ -53,6 +54,14 @@
 4x에서는 D50 −92.8 dB로 충분하며(D100은 4x −36 dB, 8x −48 dB), Claude 4x CPU(353 ns/샘플)가 Codex 2x(668 ns/샘플)보다 가볍습니다(같은 기계).
 기본 OS를 2x로 유지하라는 지시를 따르되, 사용자 안내에 "Drive 60 이상은 4x 권장"을 적었습니다(KNOWN_ISSUES K-001).
 
+### v0.4: Model 파라미터 (기존 소리 보존)
+* `model`은 Custom Drive 파라미터 목록의 **끝(index 10)**에 추가되었습니다. 기존 파라미터 index·id는 그대로라 호스트 자동화가 유지됩니다.
+* 프리셋/호스트 상태에 `model`이 없으면(v0.2–v0.3에서 저장) 기본값 v2로 로드됩니다 → MFX Claude(McL1)로 저장된 모든 기존 상태는 v2 소리 그대로.
+* v0.1 소리는 `model = v1 (legacy)`로 선택합니다(v0.1 바이너리와 출력 비트 동일, 4개 설정 확인).
+  v0.1로 만든 Logic 프로젝트는 별도 AU "MultiEffects"(Mfxp/Mfx1)를 쓰므로 그 AU가 설치되어 있는 한 v1 소리 그대로입니다.
+  v0.1 시절 저장한 **JSON 프리셋 파일**은 형식이 같아 자동 구분이 불가능합니다 → 로드 후 Model을 v1로 바꾸면 됩니다.
+  v0.4부터 프리셋에 `app_version`을 기록해 이후에는 구분 가능합니다.
+
 ### 기존 프리셋 영향과 조치
 
 합성 Karplus-Strong DI(피크 −7.2 dBFS, 녹음 아님)로 Custom Drive 블록만 렌더해 측정했습니다
@@ -70,7 +79,7 @@ v2에서 값을 그대로 두면 02/03 프리셋의 출력이 14–19 dB 낮아�
   **청감 확인이 필요합니다(사용자 확인 항목).**
 * v0.1 사용자 프리셋은 마이그레이션하지 않습니다(미출시, D-017). 필요하면 `customDriveMappingV1`로 변환 도구를 만들 수 있습니다.
 
-## 3. 이펙트별 파라미터 (자동 생성)
+## 3. 이펙트별 파라미터 (자동 생성, v0.4)
 
 ### `utility` — Gain / Volume
 
@@ -179,6 +188,7 @@ v2에서 값을 그대로 두면 02/03 프리셋의 출력이 14–19 dB 낮아�
 | `mix` | Mix | 0…100 | 100 | % | linear |
 | `level` | Level | -24…12 | -6 | dB | linear |
 | `oversampling` | Oversampling | 1x / 2x / 4x / 8x | 1 |  | linear |
+| `model` | Model | v1 (legacy) / v2 / v2 + ADAA | 1 |  | linear |
 
 ### `ddsp_drive` — DDSP Drive (research)
 
@@ -256,6 +266,17 @@ v2에서 값을 그대로 두면 02/03 프리셋의 출력이 14–19 dB 낮아�
 | `master` | Master | 0…100 | 50 | % | linear |
 | `sag` | Sag | 0…100 | 50 | % | linear |
 | `bright` | Bright | 0…1 | 0 |  | linear |
+| `mix` | Mix | 0…100 | 100 | % | linear |
+| `level` | Level | -40…40 | 0 | dB | linear |
+| `oversampling` | Oversampling | 1x / 2x / 4x / 8x | 1 |  | linear |
+
+### `amp_ab763` — AB763 Normal (M1)
+
+| id | 이름 | 범위 | 기본값 | 단위 | 스케일 |
+|---|---|---|---|---|---|
+| `volume` | Volume | 0…10 | 4 |  | linear |
+| `treble` | Treble | 0…10 | 6 |  | linear |
+| `bass` | Bass | 0…10 | 4 |  | linear |
 | `mix` | Mix | 0…100 | 100 | % | linear |
 | `level` | Level | -40…40 | 0 | dB | linear |
 | `oversampling` | Oversampling | 1x / 2x / 4x / 8x | 1 |  | linear |
@@ -361,5 +382,4 @@ v2에서 값을 그대로 두면 02/03 프리셋의 출력이 14–19 dB 낮아�
 | `modulation` | Modulation | 0…100 | 25 | % | linear |
 | `mix` | Mix | 0…100 | 25 | % | linear |
 | `width` | Width | 0…100 | 100 | % | linear |
-
 

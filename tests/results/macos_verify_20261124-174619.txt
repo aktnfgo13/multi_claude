@@ -1,0 +1,89 @@
+== MFX Claude macOS verify 20261124-174619
+ProductName:		macOS
+ProductVersion:		27.0.1
+BuildVersion:		26A434
+arm64
+Xcode 27.0
+cmake version 4.4.4
+source id: 3f823fa+gap-v1-uncommitted
+CMake Warning (author) at /opt/homebrew/share/cmake/Modules/FetchContent.cmake:1968 (message):
+  Calling FetchContent_Populate(namcore) is deprecated, call
+  FetchContent_MakeAvailable(namcore) instead.  Policy CMP0169 can be set to
+  OLD to allow FetchContent_Populate(namcore) to be called directly for now,
+  but the ability to call it with declared details will be removed completely
+  in a future version.
+Call Stack (most recent call first):
+  CMakeLists.txt:99 (FetchContent_Populate)
+This warning is for project developers.  Use -Wno-author to suppress it.
+
+CMake Warning (author) at /opt/homebrew/share/cmake/Modules/FetchContent.cmake:1968 (message):
+  Calling FetchContent_Populate(eigen) is deprecated, call
+  FetchContent_MakeAvailable(eigen) instead.  Policy CMP0169 can be set to
+  OLD to allow FetchContent_Populate(eigen) to be called directly for now,
+  but the ability to call it with declared details will be removed completely
+  in a future version.
+Call Stack (most recent call first):
+  CMakeLists.txt:106 (FetchContent_Populate)
+This warning is for project developers.  Use -Wno-author to suppress it.
+
+-- Configuring juceaide
+-- Building juceaide
+-- Exporting juceaide
+-- Testing juceaide
+-- Finished setting up juceaide
+-- Configuring done (1.4s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/kimhyuntae/multi_effects_claude/build-mac
+[0/2] Re-checking globbed directories...
+[1/16] Generating juce_binarydata_MultiEffectsPresets/JuceLibraryCode/BinaryData1.cpp, juce_binarydata_MultiEffectsPresets/JuceLibraryCode/BinaryData2.cpp, juce_binarydata_MultiEffectsPresets/JuceLibraryCode/BinaryData3.cpp, juce_binarydata_MultiEffectsPresets/JuceLibraryCode/BinaryData4.cpp, juce_binarydata_MultiEffectsPresets/JuceLibraryCode/BinaryData5.cpp, juce_binarydata_MultiEffectsPresets/JuceLibraryCode/BinaryData.h
+[2/9] Building CXX object CMakeFiles/mfx_render.dir/apps/mfx_render.cpp.o
+[3/9] Linking CXX executable mfx_render
+[4/9] Building CXX object src/plugin/CMakeFiles/MultiEffects.dir/PluginEditor.cpp.o
+In file included from /Users/kimhyuntae/multi_effects_claude/src/plugin/PluginEditor.cpp:1:
+In file included from /Users/kimhyuntae/multi_effects_claude/src/plugin/PluginEditor.h:5:
+In file included from /Users/kimhyuntae/multi_effects_claude/src/plugin/PluginProcessor.h:9:
+In file included from /Users/kimhyuntae/multi_effects_claude/src/engine/Engine.h:22:
+/Users/kimhyuntae/multi_effects_claude/src/core/Smoothed.h:17:15: warning: comparing floating point with == or != is unsafe [-Wfloat-equal]
+   17 |         if (v == target_) return;
+      |             ~ ^  ~~~~~~~
+/Users/kimhyuntae/multi_effects_claude/src/plugin/PluginEditor.cpp:120:124: warning: implicit conversion turns floating-point number into integer: 'float' to 'int' [-Wfloat-conversion]
+  120 |     g.drawText(juce::String("v") + build::version + " " + build::gitCommit, (float)getWidth() - 230.0f, (float)getHeight() - 16.0f, 220.0f, 14.0f, juce::Justification::centredRight);
+      |       ~~~~~~~~                                                                                          ~~~~~~~~~~~~~~~~~~~^~~~~~~
+/Users/kimhyuntae/multi_effects_claude/src/plugin/PluginEditor.cpp:120:95: warning: implicit conversion turns floating-point number into integer: 'float' to 'int' [-Wfloat-conversion]
+  120 |     g.drawText(juce::String("v") + build::version + " " + build::gitCommit, (float)getWidth() - 230.0f, (float)getHeight() - 16.0f, 220.0f, 14.0f, juce::Justification::centredRight);
+      |       ~~~~~~~~                                                              ~~~~~~~~~~~~~~~~~~^~~~~~~~
+3 warnings generated.
+[5/9] Linking CXX static library "src/plugin/MultiEffects_artefacts/Release/libMFX Claude_SharedCode.a"
+[6/9] Linking CXX CFBundle shared module "src/plugin/MultiEffects_artefacts/Release/AU/MFX Claude.component/Contents/MacOS/MFX Claude"
+[7/9] Linking CXX CFBundle shared module "src/plugin/MultiEffects_artefacts/Release/VST3/MFX Claude.vst3/Contents/MacOS/MFX Claude"
+/Users/kimhyuntae/multi_effects_claude/build-mac/src/plugin/MultiEffects_artefacts/Release/VST3/MFX Claude.vst3: code has no resources but signature indicates they must be present
+-- Replacing invalid signature with ad-hoc signature
+/Users/kimhyuntae/multi_effects_claude/build-mac/src/plugin/MultiEffects_artefacts/Release/VST3/MFX Claude.vst3: replacing existing signature
+removing moduleinfo.json
+creating /Users/kimhyuntae/multi_effects_claude/build-mac/src/plugin/MultiEffects_artefacts/Release/VST3/MFX Claude.vst3/Contents/Resources/moduleinfo.json
+[8/9] Linking CXX executable "src/plugin/MultiEffects_artefacts/Release/Standalone/MFX Claude.app/Contents/MacOS/MFX Claude"
+RESULT build: PASS
+== core tests
+RESULT mfx_tests: PASS
+[PASS] performance.full_chain_realtime_factor                     598.2 ms 
+
+78 passed, 0 failed, 184609 checks
+MFX Claude 0.2.0+3f823fa+gap-v1-uncommitted 2026-11-24T08:46:19Z
+build-mac/src/plugin/MultiEffects_artefacts/Release/AU/MFX Claude.component/Contents/MacOS/MFX Claude: Mach-O 64-bit bundle arm64
+backed up existing MFX Claude.component -> /Users/kimhyuntae/Library/Audio/Plug-Ins/_mfx_claude_backup/20261124-174619
+backed up existing MFX Claude.vst3 -> /Users/kimhyuntae/Library/Audio/Plug-Ins/_mfx_claude_backup/20261124-174619
+installed MFX Claude AU + VST3
+other plug-ins present (untouched):
+MFX Claude.component
+Multi Effects.component
+MultiEffects.component
+== auval list
+aufx Mfx6 Mefx  -  Multi Effects: Multi Effects
+aumf McL1 MfxL  -  MFX Lab: MFX Claude
+aumf Mfx1 Mfxp  -  MultiEffects Project: MultiEffects
+== auval -v aumf McL1 MfxL
+RESULT auval: PASS
+AU VALIDATION SUCCEEDED.
+
+Next (manual, Logic Pro): see docs/BUILD_GUIDE.md §2 'Logic 체크리스트' and report each item.
+log written: tests/results/macos_verify_20261124-174619.txt

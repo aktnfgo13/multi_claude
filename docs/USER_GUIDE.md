@@ -10,6 +10,14 @@
 * **파라미터 패널**: 노브(더블클릭 = 기본값, 값 직접 입력 가능), 선택 상자, 토글.
   Cabinet은 *Load IR*, NAM Amp는 *Load .nam*, DDSP Drive는 *Load knob LUT* 버튼이 있습니다. Tuner는 음정·센트를 표시합니다.
 
+## Custom Drive Model (v0.4)
+* **v2**(기본): v0.2부터의 소리. **v2 + ADAA**: 같은 소리에 고음·고게인의 금속성 앨리어싱을 줄임(CPU 약 20 % 증가) — Drive 60 이상에서 권장.
+* **v1 (legacy)**: v0.1 소리. v0.1에서 저장한 JSON 프리셋은 불러온 뒤 Model을 v1로 바꾸세요.
+
+## AB763 Normal (M1) 앰프
+블랙페이스 계열 Normal 채널 회로 모델: Volume / Treble / Bass(0–10) + Level·Oversampling. Volume 5 근처까지 클린, 7 이상에서 브레이크업.
+Cabinet 블록(IR 또는 내장 시뮬레이션)을 뒤에 두세요(팩토리 프리셋 "Blackface Normal").
+
 ## Visualize (파형 · 스펙트럼)
 상단 **Effects / Visualize** 버튼으로 화면을 전환합니다. Visualize를 열었을 때만 분석이 동작하며, 소리에는 영향이 없습니다.
 * 표시: Input(체인 입력, 입력 게인 적용 후) / Output(체인 출력) / Overlay. 입력은 체인 지연만큼 늦춰 출력과 맞춰 그립니다.

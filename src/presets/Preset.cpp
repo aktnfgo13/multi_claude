@@ -1,5 +1,7 @@
 #include "presets/Preset.h"
 
+#include "core/BuildInfo.h"
+
 #include "engine/EffectFactory.h"
 
 namespace mfx {
@@ -15,6 +17,7 @@ Json presetToJson(const Engine& e, const std::string& name) {
     Json j = Json::object();
     j["format"] = "mfx-preset";
     j["version"] = 1;
+    j["app_version"] = std::string(build::version); // informational (which build wrote the file)
     j["name"] = name;
     j["input_gain_db"] = e.inputGainDb();
     j["output_gain_db"] = e.outputGainDb();

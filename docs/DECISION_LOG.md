@@ -49,3 +49,15 @@
 | D-033 | ADOPT(동작 참고) | 입력 시스템 보완: 비유한(NaN/Inf) 입력 → 0, 원본(게인 전) 피크, HOT(−3 dBFS)·CLIP(0 dBFS) 표시, 공칭 −20 dBFS RMS 눈금 | 측정·보호만 추가, 유한 입력에서는 출력 비트 동일(골든 렌더로 확인) | 입력 레벨 자동 보정(음색 변경 위험) |
 | D-034 | IMPROVE | 캐비닛 IR은 프리셋에 샘플을 넣지 않고 참조(`mfx-ir:1`: 경로·파일명·FNV-1a 64 해시·SR·길이)로 저장. 경로가 없으면 프리셋 폴더(./, ir/, IR/) → 사용자 IR 폴더(~/Music/MFX Claude/IR)에서 이름으로 찾고 해시로 검증 | Codex는 IR 샘플(최대 32768개)을 JSON 배열로 내장 → 프리셋 크기 증가. 참조+해시는 작고, 다른 파일이 로드되면 경고 가능 | Codex식 내장(재현성은 최고) — 필요 시 "IR 번들 내보내기"로 보완 |
 | D-035 | IMPROVE | 찾지 못한 IR은 내장 캐비닛 시뮬레이션으로 대체 + 경고, 참조 문자열은 보존(다시 저장해도 사라지지 않음) | 무음·크래시 없이 안전하게, 파일을 되찾으면 복원 가능 | IR 블록 바이패스 |
+
+## v0.4 Sound Engine Expansion (2026-11-25)
+
+| ID | 분류 | 결정 | 이유 | 대안 |
+|---|---|---|---|---|
+| D-036 | KEEP | 플러그인 ID MFX Claude / MfxL / McL1 고정. Mac에는 Codex(aufx Mfx6 Mefx), MFX Claude(aumf McL1 MfxL), v0.1 MultiEffects(aumf Mfx1 Mfxp)가 공존 — 어느 것도 삭제하지 않음 | 기존 Logic 프로젝트는 각자의 AU를 계속 사용 | 구형 AU 정리(사용자 판단) |
+| D-037 | IMPROVE | Custom Drive에 `model` Choice(v1/v2/v2+ADAA)를 **마지막 파라미터로 추가**, 기본 v2 | 기존 index·자동화 유지, `model` 없는 상태 = v2 → 기존 소리 무변경. v1은 v0.1과 비트 동일 | 프리셋 형식 버전 증가(불필요) |
+| D-038 | ADOPT | 1차 ADAA를 v2 곡선에 적용한 `v2 + ADAA`를 신규 모델로 제공(기본값은 아님) | 2x에서 고게인 앨리어싱 15–20 dB 감소, 음색 지표 동일, CPU +21 %, 할당 0. 지시서: 기존 v2를 조용히 덮어쓰지 않음 | 기본값을 ADAA로(기존 프리셋 소리 변경 위험) |
+| D-039 | IMPROVE | 새 앰프는 새 type `amp_ab763`로 추가(기존 `amp`의 Model Choice에 추가하지 않음) | Choice 항목 추가는 호스트 자동화 정규화 값을 바꿈(K-021) | 기존 amp에 항목 추가 |
+| D-040 | IMPROVE | 앰프 이름은 상표 대신 회로명 "AB763 Normal" 사용. 문서에만 참고 모델(Fender '65 Deluxe Reverb) 표기 | 판매 시 상표 문제 회피 | 제품명 그대로 사용 |
+| D-041 | DEFER | 위상 반전단, 6V6 정밀 모델, Sag, NFB, 출력 트랜스, 톤스택-볼륨 부하 → M2 | 지시서 범위(M1) | — |
+| D-042 | IMPROVE | 프리셋에 `app_version` 기록(정보용) | 이후 저장 파일의 생성 빌드 구분 | — |

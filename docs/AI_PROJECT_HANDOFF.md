@@ -1,22 +1,20 @@
 # AI 프로젝트 인수인계 (MFX Claude)
 
-- 작성일: 2026-11-24 · 기준 커밋: `3f823fa` (GitHub `aktnfgo13/multi_claude`, `main`) + **미커밋 변경**(아래 D절)
+- 갱신일: 2026-11-25 · 저장소 GitHub `aktnfgo13/multi_claude` `main` · 버전 0.4.0 (커밋 SHA는 `git log -1`; v0.4 = gap v1 커밋 `3042507` 다음 커밋)
 - 대상: ChatGPT / Claude / Codex 등 후속 개발 AI. 추측하지 말고 이 문서와 링크된 파일을 근거로 진행하세요.
 
 ## Quick Context
-- 제품: 기타 멀티이펙터 플러그인 **MFX Claude v0.2.0** (AU/VST3/Standalone, JUCE 8) + 향후 ARM 전용 하드웨어. 상업 판매 목표.
-- 코어: `mfx_core` = JUCE·OS 독립 C++20 DSP/엔진/프리셋. 플러그인·UI는 얇은 래퍼.
-- 필수 요구사항: `AGENTS.md` R1–R6(모듈형, 코어 독립, Mac/Win 공통·프리셋 호환, ARM 이식, 실시간 안전, 기존 모델·프리셋 보존).
-- Codex 프로젝트(`~/multi_effects`)는 **읽기 전용 참고**. 코드 복사·병합 금지, 플러그인 ID 재사용 금지.
-- 사용자 Mac Logic Pro에서 v0.2.0 정상 실행 확인됨(사용자 보고).
-- 최근 구현(미커밋): 실시간 분석 탭 + 파형/스펙트럼(Visualize 화면), 입력 시스템 보완(원본 피크·HOT·NaN 가드·공칭 눈금), 캐비닛 IR 참조 복원(해시 검증·검색 폴더·누락 시 안전 대체).
-- 최신 테스트: C++ 78개 PASS(Linux x86_64 + 사용자 Mac의 Linux arm64 VM, `tests/results/arm64_linux_vm_tests.txt`), TSan/ASan(integration) 경고 0, 콜백 할당/해제 0, 팩토리 프리셋 5종 렌더 변경 전과 비트 동일, pluginval strictness 7 PASS.
-- 미검증: Logic에서 Visualize·입력 표시(K-022), macOS AU 후보 빌드·auval(K-026 — 이 환경에서 macOS 툴체인 실행 불가), Windows 빌드(K-015).
-- 사용자 Mac 사본 `~/multi_effects_claude`에 이번 변경 반영 완료(`SOURCE_ID` = `3f823fa+gap-v1-uncommitted`, 반영 전 스냅샷 `_snapshots/pre-sync-gapv1_*.tar.gz`).
-- 미해결 우선: R6 보완(프리셋 모델 버전 K-019, 골든 렌더 테스트 자동화 K-020), Custom Drive 고게인 앨리어싱 K-001.
-- 다음 순서: ① 미커밋 변경 사용자 확인 → 커밋 ② Mac 빌드·Logic 확인 ③ K-019/K-020 ④ K-001(ADAA).
-- 보호 대상: Custom Drive v2 음색, 기존 25종 이펙트·팩토리 프리셋, 플러그인 ID(MfxL/McL1), 설치된 AU(Claude·Codex), Codex 프로젝트, Logic 프로젝트, 스냅샷/백업.
-- 주요 문서: `AGENTS.md`, `CLAUDE.md`, `docs/DEVELOPMENT_PLAN.md`, `docs/INTEGRATION_REPORT.md`, `docs/KNOWN_ISSUES.md`, 이 문서.
+- 제품: 기타 멀티이펙터 플러그인 **MFX Claude 0.4.0** (AU/VST3/Standalone, JUCE 8) + 향후 ARM 하드웨어. 상업 판매 목표(출시 전 제품명·JUCE 라이선스 정리 필요).
+- 코어 `mfx_core` = JUCE·OS 독립 C++20. 필수 요구 `AGENTS.md` R1–R6. Codex(`~/multi_effects`)는 읽기 전용 참고.
+- 플러그인 ID 고정: MFX Claude / MfxL / McL1. Mac에 Codex·v0.1 MultiEffects AU 공존(삭제 금지).
+- v0.4 신규: Custom Drive `model`(v1 legacy = v0.1 비트 동일 / v2 기본 / v2 + ADAA), 새 앰프 `amp_ab763`(AB763 Normal M1: 12AX7 부하선 표 ×2, Yeh 톤스택, 볼륨 테이퍼, 파워 소프트 포화), 팩토리 프리셋 06.
+- 이전(gap v1, `3042507`): 분석 탭 + 파형/스펙트럼, 입력 표시 보완, 캐비닛 IR 참조 복원 — 사용자 Mac 빌드·78/78·auval PASS.
+- 최신 검증(v0.4, Linux x86_64): C++ 86/86, ASan(audio) 0건, pluginval strictness 7 PASS, 팩토리 01–05 출력 비트 동일, 콜백 할당/해제 0.
+- ADAA 효과(2x, 3953 Hz 스트레스): D75 −32.0 → −51.8 dB, D100 −27.4 → −47.9 dB, 음색 지표 동일, CPU +21 %.
+- 미검증: v0.4 Mac AU·auval·Logic(K-031), Windows(K-015), AB763 실기 비교(K-029).
+- 다음 우선순위: ① v0.4 Mac 1회 검증 ② AB763 M2(PI·6V6·Sag·NFB·OT) ③ 출시 준비(제품명·JUCE·서명) ④ UI 디자인 토큰/레이아웃 정리.
+- 보호 대상: Custom Drive v1/v2 소리, 기존 25종 이펙트·`amp`·NAM, 팩토리 프리셋, 설치된 AU(Claude·Codex·v0.1), Codex 프로젝트, Logic 프로젝트, 스냅샷.
+- 읽을 파일: `AGENTS.md` → 이 문서 → `docs/KNOWN_ISSUES.md` → `docs/DSP_SPECIFICATION.md`(Custom Drive·AB763 절).
 
 ## A. 프로젝트 개요
 | 항목 | 내용 |
@@ -42,6 +40,8 @@
 | 캐비닛 IR(분할 컨볼루션, 메시지 스레드 로드) | 구현 | 이전 | `src/dsp/cabinet/*` |
 | **캐비닛 IR 프리셋 참조(해시·검색 폴더·누락 대체)** | 구현 | **이번** | `Cabinet.*`, `Effect.h`(`StateContext`), `Preset.*`, `PluginProcessor.cpp` |
 | NAM 로더 | 구현(SR 불일치 시 바이패스) | 이전 | `src/neural/NamAmp.*` |
+| **Custom Drive Model (v1/v2/v2+ADAA)** | 구현 | **v0.4** | `src/dsp/drive/CustomDrive.*`, `src/dsp/nonlinear/Nonlinear.*`(`kneeAntiderivative`) |
+| **AB763 Normal M1 앰프** (`amp_ab763`) | 구현, Logic 미검증 | **v0.4** | `src/dsp/amp/AB763Amp.*`, `presets/factory/06_Blackface_Normal.json` |
 
 ## C. 아키텍처
 ```
@@ -78,6 +78,19 @@ src/plugin    JUCE AudioProcessor/Editor (얇은 래퍼)       src/ui  JUCE 컴�
 - 호환성: 유한 입력에서 DSP 출력 비트 동일(팩토리 5종 골든 렌더). 플러그인 ID·파라미터 id·프리셋 형식(버전 1) 유지. 기존 IR 상태(경로 문자열)는 그대로 읽힘.
   새 `mfx-ir:1` 형식은 이전 빌드에서 읽히지 않음(K-025). 입력 게인 범위·프리셋 로드 동작은 바꾸지 않음(D-032).
 
+## D-2. v0.4 변경 (2026-11-25)
+| 파일 | 변경 |
+|---|---|
+| `src/dsp/drive/CustomDrive.*` | `model` 파라미터(index 10, 기본 v2), `processNonlinearV1/V2/Adaa`, 모델 전환 시 상태 리셋+5 ms 페이드 |
+| `src/dsp/nonlinear/Nonlinear.*` | `kneeAntiderivativeInit/kneeAntiderivative/kneeCurveD` (K4·K6 Hermite 표) |
+| `src/dsp/amp/AB763Amp.*` (신규) | `TriodeStageTable`, `BlackfaceToneStack`, `AB763Amp`(OversampledDrive 기반) |
+| `src/engine/EffectFactory.cpp`, `CMakeLists.txt` | `amp_ab763` 등록, 버전 0.4.0 |
+| `src/presets/Preset.cpp` | `app_version` 기록 |
+| `apps/mfx_compare_drive.cpp` | `--claude-model` |
+| `tests/audio/test_amp_ab763.cpp`(신규), `tests/performance/test_performance.cpp` | 테스트 7 + 할당 1 |
+| `presets/factory/06_Blackface_Normal.json` (신규) | gate → AB763 → cabinet → reverb |
+호환성: 기존 파라미터 index·type id 불변, 팩토리 01–05 출력 비트 동일, `model` 없는 상태 → v2.
+
 ## E. 테스트 및 검증 (이번 작업, Linux x86_64 클라우드, Release)
 | 명령 | 결과 |
 |---|---|
@@ -93,12 +106,17 @@ src/plugin    JUCE AudioProcessor/Editor (얇은 래퍼)       src/ui  JUCE 컴�
 | Windows | NOT TESTED |
 이전 작업 결과(별도): Custom Drive v2 비교·parity·pluginval 검증은 `docs/INTEGRATION_REPORT.md` 본문(2026-11-24 통합 고도화), v0.2.0 Logic 실행은 사용자 보고.
 
+v0.4(Linux x86_64): `./build/mfx_tests` 86/86 PASS, ASan audio 0건, pluginval PASS, v1 비트 동일(v0.1 빌드와 cmp), 골든 01–05 동일. macOS v0.4: NOT TESTED.
+gap v1 Mac(사용자 실행): 빌드 PASS, 78/78, auval PASS (`tests/results/macos_verify_20261124-174619.txt`).
+
 ## F. 미해결 문제 (전체 목록: `docs/KNOWN_ISSUES.md`)
 | 우선 | ID | 내용 |
 |---|---|---|
-| P0/P1 | K-026, K-022 | Mac 후보 빌드·Logic에서 Visualize/입력 표시/IR 복원 확인 |
-| P1 | K-019, K-020 | 프리셋 모델 버전 없음(Custom Drive v1 선택 불가), 골든 렌더 테스트 미자동화 |
-| P1 | K-001, K-002 | Custom Drive 고게인 앨리어싱·어택 압축(Codex 대비) |
+| P0/P1 | K-031, K-022 | v0.4 Mac 빌드·auval·Logic(AB763, Model 전환, Visualize) |
+| P1 | K-029 | AB763 M2 범위·실측 비교 없음 |
+| P1 | K-020 | 골든 렌더 테스트 미자동화(현재 수동 cmp) |
+| P1 | K-001(완화), K-002 | 고게인 앨리어싱은 ADAA로 완화, 어택 압축 차이 남음 |
+| P2 | K-027, K-028, K-030 | ADAA parity 미러 없음, 반 샘플 지연, double 연산 |
 | P2 | K-023, K-024, K-025 | 스펙트럼 스캘럽 1.42 dB, IR 번들 내보내기 없음, 새 IR 상태 상위 호환 없음 |
 | P2 | K-005, K-006, K-008 | NAM 리샘플링, Custom Drive 진단 UI, Undo/Redo |
 | P2 | K-015~018, K-021 | Windows/플랫폼 일치, ARMv7 FTZ, 메모리 보고, MCU 부적합 모듈, Choice 확장 정책 |
@@ -107,9 +125,9 @@ src/plugin    JUCE AudioProcessor/Editor (얇은 래퍼)       src/ui  JUCE 컴�
 ## G. 다음 개발 작업
 | 순서 | 작업 | 변경 대상 | 주의 | 권장 모델 | 최소 검증 |
 |---|---|---|---|---|---|
-| 1 | 미커밋 변경 커밋·Mac 동기화 | git | Codex 저장소·설치 AU 건드리지 않음 | 경량 모델 | `git status`, 빌드 |
-| 2 | Mac 빌드·auval·Logic | `scripts/macos_build_install_verify.sh` | 기존 AU는 백업 후 교체(스크립트가 처리) | — (사용자) | auval PASS, Visualize 동작 |
-| 3 | 프리셋 모델 버전(K-019) + 골든 렌더 테스트(K-020) | `Preset.*`, `CustomDrive.*`, `tests/unit/test_presets.cpp` | 없는 필드 = 현재 동작, id 불변 | 고성능 코딩 모델(예: Claude Opus급 / GPT 상위 모델) | 팩토리 렌더 비트 동일, v1 선택 시 v1 출력 |
-| 4 | Custom Drive 고게인 ADAA(K-001) | `CustomDrive.cpp`, `research/common/mfx_dsp.py` | v2 기본 음색 유지 또는 버전 분리, parity 갱신 | 고성능 모델 | parity, `mfx_compare_drive`, 앨리어싱 수치 |
-| 5 | IR 번들 내보내기(K-024) | `Preset.*`, `PluginEditor.cpp` | IR 샘플 JSON 내장 금지(D-034) | 중간급 모델 | 이동 후 복원 테스트 |
-"권장 모델"은 작업 난이도 기준의 제안이며, 특정 제품명(Astra/Sol 등)의 실제 성능은 확인하지 않았습니다.
+| 1 | v0.4 Mac 1회 검증 | `scripts/macos_build_install_verify.sh` | 설치 AU는 스크립트가 백업 후 교체 | (사용자) | auval PASS, Logic에서 AB763·Model 전환 |
+| 2 | AB763 M2: PI(롱테일), 6V6 푸시풀, Sag, NFB, OT | `src/dsp/amp/AB763Amp.*` | M1 소리는 `model` 파라미터 추가로 보존(R6), type id 불변 | 고성능 코딩 모델 | 기존 M1 출력 비트 동일, 할당 0, SR 독립 |
+| 3 | 골든 렌더 자동 테스트(K-020) | `tests/unit/test_presets.cpp` | 플랫폼 간 허용 오차 정의 | 중간급 | 팩토리 01–06 |
+| 4 | 출시 준비: 제품명·ID 확정, JUCE 라이선스, 서명/공증 | `src/plugin/CMakeLists.txt`, 문서 | ID 변경은 첫 출시 전 1회만 | 중간급 | auval, pluginval |
+| 5 | UI 정리(디자인 토큰·비율 레이아웃·이펙트별 전용 화면 연결부) | `src/ui/*` | DSP 무영향 | 중간급 | 스냅샷, pluginval |
+"권장 모델"은 작업 난이도 기준 제안이며 특정 제품 성능은 확인하지 않았습니다.

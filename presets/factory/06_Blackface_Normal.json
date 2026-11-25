@@ -1,0 +1,42 @@
+{
+  "format": "mfx-preset",
+  "version": 1,
+  "name": "Blackface Normal",
+  "input_gain_db": 0,
+  "output_gain_db": 0,
+  "tempo_bpm": 120,
+  "parallel": false,
+  "parallel_mix": 0.5,
+  "chain": [
+    {
+      "type": "noise_gate",
+      "params": {
+        "threshold_db": -70,
+        "range_db": -40,
+        "attack_ms": 1,
+        "release_ms": 120
+      }
+    },
+    {
+      "type": "amp_ab763",
+      "params": {
+        "volume": 5,
+        "treble": 6,
+        "bass": 4,
+        "mix": 100,
+        "level": 6,
+        "oversampling": 1
+      }
+    },
+    {
+      "type": "cabinet",
+      "params": {}
+    },
+    {
+      "type": "reverb",
+      "params": {
+        "mix": 18
+      }
+    }
+  ]
+}

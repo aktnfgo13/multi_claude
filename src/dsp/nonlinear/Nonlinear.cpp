@@ -1,5 +1,7 @@
 #include "dsp/nonlinear/Nonlinear.h"
 
+#include <cmath>
+
 namespace mfx {
 namespace nl {
 
@@ -84,6 +86,46 @@ double WDFDiodeClipper::process(double x) {
     const double toC = a3 + b3 - a2;
     bC_ = toC;               // capacitor: next reflected wave = current incident wave
     return 0.5 * (a3 + b3);  // node voltage
+}
+
+namespace {
+struct KneeTable {
+    static constexpr double kH = 1.0 / 32.0, kMax = 64.0;
+    static constexpr int kN = (int)(kMax / kH) + 1;
+    double g[kN] = {}, d[kN] = {};
+    explicit KneeTable(int n) {
+        auto f = [n](double z) { return z / std::pow(1.0 + std::pow(z, n), 1.0 / n); };
+        g[0] = 0.0; d[0] = 0.0;
+        for (int i = 1; i < kN; ++i) {
+            const double a = (i - 1) * kH;
+            const int sub = 16; const double hs = kH / sub; // composite Simpson
+            double acc = f(a) + f(a + kH);
+            for (int j = 1; j < sub; ++j) acc += (j & 1 ? 4.0 : 2.0) * f(a + j * hs);
+            g[i] = g[i - 1] + acc * hs / 3.0;
+            d[i] = f(i * kH);
+        }
+    }
+    double eval(double z) const { // even function
+        z = std::fabs(z);
+        if (z >= kMax) return g[kN - 1] + (z - kMax);
+        const double x = z / kH;
+        const int i = (int)x;
+        const double t = x - i, t2 = t * t, t3 = t2 * t;
+        return (2 * t3 - 3 * t2 + 1) * g[i] + (t3 - 2 * t2 + t) * kH * d[i] + (-2 * t3 + 3 * t2) * g[i + 1] + (t3 - t2) * kH * d[i + 1];
+    }
+};
+const KneeTable& table4() { static const KneeTable t(4); return t; }
+const KneeTable& table6() { static const KneeTable t(6); return t; }
+} // namespace
+
+void kneeAntiderivativeInit() { (void)table4(); (void)table6(); }
+
+double kneeAntiderivative(double z, const KneeWeights& k) {
+    double g = 0.0;
+    if (k.w2 != 0.0f) g += k.w2 * std::sqrt(1.0 + z * z);
+    if (k.w4 != 0.0f) g += k.w4 * table4().eval(z);
+    if (k.w6 != 0.0f) g += k.w6 * table6().eval(z);
+    return g;
 }
 
 } // namespace nl

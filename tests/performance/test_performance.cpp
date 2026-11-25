@@ -131,3 +131,33 @@ TEST(performance, full_chain_realtime_factor) {
         CHECK(allFinite(l) && allFinite(r));
     }
 }
+
+TEST(performance, no_heap_allocation_or_free_ab763_and_custom_drive_adaa) {
+    Engine e;
+    e.prepare(48000, 512);
+    auto cd = createEffect("custom_drive");
+    cd->setParam("model", 2.0f);
+    cd->setParam("drive", 90.0f);
+    e.addEffect(std::move(cd));
+    auto amp = createEffect("amp_ab763");
+    amp->setParam("volume", 8.0f);
+    e.addEffect(std::move(amp));
+    e.addEffect(createEffect("cabinet"));
+    std::vector<float> x = makeNoise(512, 0.5), l(512), r(512);
+    const float* in[1] = {x.data()};
+    float* out[2] = {l.data(), r.data()};
+    e.process(in, 1, out, 2, 512);
+    const auto slots = e.allSlotsInOrder(); // (allocates: outside the counted region)
+    Effect* drive = e.effect(slots[0]);
+    Effect* ampFx = e.effect(slots[1]);
+    gAllocs = 0; gFrees = 0;
+    gCountAllocs = true;
+    for (int i = 0; i < 200; ++i) {
+        if (i == 50) drive->setParam("model", 1.0f);  // model switch while running
+        if (i == 80) ampFx->setParam("bass", 9.0f);
+        e.process(in, 1, out, 2, 512);
+    }
+    gCountAllocs = false;
+    CHECK_MSG(gAllocs.load() == 0 && gFrees.load() == 0, gAllocs.load() << " allocations, " << gFrees.load() << " frees");
+    CHECK(allFinite(l) && allFinite(r));
+}

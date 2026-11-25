@@ -45,6 +45,21 @@ inline float kneeCurve(float z, const KneeWeights& k) {
     return y;
 }
 
+/// Antiderivative of kneeCurve (for 1st-order ADAA), in double:
+///   G2 = sqrt(1+z^2) (closed form); G4, G6 = integral of z/(1+z^n)^(1/n) from cubic-Hermite tables
+///   (nodes every 1/32 on [0, 64], exact derivative at the nodes; beyond 64: G = G(64) + (|z| - 64)).
+/// Tables are built on first use: call kneeAntiderivativeInit() from a non-real-time thread (prepare()).
+void kneeAntiderivativeInit();
+double kneeAntiderivative(double z, const KneeWeights& k);
+inline double kneeCurveD(double z, const KneeWeights& k) {
+    const double z2 = z * z;
+    double y = 0.0;
+    if (k.w2 != 0.0f) y += k.w2 * z / std::sqrt(1.0 + z2);
+    if (k.w4 != 0.0f) y += k.w4 * z / std::sqrt(std::sqrt(1.0 + z2 * z2));
+    if (k.w6 != 0.0f) y += k.w6 * z / std::cbrt(std::sqrt(1.0 + z2 * z2 * z2));
+    return y;
+}
+
 inline float hardClip(float u, float lim = 1.0f) { return clampv(u, -lim, lim); }
 
 /// Fast rational tanh approximation (max error ~2e-4), clamped.

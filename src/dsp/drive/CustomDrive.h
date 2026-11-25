@@ -57,7 +57,11 @@ CustomDrivePhysical customDriveMapping(const CustomDriveKnobs& k);
 
 class CustomDrive : public Effect {
 public:
-    enum P { kDrive, kHeadroom, kTone, kTight, kCrunch, kGrain, kMid, kMix, kLevel, kOversampling, kNumParams };
+    enum P { kDrive, kHeadroom, kTone, kTight, kCrunch, kGrain, kMid, kMix, kLevel, kOversampling, kModel, kNumParams };
+    /// Sound model (appended parameter, R6): 0 = v1 (v0.1 mapping + curve, bit-exact),
+    /// 1 = v2 (default, v0.2 sound), 2 = v2 + 1st-order ADAA on both clipping stages (v0.4).
+    enum Model { kModelV1 = 0, kModelV2 = 1, kModelV2Adaa = 2 };
+    int model() const { return model_; }
     CustomDrive();
     const char* typeId() const override { return "custom_drive"; }
     const char* displayName() const override { return "Custom Drive"; }
@@ -111,6 +115,14 @@ private:
     std::atomic<float> dApplied_[5] = {};   // gLin, vth, makeup, kappa, knee p (audio thread writes)
     int fadeIn_ = 0, fadeLen_ = 1;
     std::vector<float> tmp_;
+    int model_ = kModelV2;
+    // ADAA state (previous stage inputs and antiderivative values), per channel, double precision
+    double adZ_[kMaxChannels] = {0, 0}, adG_[kMaxChannels] = {0, 0};
+    double adW_[kMaxChannels] = {0, 0}, adG2_[kMaxChannels] = {0, 0};
+    bool adInit_[kMaxChannels] = {false, false};
+    void processNonlinearV1(float* u, int n, int c);
+    void processNonlinearV2(float* u, int n, int c, bool diag, float& dZ, float& dY, float& dLin);
+    void processNonlinearAdaa(float* u, int n, int c);
 };
 
 } // namespace mfx

@@ -3,6 +3,7 @@
 #include <functional>
 
 #include "dsp/amp/AmpSim.h"
+#include "dsp/amp/AB763Amp.h"
 #include "dsp/cabinet/Cabinet.h"
 #include "dsp/delay/Delay.h"
 #include "dsp/drive/CustomDrive.h"
@@ -31,7 +32,7 @@ const std::vector<Entry>& entries() {
         {"clean_boost", mk<CleanBoost>}, {"overdrive", mk<Overdrive>}, {"distortion", mk<Distortion>},
         {"fuzz", mk<Fuzz>}, {"custom_drive", mk<CustomDrive>}, {"ddsp_drive", mk<DdspDrive>},
         {"filter", mk<FilterBlock>}, {"parametric_eq", mk<ParametricEQ>}, {"graphic_eq", mk<GraphicEQ>},
-        {"amp", mk<AmpSim>}, {"nam_amp", mk<NamAmp>}, {"cabinet", mk<Cabinet>},
+        {"amp", mk<AmpSim>}, {"amp_ab763", mk<AB763Amp>}, {"nam_amp", mk<NamAmp>}, {"cabinet", mk<Cabinet>},
         {"chorus", mk<Chorus>}, {"flanger", mk<Flanger>}, {"phaser", mk<Phaser>},
         {"tremolo", mk<Tremolo>}, {"vibrato", mk<Vibrato>},
         {"delay", mk<Delay>}, {"reverb", mk<Reverb>},

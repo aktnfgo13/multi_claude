@@ -120,3 +120,21 @@ python3 research/spice/run_spice.py tolerance …     → E-018
 | pluginval strictness 7 (VST3 Linux) | PASS | `pluginval_vst3_linux_strict7_v3_analysis.txt` (스펙트럼 표시점 미세 조정 전 빌드) |
 | arm64(사용자 Mac의 Linux VM) 코어+테스트 | PASS 78/78 | `tests/results/arm64_linux_vm_tests.txt` |
 | macOS AU 후보 빌드 / auval | NOT TESTED | macOS 툴체인 필요(K-026) |
+
+---
+# 추가: v0.4 Sound Engine Expansion (2026-11-25)
+
+| 항목 | 상태 | 근거 |
+|---|---|---|
+| 플러그인 ID 확인·고정 (MfxL/McL1), 구형·Codex AU 보존 | PASS | Mac `auval -a`: 3개 공존 (`macos_verify_20261124-174619.txt`) |
+| Custom Drive v1 = v0.1 출력 | PASS (비트 동일 4설정) | `/tmp` v0.1 빌드(e1515b2) vs `--set model=0` cmp |
+| Custom Drive v2 = 기존 출력 | PASS (팩토리 01–05 비트 동일) | 골든 렌더 cmp |
+| v2 + ADAA 앨리어싱 개선 | PASS (2x D75/D100 −20 dB) | `custom_drive_model_parameter_and_versions`, `mfx_compare_drive --claude-model 2` |
+| AB763 톤스택 디지털 = 아날로그 | PASS (±0.35 dB) | `ab763_tone_stack_*` |
+| AB763 동작점·볼륨 브레이크업·SR 독립 | PASS | `ab763_*` 4개 |
+| 프리셋 저장·복원 (amp + cabinet, model 없는 프리셋 → v2) | PASS | `ab763_preset_roundtrip_with_cabinet`, `custom_drive_preset_without_model_loads_v2`, 팩토리 06 로드 |
+| 콜백 할당/해제 0 (ADAA, 모델 전환, AB763) | PASS | `no_heap_allocation_or_free_ab763_and_custom_drive_adaa` |
+| C++ 전체 | PASS 86/86 | `tests/results/cpp_tests.json` |
+| ASan/UBSan (audio) | PASS 0건 | `sanitizer_asan_v04_audio.txt` |
+| pluginval strictness 7 (VST3 Linux) | PASS | `pluginval_vst3_linux_strict7_v04.txt` |
+| macOS AU 빌드·auval·Logic | NOT TESTED | 사용자 Mac 1회 검증 대기(K-031) |

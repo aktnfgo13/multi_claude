@@ -20,7 +20,8 @@ preservation of existing models/presets) override anything below.
   through `apps/mfx_compare_drive` with `-DMFX_REFERENCE_DIR=...`. Never reuse its plug-in IDs.
 * Plug-in identity: MFX Claude / manufacturer MfxL / subtype McL1 / com.mfxlab.mfxclaude. Do not change without a
   DECISION_LOG entry (hosts treat it as a different plug-in).
-* Custom Drive mapping is v2 (`customDriveMapping`); v1 is kept as `customDriveMappingV1` for studies only.
+* Custom Drive has a `model` parameter (v0.4): 0 = v1 (v0.1, bit-exact), 1 = v2 (default), 2 = v2 + ADAA. Never change
+  what an existing model sounds like; add a new model value instead (R6).
   After mapping changes also re-run `apps/mfx_compare_drive` and `tools/benchmark/preset_mapping_impact.py`.
 * Unverified items are written as NOT TESTED / BLOCKED. Never claim listening results; never call a GRU model "NAM".
 
