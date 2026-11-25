@@ -9,7 +9,7 @@
 - 플러그인 ID 고정: MFX Claude / MfxL / McL1. Mac에 Codex·v0.1 MultiEffects AU 공존(삭제 금지).
 - v0.4 신규: Custom Drive `model`(v1 legacy = v0.1 비트 동일 / v2 기본 / v2 + ADAA), 새 앰프 `amp_ab763`(AB763 Normal M1: 12AX7 부하선 표 ×2, Yeh 톤스택, 볼륨 테이퍼, 파워 소프트 포화), 팩토리 프리셋 06.
 - 이전(gap v1, `3042507`): 분석 탭 + 파형/스펙트럼, 입력 표시 보완, 캐비닛 IR 참조 복원 — 사용자 Mac 빌드·78/78·auval PASS.
-- 최신 검증(v0.4, Linux x86_64): C++ 86/86, ASan(audio) 0건, pluginval strictness 7 PASS, 팩토리 01–05 출력 비트 동일, 콜백 할당/해제 0.
+- 최신 검증(v0.4): C++ 86/86 (Linux x86_64 + 사용자 Mac의 Linux arm64 VM), ASan(audio) 0건, pluginval strictness 7 PASS, 팩토리 01–05 출력 비트 동일, 콜백 할당/해제 0.
 - ADAA 효과(2x, 3953 Hz 스트레스): D75 −32.0 → −51.8 dB, D100 −27.4 → −47.9 dB, 음색 지표 동일, CPU +21 %.
 - 미검증: v0.4 Mac AU·auval·Logic(K-031), Windows(K-015), AB763 실기 비교(K-029).
 - 다음 우선순위: ① v0.4 Mac 1회 검증 ② AB763 M2(PI·6V6·Sag·NFB·OT) ③ 출시 준비(제품명·JUCE·서명) ④ UI 디자인 토큰/레이아웃 정리.
