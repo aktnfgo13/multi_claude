@@ -1,0 +1,14 @@
+[PASS] audio.ab763_tone_stack_matches_analog_prototype_and_scoops_mids      1.2 ms 
+[PASS] audio.ab763_triode_stage_operating_point_and_gain           54.4 ms 
+[PASS] audio.ab763_volume_controls_breakup                        471.5 ms 
+[PASS] audio.ab763_sample_rate_independent                       2224.2 ms 
+[PASS] audio.ab763_m2_model_parameter_and_legacy_default          113.3 ms 
+[PASS] audio.ab763_m2_breakup_harmonics_and_nfb                   717.5 ms 
+[PASS] audio.ab763_m2_reactive_load_shapes_response              1297.2 ms 
+[PASS] audio.ab763_m2_no_hf_peaking_and_rate_independent_treble   5774.2 ms 
+[PASS] audio.ab763_m2_sag_attack_and_recovery                     173.8 ms 
+[PASS] audio.ab763_m2_extreme_input_bounded_all_rates            1836.8 ms 
+[PASS] audio.ab763_preset_roundtrip_with_cabinet                  304.6 ms 
+[PASS] performance.no_heap_allocation_or_free_ab763_and_custom_drive_adaa    504.8 ms 
+
+12 passed, 0 failed, 62 checks

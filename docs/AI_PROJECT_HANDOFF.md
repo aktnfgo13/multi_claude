@@ -1,6 +1,6 @@
 # AI 프로젝트 인수인계 (MFX Claude)
 
-- 갱신일: 2026-11-25 · GitHub `aktnfgo13/multi_claude` `main` · 버전 **0.6.0** (구현 커밋 `d7d40e1`, 이후 로그 커밋은 `git log`, 직전 v0.5 = `5b32e1a`)
+- 갱신일: 2026-11-25 · GitHub `aktnfgo13/multi_claude` `main` · 버전 **0.6.1** (v0.6 구현 `d7d40e1`, v0.6.1 = AB763 M2 고역 피크 수정, `git log`로 확인)
 - 대상: ChatGPT / Claude / Codex 등 후속 개발 AI. 추측하지 말고 이 문서와 링크된 파일을 근거로 진행하세요.
 
 ## Quick Context
@@ -10,12 +10,13 @@
   ② `delay_bbd_premium` BBD — 4096단 클록 샘플링, 컴팬더, AA/재구성 4차, 버킷 과부하, 클록 변조, 메모리 32 KiB 고정
   ③ `comp_fet` FET Compressor — 피드백 검출 지연 없는 해, 20–800 µs 어택(유효값), 프로그램 의존 릴리즈, 4/8/12/20/All, FET 2차 왜곡
   ④ 기존 `delay`에 Cross FB·L/R FB·Width·Free R Time(기본값 중립) ⑤ 팩토리 08/09.
+- v0.6.1 수정: AB763 M2 NFB 경로의 20 kHz LPF가 10–20 kHz를 +5…+15 dB 끌어올려 잡음 많은 DI(026.wav)의 히스를 키움 → 회로처럼 저항성 피드백으로 수정(K-046). 7 kHz 이하 ≤ 0.3 dB, M1·팩토리 01–06 비트 동일. 잡음은 원본 DI 히스의 선형 증폭이었고 DSP 자체 잡음·발진 없음.
 - 이전 버전 DSP: Custom Drive v1/v2/v2+ADAA(+보정), AB763 M1/M2, Premium Plate, Cabinet IR, NAM 로더, 기존 이펙트 25종.
 - 보존 확인: 팩토리 01–07, `delay` 9개 모드×라우팅, compressor, limiter, Premium Plate 출력이 v0.5와 **비트 동일**. 파라미터 id·AU ID 불변.
 - 검증 환경: Linux x86_64 (C++ 113/113, ASan 0건, pluginval strictness 7 PASS), Linux arm64 VM on 사용자 Mac (113/113, `tests/results/arm64_linux_vm_tests_v06.txt`). macOS 네이티브 v0.6 미확인.
 - 미검증: **v0.5·v0.6 macOS AU 빌드·auval·Logic GUI·청취 전부 NOT TESTED**(사용자 Mac 필요), 실기(테이프 에코·BBD 페달·1176) 비교 없음.
 - 품질 Level: Tape/BBD/FET = 3(청취 전), AB763 M2 = 3, Premium Plate = 2–3, 기존 Delay = 2. Level 4 이상은 실측·청취 필요.
-- 남은 문제: K-039(Tape 메모리 192 kHz 5 MiB), K-040(BBD 장지연 앨리어싱 — 다중 칩 옵션), K-041(FET 계수 추정), K-032(AB763 파라미터), K-045(Mac).
+- 남은 문제: K-047(M2가 M1보다 고역 +4 dB·95 Hz +6 dB — 물리적 특성, 잡음 많은 DI에서 히스 2–4 dB 더 들림), K-039(Tape 메모리 192 kHz 5 MiB), K-040(BBD 장지연 앨리어싱 — 다중 칩 옵션), K-041(FET 계수 추정), K-032(AB763 파라미터), K-045(Mac).
 - 다음 우선순위(v0.7): Mac·Logic 확인과 청취 반영 → 리앰프/DI 측정 인프라·실기 비교 → BBD 다중 칩·하드웨어 메모리 예산 → Plate 튜닝·Shimmer → parity 확장 → 출시 준비.
 - 보호 대상: 위 비트 동일 항목, 설치된 AU(Claude·Codex·구형), Codex 프로젝트, Logic 프로젝트, 스냅샷.
 - 읽을 파일: `AGENTS.md` → 이 문서 → `docs/KNOWN_ISSUES.md` → `docs/DSP_SPECIFICATION.md`(Tape/BBD/FET 절) → `docs/AUDIO_QUALITY_TARGETS.md`.
@@ -124,6 +125,7 @@ src/plugin    JUCE AudioProcessor/Editor (얇은 래퍼)       src/ui  JUCE 컴�
 | `tests/audio/test_delay_dynamics_v06.cpp` (신규), `tests/performance/test_performance.cpp` | 테스트 +16 |
 | `presets/factory/08_Tape_Echo_Lead.json`, `09_FET_Comp_BBD_Clean.json` (신규) | |
 | 문서: DSP_SPECIFICATION, AUDIO_QUALITY_TARGETS, KNOWN_ISSUES, DECISION_LOG, DEVELOPMENT_PLAN, PARAMETER_SPECIFICATION, USER_GUIDE, INTEGRATION_REPORT, CLAUDE.md | |
+| v0.6.1: `src/dsp/amp/AB763Amp.*` (NFB LPF 제거), `tests/audio/test_amp_ab763.cpp` (+1), `tools/benchmark/di_noise_analysis.py` | K-046 |
 
 ## E. 테스트 및 검증 (이번 작업, Linux x86_64 클라우드, Release)
 | 명령 | 결과 |

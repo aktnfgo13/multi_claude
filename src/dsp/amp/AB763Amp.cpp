@@ -212,7 +212,7 @@ void AB763Amp::resetDsp() {
     couple_.reset();
     dcIn_.reset();
     dcOut_.reset();
-    for (Biquad* b : {&gridA_, &gridB_, &otHp_, &otLp_, &spkRes_, &spkLe_, &fbLp_}) b->reset();
+    for (Biquad* b : {&gridA_, &gridB_, &otHp_, &otLp_, &spkRes_, &spkLe_}) b->reset();
     for (int c = 0; c < kMaxChannels; ++c) {
         bias_[c][0] = bias_[c][1] = 0.0f;
         vPrim_[c] = vSpk_[c] = 0.0f;
@@ -248,7 +248,6 @@ void AB763Amp::updateDsp(double fs, double fsOs) {
         c.b0 *= (float)rl; c.b1 *= (float)rl; c.b2 *= (float)rl;
         spkLe_.setCoeffs(c);
     }
-    fbLp_.design(FilterType::LowPass, fsOs, std::min(kFbBandwidth, 0.2 * fsOs), 0.7071);
     dtOs_ = (float)(1.0 / fsOs);
     {   // small-signal forward transconductance at idle (seeds the delay-free loop solver)
         const float vg2 = (float)kSupplyIdle - 15.0f, e = 0.05f;
@@ -308,7 +307,9 @@ float AB763Amp::m2Power(float v, int ch) {
     const float kz = otLp_.coeffs().b0 * otHp_.coeffs().b0 * kz0;               // z = kz * i + zs
     const float zs = otLp_.coeffs().b0 * (otHp_.coeffs().b0 * (spkRes_.state1(ch) + spkLe_.state1(ch)) + otHp_.state1(ch))
                    + otLp_.state1(ch);
-    const float kf = fbLp_.coeffs().b0, fs = fbLp_.state1(ch);                 // fb = kf * z + fs
+    // feedback network 820 / 47 ohm is resistive (broadband) as in the circuit: fb = z  (v0.6.1: the former 20 kHz
+    // feedback low-pass removed - it let the loop lose feedback near Nyquist and lifted 10-20 kHz by up to +11 dB)
+    const float kf = 1.0f, fs = 0.0f;
     const float G = gEst_[ch];
     const float num = vpi + beta * kf * kz * (iPrev_[ch] - G * vdPrev_[ch]) + beta * (kf * zs + fs);
     const float den = 1.0f - beta * kf * kz * G;
@@ -325,7 +326,6 @@ float AB763Amp::m2Power(float v, int ch) {
     float z = 6.0f * iSec + spkRes_.process(iSec, ch) + spkLe_.process(iSec, ch); // speaker voltage (8 ohm tap)
     z = otLp_.process(otHp_.process(z, ch), ch);
     z = finiteOr(clampv(z, -200.0f, 200.0f), 0.0f);
-    fbLp_.process(z, ch);
     vSpk_[ch] = z;
     vPrim_[ch] = z * (float)kTurns;
     return z * (1.0f / 25.0f);                                  // ~ 20 W into 8 ohm -> about -3 dBFS

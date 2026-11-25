@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.24)
-project(MultiEffects VERSION 0.6.0 LANGUAGES C CXX)
+project(MultiEffects VERSION 0.6.1 LANGUAGES C CXX)
 
 # ----------------------------------------------------------------------------- options
 option(MFX_BUILD_TESTS   "Build C++ tests"                                   ON)

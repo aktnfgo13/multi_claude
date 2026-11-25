@@ -103,7 +103,6 @@ public:
     static constexpr double kSupplyIdle = 420.0;   // B+ at idle with M2 (unloaded source ~ 450 V)
     static constexpr double kRaa = 6600.0, kTurns = 28.72; // primary impedance, turns ratio (6.6k : 8)
     static constexpr double kNfb = 47.0 / (820.0 + 47.0);
-    static constexpr double kFbBandwidth = 20000.0;  // NFB loop low-pass (approximation, see DSP_SPECIFICATION)
     static constexpr double kPiInput = 0.14;        // recovery stage -> phase inverter network (approx.)
 
 protected:
@@ -131,7 +130,6 @@ private:
     Biquad gridA_, gridB_;                 // 0.1uF / 220k coupling (applied to the PI outputs)
     Biquad otHp_, otLp_;                   // transformer primary inductance / leakage
     Biquad spkRes_, spkLe_;                // speaker impedance parts
-    Biquad fbLp_;                          // NFB loop band limit (keeps the discrete loop stable at every rate)
     float bias_[kMaxChannels][2] = {};     // grid-conduction charge on the coupling caps (blocking)
     float vPrim_[kMaxChannels] = {};       // primary voltage, previous sample
     float vSpk_[kMaxChannels] = {};        // speaker voltage, previous sample (NFB)

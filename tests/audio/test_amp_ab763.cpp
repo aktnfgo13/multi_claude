@@ -145,6 +145,39 @@ TEST(audio, ab763_m2_reactive_load_shapes_response) {
     CHECK(m2hi - m1hi > 2.0);
 }
 
+TEST(audio, ab763_m2_no_hf_peaking_and_rate_independent_treble) {
+    // v0.6.1 regression (DI hiss report, 026.wav): the NFB network is resistive. A low-pass in the feedback path made
+    // the loop lose feedback near Nyquist: +8..+11 dB at 18-20 kHz (2x) and a moving +18 dB peak at 1x, which lifted
+    // source hiss. Check: the treble plateau stays flat (18 kHz within 1.5 dB of 10 kHz) and agrees across rates / OS.
+    auto rel = [](double fs, float os, double f) {
+        AB763Amp a; a.setParam("model", 1.f); a.setParam("volume", 4.f); a.setParam("oversampling", os);
+        a.prepare({fs, 256, 1});
+        auto g = [&](double fr) {
+            a.reset();
+            auto y = processMono(a, makeSine(fs, fr, 0.001, (size_t)fs), 256);
+            return db(analysis::rms(y.data() + (size_t)fs / 2, (size_t)fs / 2));
+        };
+        return g(f) - g(1000.0);
+    };
+    double lo = 1e9, hi = -1e9;
+    for (double fs : {44100.0, 48000.0, 96000.0})
+        for (float os : {0.f, 1.f, 2.f}) {
+            const double r10 = rel(fs, os, 10000.0), r18 = rel(fs, os, 18000.0);
+            CHECK_MSG(std::fabs(r18 - r10) < 1.5, "fs " << fs << " os " << os << " 10k " << r10 << " 18k " << r18);
+            lo = std::min(lo, r18); hi = std::max(hi, r18);
+            if (fs == 44100.0 && os == 1.f) { record("ab763_m2_18k_re_1k_44k_2x", r18, "dB"); record("ab763_m2_10k_re_1k_44k_2x", r10, "dB"); }
+        }
+    record("ab763_m2_18k_spread_rates_os", hi - lo, "dB");
+    CHECK(hi - lo < 1.5);
+    // digital silence in -> exact silence out (no self noise / oscillation)
+    for (double fs : {44100.0, 96000.0}) {
+        AB763Amp a; a.setParam("model", 1.f); a.setParam("volume", 10.f);
+        a.prepare({fs, 256, 1});
+        auto y = processMono(a, std::vector<float>((size_t)fs * 2, 0.0f), 256);
+        CHECK(analysis::peak(y.data(), y.size()) == 0.0);
+    }
+}
+
 TEST(audio, ab763_m2_sag_attack_and_recovery) {
     AB763Amp a; a.setParam("volume", 10.f);
     a.prepare({48000, 64, 1});

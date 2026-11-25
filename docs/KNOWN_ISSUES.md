@@ -36,7 +36,7 @@
 | K-030 | OPEN | P2 | ADAA 경로는 샘플당 double 연산(Cortex-M 등 단정밀 FPU 하드웨어에서 비용 큼) | 하드웨어 후보 확정 시 float 버전 검토 |
 | K-031 | PARTIAL (v0.4 Mac 빌드·86/86·auval PASS, Logic GUI 미확인) | P1 | v0.4 후보의 Logic 실사용(AB763 선택·Model 전환·프리셋) 미확인 | 사용자 Mac 1회 검증 |
 | K-032 | OPEN | P1 | AB763 M2의 6V6 Koren 파라미터·PI 전달곡선·PI 입력 분압(0.14)·그리드 전도 계수는 문헌/근사값. SPICE·실측 비교 없음 | SPICE 기준 회로, 실측 |
-| K-033 | OPEN | P2 | AB763 M2 1x 오버샘플링에서는 피드백 대역 제한(0.2·fs)으로 고역 응답이 2x 이상과 다름 | 2x 이상 사용(기본 2x) |
+| K-033 | FIXED (v0.6.1: 피드백 경로 LPF 제거, 1x–4x 고역 응답 차 < 0.6 dB) | P2 | AB763 M2 1x 오버샘플링에서는 피드백 대역 제한(0.2·fs)으로 고역 응답이 2x 이상과 다름 | 2x 이상 사용(기본 2x) |
 | K-034 | OPEN | P2 | AB763 M2는 M1보다 같은 볼륨에서 약 6 dB 큼(출력 스케일 차) | Level로 보정, 청취 후 정규화 결정 |
 | K-035 | OPEN | P2 | Premium Plate 초기 에코 밀도(NED 50 ms 0.54)가 Legacy FDN(0.97)보다 낮음 — 플레이트 특성인지 청취 필요 | 입력 확산 단 추가 검토 |
 | K-036 | OPEN | P2 | 구형 Claude AU(MultiEffects, Mfxp)가 Logic 목록에 중복 표시 | 플러그인 관리자에서 비활성화(BUILD_GUIDE §2-1), 필요 시 이동 스크립트 |
@@ -49,3 +49,5 @@
 | K-043 | OPEN | P3 | Tape Echo는 모노 테이프(스테레오 입력은 합산), 스테레오는 헤드 패닝(Spread)으로만 | 필요 시 듀얼 테이프 |
 | K-044 | OPEN | P3 | Delay `time_r_mode = Free`는 템포 싱크 시에도 ms 값 사용 | R 싱크 분할 파라미터 추가 검토 |
 | K-045 | OPEN | P1 | v0.6 macOS 네이티브 빌드·auval·Logic 미확인 (K-037 포함) | 사용자 Mac `scripts/macos_build_install_verify.sh` |
+| K-046 | FIXED (v0.6.1) | P1 | **AB763 M2 고역 잡음 증폭(026.wav DI 히스)**. 원인: NFB 경로에 넣었던 20 kHz(또는 0.2·fs_OS) 2차 LPF가 Nyquist 근처에서 피드백을 잃게 해 10–20 kHz를 M1 대비 +5…+15 dB(1x에서는 14 kHz +18 dB 피크, 샘플레이트 의존) 끌어올림 → DI의 백색 히스(−74.5 dBFS RMS)가 증폭. DSP 자체 잡음·발진은 없음(디지털 무음 → 정확히 0, 조용한 구간 출력 = |H|²×입력 잡음 ±0.1 dB). | 수정: 회로처럼 저항성(광대역) 피드백. 7 kHz 이하 응답 변화 ≤ 0.3 dB, THD 동일, M1 비트 동일. 테스트 `ab763_m2_no_hf_peaking_and_rate_independent_treble` |
+| K-047 | OPEN (특성) | P3 | 수정 후에도 M2는 M1보다 10 kHz +4 dB, 95 Hz +6 dB(스피커 보이스코일·공진과 출력관 출력 임피던스의 상호작용, NFB로 제한된 물리적 특성). 잡음이 많은 DI에서는 M2의 히스·저역 잡음이 M1보다 약 2–4 dB 더 들림. 톤스택(Treble 6)이 M1/M2 공통으로 고역 +9 dB | 캐비닛 IR 사용, DI 녹음 레벨 확보(026.wav는 피크 −16.6 dBFS, 잡음 −74.5 dBFS로 SNR이 낮은 편). Noise Gate·고역 컷으로 가리지 않음 |

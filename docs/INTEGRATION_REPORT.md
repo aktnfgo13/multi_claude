@@ -178,3 +178,14 @@ python3 research/spice/run_spice.py tolerance …     → E-018
 | pluginval strictness 7 (VST3 Linux, GUI 테스트 제외) | PASS | `pluginval_vst3_linux_strict7_v06.txt` |
 | Linux arm64 VM (사용자 Mac, g++ 11.4) | PASS 113/113 | `arm64_linux_vm_tests_v06.txt` |
 | macOS v0.6 빌드·auval·Logic, 청취 | NOT TESTED | K-045 |
+
+---
+# 추가: v0.6.1 AB763 M2 DI 히스 진단 (2026-11-25)
+| 항목 | 결과 | 근거 |
+|---|---|---|
+| 원본 DI(026.wav, 44.1 kHz/16 bit) 조용한 구간 | RMS −63.3 dBFS(저역 위주), 1–22 kHz 백색 바닥 약 −74.5 dBFS RMS(16 bit 양자화보다 27 dB 높음), 피크 −16.6 dBFS | `tools/benchmark/di_noise_analysis.py` |
+| 조용한 구간 출력 = 선형 증폭된 원본 잡음 | 실제/예측(|H|²×입력) 200 Hz 이상 ±0.1 dB, 코히어런스 ≥ 0.994 | 동 |
+| 디지털 무음 입력(44.1/48/96 kHz) | M1·M2 출력 정확히 0, 발진 없음 | 동, 새 테스트 |
+| DSP 자체 잡음(−120 dBFS 사인 입력) | 출력 잡음 바닥 M1 −116 / M2 −108 dBFS(float 연산 잡음) — 원본 잡음보다 약 50 dB 낮음 | 동 |
+| 결함 | M2 피드백 경로 LPF → 10–20 kHz 피크(샘플레이트 의존). 수정 후 M2 10–20 kHz 잡음 −5 dB, 조용한 구간 SNR 23.9 → 26.2 dB(M1 29.8) | K-046, D-059 |
+| 회귀 | 팩토리 01–06 비트 동일, M1 비트 동일, 07–09(M2 포함) 캐비닛 후 대역 차 ≤ 0.5 dB, C++ 114/114 | |
