@@ -1,6 +1,6 @@
 # AI 프로젝트 인수인계 (MFX Claude)
 
-- 갱신일: 2026-11-25 · GitHub `aktnfgo13/multi_claude` `main` · 버전 **0.5.0** (SHA: v0.5 커밋 = `0518cc3` 다음, `git log -1`로 확인)
+- 갱신일: 2026-11-25 · GitHub `aktnfgo13/multi_claude` `main` · 버전 **0.5.0** (구현 커밋 `1e8d10d`, 이후 문서·로그 커밋은 `git log`로 확인)
 - 대상: ChatGPT / Claude / Codex 등 후속 개발 AI. 추측하지 말고 이 문서와 링크된 파일을 근거로 진행하세요.
 
 ## Quick Context
@@ -8,7 +8,7 @@
 - v0.5 구현 DSP: ① AB763 **M2**(LTP 위상반전, 6V6 푸시풀 Koren, 그리드 블로킹, 정류관 Sag, 지연 없는 NFB 루프, OT + 반응성 스피커 부하) — 새 인스턴스 기본, 기존 저장은 M1
   ② Custom Drive `adaa_comp`(ADAA 고역·드라이/웻 정렬 보정) ③ 새 리버브 `reverb_plate_premium`(Dattorro 탱크 + 주파수별 RT60 + ER + 변조) ④ 프리셋 07.
 - 기존 기능 보존: 팩토리 01–06, Custom Drive v1/v2/v2+ADAA(보정 Off), AB763 M1, Legacy reverb 출력이 v0.4와 **비트 동일**(cmp 확인). 파라미터 id·AU ID 불변.
-- 테스트 플랫폼: Linux x86_64 (C++ 97/97, ASan audio 0건, pluginval strictness 7 PASS). v0.5의 arm64/macOS 결과는 아래 E절 참고.
+- 테스트 플랫폼: Linux x86_64 (C++ 97/97, ASan audio 0건, pluginval strictness 7 PASS), Linux arm64 VM on 사용자 Mac (97/97, `tests/results/arm64_linux_vm_tests_v05.txt`). macOS 네이티브 v0.5 미확인.
 - Mac/Logic: v0.4는 사용자 Mac에서 빌드·86/86·auval PASS(2026-11-25). **v0.5 macOS·Logic GUI 미확인**. 구형 Claude AU(Mfxp) 중복은 플러그인 관리자 비활성화 안내.
 - 품질 Level(`docs/AUDIO_QUALITY_TARGETS.md`): AB763 M2 = 3(실측 전), Custom Drive = 2, Premium Plate = 2–3, Legacy amp = 1–2. Level 4 이상은 실측·청취 필요.
 - 남은 문제: AB763 M2 파라미터 문헌/근사값·SPICE·실측 없음(K-032), Plate 초기 밀도(K-035), parity 미러 범위(K-027), 원문 연구 자료 미확보(K-038).
