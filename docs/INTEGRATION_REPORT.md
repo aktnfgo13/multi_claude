@@ -232,4 +232,5 @@ python3 research/spice/run_spice.py tolerance …     → E-018
 | ASan (v0.8 관련) | PASS 0건 | `sanitizer_asan_v08.txt` |
 | 호스트 파라미터 레이아웃(실제 Processor, 헤드리스) | PASS | `plugin_host_params_v08.txt` |
 | pluginval strictness 7 (VST3 Linux, GUI 제외, `--timeout-ms` 연장) | PASS | `pluginval_vst3_linux_strict7_v08.txt`, K-054 |
+| Linux arm64 VM (사용자 Mac, g++ 11.4, macOS 네이티브 아님) | PASS 141/141 | `arm64_linux_vm_tests_v08.txt` |
 | macOS·auval·Logic(오토메이션·로딩), 청취 | NOT TESTED | K-053, K-058 |

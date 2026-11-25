@@ -1,6 +1,6 @@
 # AI 프로젝트 인수인계 (MFX Claude)
 
-- 갱신일: 2026-11-25 · GitHub `aktnfgo13/multi_claude` `main` · 버전 **0.8.0** (v0.8 커밋은 `git log`로 확인, 직전 v0.7 = `20e85e4`)
+- 갱신일: 2026-11-25 · GitHub `aktnfgo13/multi_claude` `main` · 버전 **0.8.0** (구현 `5d1aec6`, 이후 로그 커밋은 `git log`, 직전 v0.7 = `20e85e4`)
 - 대상: ChatGPT / Claude / Codex 등 후속 개발 AI. 추측하지 말고 이 문서와 링크된 파일을 근거로 진행하세요.
 
 ## Quick Context
@@ -16,7 +16,7 @@
 - Host Automation(K-048): 해결 — 기존 275개 파라미터 인덱스(=JUCE AU/VST3 ID) 불변, 슬롯당 16..23 확장 128개를 맨 뒤에 추가(version hint 2),
   세션 키 호환. 헤드리스 Processor 테스트 PASS. **Logic 수동 확인 필요(K-053)**.
 - 호환성: 팩토리 01–10과 기존 이펙트 전부 v0.7과 비트 동일. 새 프리셋 11–12.
-- 검증 환경: Linux x86_64 (C++ 141/141, ASan 0건, pluginval 7 PASS(타임아웃 연장, K-054)). arm64 VM은 INTEGRATION_REPORT. macOS 네이티브 v0.5–v0.8 미확인.
+- 검증 환경: Linux x86_64 (C++ 141/141, ASan 0건, pluginval 7 PASS(타임아웃 연장, K-054)), Linux arm64 VM on 사용자 Mac (141/141 — macOS 네이티브 아님). macOS 네이티브 v0.5–v0.8 미확인.
 - 미해결: K-053(Logic 오토메이션), K-055(Phaser 스테이지 전환), K-056(Vibrato 저속 최대 깊이), K-057(근사 계수), K-058(청취·DI), K-047/K-050.
 - 다음 우선순위(v0.9): Mac/Logic 확인 → 청취 튜닝 → 실측(LDR·로터리·DI) → 출시 준비(설치·서명·Windows·매뉴얼) → 하드웨어 ARM 최적화.
 - 읽을 파일: `AGENTS.md` → 이 문서 → `docs/KNOWN_ISSUES.md` → `docs/DSP_SPECIFICATION.md`(Premium Modulation 절) → `docs/PARAMETER_SPECIFICATION.md` §4.
