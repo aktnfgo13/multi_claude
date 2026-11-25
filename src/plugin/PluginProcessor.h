@@ -94,7 +94,9 @@ public:
     void moveEffect(int slot, Lane lane, int index);
     void setEffectParam(int slot, int param, float plainValue); // routes through host parameter (undo/automation)
     void refreshBindings();
-    bool loadPresetJson(const juce::String& json, juce::String& error);
+    bool loadPresetJson(const juce::String& json, juce::String& error, const juce::String& presetDir = {});
+    /// User IR library (searched when a preset's saved IR path no longer exists): ~/Music/MFX Claude/IR
+    static juce::File userIrDirectory();
     juce::String currentPresetJson(const juce::String& name) const;
     juce::StringArray factoryPresetNames() const;
     juce::String presetName() const { return presetName_; }

@@ -101,3 +101,22 @@ python3 research/spice/run_spice.py tolerance …     → E-018
 3. NAM 리샘플러, 진단 UI, Undo/Redo.
 4. Codex 고유 기능 이식 검토(시각화, Input System, preset 내장 IR) — 재구현, 사용자 승인 후.
 5. Gray-box / Architecture Search는 실측 데이터 확보 후.
+
+---
+# 추가: Codex 기능 격차 해소 v1 (2026-11-24, 기준 커밋 3f823fa, **미커밋**)
+
+| 항목 | 상태 | 근거 |
+|---|---|---|
+| 분석 탭(SPSC) + 워커 | PASS | `integration.analysis_*` 5개, TSan/ASan 경고 0 |
+| 분석 ON/OFF 출력 동일 | PASS | `analysis_tap_does_not_change_output`(비트 동일) |
+| 콜백 할당/해제 0 (탭 ON, 큐 넘침, 토글) | PASS | `performance.no_heap_allocation_or_free_with_analysis_tap` |
+| Waveform / Spectrum 계산 | PASS | 정렬 오차 < 1e-4, 빈 중심 사인 −6 dBFS ±0.2 dB |
+| Waveform / Spectrum UI | PARTIAL | Linux 오프스크린 렌더 확인, pluginval GUI 통과 / Logic NOT TESTED |
+| 입력 시스템 보완(원본 피크, HOT, 비유한 가드, 공칭 눈금) | PASS(코어) / NOT TESTED(Logic 표시) | `input_meters_source_peak_hot_and_nonfinite_guard` |
+| 캐비닛 IR 참조·이동·누락·해시 | PASS | `cabinet_ir_reference_survives_moves_and_missing_files` |
+| 팩토리 프리셋 5종 출력(골든 렌더) | PASS — 변경 전과 비트 동일 | `mfx_render` 렌더 cmp |
+| Custom Drive v2 회귀 | PASS | audio custom_drive 13개 + 골든 렌더 |
+| C++ 전체 | PASS 78개 | `tests/results/cpp_tests.json` |
+| pluginval strictness 7 (VST3 Linux) | PASS | `pluginval_vst3_linux_strict7_v3_analysis.txt` (스펙트럼 표시점 미세 조정 전 빌드) |
+| arm64(사용자 Mac의 Linux VM) 코어+테스트 | PASS 78/78 | `tests/results/arm64_linux_vm_tests.txt` |
+| macOS AU 후보 빌드 / auval | NOT TESTED | macOS 툴체인 필요(K-026) |

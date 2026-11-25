@@ -64,6 +64,18 @@ input ─ InputMode(Auto/MonoL/MonoSum/Stereo) ─ input gain ─ meter
   `setLatencySamples()`를 호출합니다(예: 오버샘플링 변경).
 * 내부 처리 청크: 호스트 블록을 256 샘플 단위로 나눠 처리(바이패스 드라이 버퍼를 스택에 둘 수 있도록).
 
+## 분석 탭 (Visualize) — 2026-11-24
+```
+Engine::process (오디오 스레드)               UI (메시지 스레드, 30 Hz)
+  입력 게인·모드 → [tap: 입력 복사]               AnalysisView::tick()
+  이펙트 체인                                      └ AnalysisWorker::poll(tap)  ← SPSC peek/pop
+  출력 게인·NaN 가드 → [tap: 출력 복사, commit]       ├ 이력 링(2 s @≤192 kHz, 입력은 체인 지연만큼 정렬)
+  AnalysisTap: 256프레임 × 64패킷, 가득 차면 Drop      ├ waveform(): 열당 min/max
+                                                     └ spectrum(): Hann, 2048/4096, dBFS, 로그 표시점, 스무딩
+```
+* `src/engine/AnalysisTap.h`(코어, 생성자에서만 할당), `src/engine/AnalysisWorker.*`(코어, 비실시간, 스레드 없음),
+  `src/ui/AnalysisView.*`(JUCE). 탭은 Visualize가 보일 때만 켜짐. 탭 ON/OFF는 출력에 영향 없음(테스트).
+
 ## Effect 인터페이스
 
 ```cpp

@@ -20,6 +20,7 @@
 
 #include "core/Effect.h"
 #include "core/Smoothed.h"
+#include "engine/AnalysisTap.h"
 #include "engine/RtPublisher.h"
 
 namespace mfx {
@@ -38,9 +39,19 @@ struct Routing {
 };
 
 struct MeterValues {
-    float inPeak = 0, inRms = 0, outPeak = 0, outRms = 0; // linear
+    float inPeak = 0, inRms = 0, outPeak = 0, outRms = 0; // linear; "in" = chain input (after input gain)
     bool inClip = false, outClip = false;
+    float srcPeak = 0;          // host/device input before input gain and input mode (linear)
+    bool inHot = false;         // chain input peak >= InputLevels::kHotPeak (-3 dBFS) since last read
+    bool inNonFinite = false;   // NaN/Inf input samples were replaced by 0 since last read
     float cpuLoad = 0, cpuPeak = 0; // fraction of real-time budget
+};
+
+/// Input level reference (digital). Used by meters / UI only — never changes the signal.
+struct InputLevels {
+    static constexpr float kNominalRmsDb = -20.0f; // provisional nominal guitar level at the chain input
+    static constexpr float kHotPeak = 0.70794578f; // -3 dBFS
+    static constexpr float kClipPeak = 1.0f;       // 0 dBFS
 };
 
 struct MidiMapping {
@@ -100,6 +111,8 @@ public:
     InputMode inputMode() const { return (InputMode)inputMode_.load(); }
     /// Read and reset peak-hold values.
     MeterValues readMeters();
+    /// Real-time analysis tap (chain input / output). Disabled by default; never changes the output.
+    AnalysisTap& analysisTap() { return tap_; }
 
     /// MIDI mapping table (message thread publishes, audio thread reads).
     void setMidiMappings(const std::vector<MidiMapping>& maps);
@@ -160,7 +173,10 @@ private:
 
     // meters
     std::atomic<float> mInPeak_{0}, mOutPeak_{0}, mInRms_{0}, mOutRms_{0}, mCpu_{0}, mCpuPeak_{0};
-    std::atomic<bool> mInClip_{false}, mOutClip_{false};
+    std::atomic<bool> mInClip_{false}, mOutClip_{false}, mInHot_{false}, mInNonFinite_{false};
+    std::atomic<float> mSrcPeak_{0};
+    AnalysisTap tap_;
+    static int routingLatency(const Routing& r);
     float inMs_ = 0.0f, outMs_ = 0.0f, rmsCoef_ = 0.0f, cpuAvg_ = 0.0f;
 
     std::vector<MidiMapping> midiMsg_;

@@ -47,6 +47,7 @@ void Engine::prepare(double sampleRate, int maxBlockSize) {
     fadeState_ = FadeState::None; fade_ = 1.0f;
     rmsCoef_ = onePoleCoeff(0.3, fs_);
     inMs_ = outMs_ = cpuAvg_ = 0.0f;
+    tap_.prepare(fs_);
     publishRouting();
 }
 
@@ -200,6 +201,9 @@ MeterValues Engine::readMeters() {
     m.inRms = mInRms_.load();
     m.outRms = mOutRms_.load();
     m.inClip = mInClip_.exchange(false);
+    m.inHot = mInHot_.exchange(false);
+    m.inNonFinite = mInNonFinite_.exchange(false);
+    m.srcPeak = mSrcPeak_.exchange(0.0f);
     m.outClip = mOutClip_.exchange(false);
     m.cpuLoad = mCpu_.load();
     m.cpuPeak = mCpuPeak_.exchange(0.0f);
@@ -329,6 +333,17 @@ void Engine::processLane(const Routing& r, int lane, float** buf, bool& mono, in
     for (int i = 0; i < r.count[(size_t)lane]; ++i) processSlot(r, r.order[(size_t)lane][(size_t)i], buf, mono, n);
 }
 
+int Engine::routingLatency(const Routing& r) {
+    auto laneLat = [&](int l) {
+        int s = 0;
+        for (int i = 0; i < r.count[(size_t)l]; ++i)
+            if (const Effect* fx = r.fx[(size_t)r.order[(size_t)l][(size_t)i]]) s += std::min(fx->latencySamples(), SlotRT::kDelay - 1);
+        return s;
+    };
+    const int a = laneLat(1), b = laneLat(2);
+    return laneLat(0) + (r.parallel ? std::max(a, b) : a + b) + laneLat(3);
+}
+
 void Engine::process(const float* const* in, int numIn, float* const* out, int numOut, int numSamples) {
     ScopedNoDenormals noDenormals;
     const auto t0 = std::chrono::steady_clock::now();
@@ -355,9 +370,15 @@ void Engine::process(const float* const* in, int numIn, float* const* out, int n
         // ---- input
         const InputMode mode = (InputMode)inputMode_.load(std::memory_order_relaxed);
         bool mono = numIn < 2 || mode == InputMode::MonoLeft || mode == InputMode::MonoSum;
+        float srcPk = 0.0f;
+        bool nonFinite = false;
         for (int i = 0; i < n; ++i) {
             float l = in[0][start + i];
             float r = numIn > 1 ? in[1][start + i] : l;
+            // input guard: NaN/Inf from the host/device would poison filter states -> 0 (finite input unchanged)
+            if (!std::isfinite(l)) { l = 0.0f; nonFinite = true; }
+            if (!std::isfinite(r)) { r = 0.0f; nonFinite = true; }
+            srcPk = std::max(srcPk, std::max(std::fabs(l), std::fabs(r)));
             if (mode == InputMode::MonoSum && numIn > 1) l = 0.5f * (l + r);
             const float g = inGain_.next();
             buf[0][i] = l * g;
@@ -371,8 +392,18 @@ void Engine::process(const float* const* in, int numIn, float* const* out, int n
                 inMs_ = a * a + rmsCoef_ * (inMs_ - a * a);
             }
         if (pk > mInPeak_.load(std::memory_order_relaxed)) mInPeak_.store(pk, std::memory_order_relaxed);
-        if (pk >= 1.0f) mInClip_.store(true, std::memory_order_relaxed);
+        if (pk >= InputLevels::kClipPeak) mInClip_.store(true, std::memory_order_relaxed);
+        if (pk >= InputLevels::kHotPeak) mInHot_.store(true, std::memory_order_relaxed);
+        if (nonFinite) mInNonFinite_.store(true, std::memory_order_relaxed);
+        if (srcPk > mSrcPeak_.load(std::memory_order_relaxed)) mSrcPeak_.store(srcPk, std::memory_order_relaxed);
         mInRms_.store(std::sqrt(inMs_), std::memory_order_relaxed);
+
+        // ---- analysis tap: capture chain input (read only)
+        AnalysisTap::Packet* pkt = tap_.beginWrite(n);
+        if (pkt) {
+            pkt->inChannels = mono ? 1 : 2;
+            for (int c = 0; c < pkt->inChannels; ++c) std::memcpy(pkt->in[c], buf[c], sizeof(float) * (size_t)pkt->numFrames);
+        }
 
         // ---- effects
         const Routing* r = routing_.active();
@@ -455,6 +486,15 @@ void Engine::process(const float* const* in, int numIn, float* const* out, int n
         if (pk > mOutPeak_.load(std::memory_order_relaxed)) mOutPeak_.store(pk, std::memory_order_relaxed);
         if (pk >= 1.0f) mOutClip_.store(true, std::memory_order_relaxed);
         mOutRms_.store(std::sqrt(outMs_), std::memory_order_relaxed);
+
+        // ---- analysis tap: capture chain output (read only) and publish
+        if (pkt) {
+            pkt->outChannels = mono ? 1 : 2;
+            pkt->latency = r ? routingLatency(*r) : 0;
+            for (int c = 0; c < 2; ++c) std::memcpy(pkt->out[c], buf[c], sizeof(float) * (size_t)pkt->numFrames);
+            tap_.commit();
+        }
+        tap_.advance(n);
 
         if (numOut >= 2) {
             std::memcpy(out[0] + start, buf[0], sizeof(float) * (size_t)n);

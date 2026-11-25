@@ -54,7 +54,7 @@ Json presetToJson(const Engine& e, const std::string& name) {
     return j;
 }
 
-PresetLoadReport presetFromJson(Engine& e, const Json& j) {
+PresetLoadReport presetFromJson(Engine& e, const Json& j, const PresetLoadContext& ctx) {
     PresetLoadReport rep;
     if (j.at("format").asString() != "mfx-preset") { rep.error = "not an mfx-preset"; return rep; }
     const int ver = (int)j.at("version").asNumber(0);
@@ -78,8 +78,11 @@ PresetLoadReport presetFromJson(Engine& e, const Json& j) {
         if (slot < 0) { rep.warnings.push_back("chain full, '" + type + "' skipped"); slots.push_back(-1); continue; }
         if (b.has("state")) {
             std::string err;
-            if (!e.effect(slot)->setExtraState(b.at("state").asString(), &err))
-                rep.warnings.push_back(type + ": could not restore state '" + b.at("state").asString() + "': " + err);
+            Effect::StateContext sc;
+            sc.searchDirs = ctx.searchDirs;
+            sc.warnings = &rep.warnings;
+            if (!e.effect(slot)->setExtraStateWithContext(b.at("state").asString(), sc, &err))
+                rep.warnings.push_back(type + ": could not restore external state: " + err);
         }
         e.setBypass(slot, b.at("bypass").asBool(false));
         slots.push_back(slot);
@@ -105,11 +108,14 @@ PresetLoadReport presetFromJson(Engine& e, const Json& j) {
     return rep;
 }
 
-PresetLoadReport loadPresetFile(Engine& e, const std::string& path) {
+PresetLoadReport loadPresetFile(Engine& e, const std::string& path, const PresetLoadContext& ctx) {
     Json j;
     std::string err;
     if (!Json::load(path, j, &err)) { PresetLoadReport r; r.error = err; return r; }
-    return presetFromJson(e, j);
+    PresetLoadContext c = ctx;
+    const auto slash = path.find_last_of("/\\");
+    c.searchDirs.insert(c.searchDirs.begin(), slash == std::string::npos ? std::string(".") : path.substr(0, slash));
+    return presetFromJson(e, j, c);
 }
 
 bool savePresetFile(const Engine& e, const std::string& name, const std::string& path) {

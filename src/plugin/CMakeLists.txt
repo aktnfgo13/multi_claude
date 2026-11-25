@@ -41,7 +41,8 @@ target_sources(MultiEffects PRIVATE
   PluginEditor.cpp
   ${CMAKE_SOURCE_DIR}/src/ui/LookAndFeel.cpp
   ${CMAKE_SOURCE_DIR}/src/ui/ChainView.cpp
-  ${CMAKE_SOURCE_DIR}/src/ui/ParamPanel.cpp)
+  ${CMAKE_SOURCE_DIR}/src/ui/ParamPanel.cpp
+  ${CMAKE_SOURCE_DIR}/src/ui/AnalysisView.cpp)
 target_include_directories(MultiEffects PRIVATE ${CMAKE_SOURCE_DIR}/src)
 target_compile_definitions(MultiEffects PUBLIC
   JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0 JUCE_VST3_CAN_REPLACE_VST2=0 JUCE_DISPLAY_SPLASH_SCREEN=0)
@@ -49,3 +50,14 @@ target_link_libraries(MultiEffects
   PRIVATE mfx_core MultiEffectsPresets
           juce::juce_audio_utils juce::juce_dsp
   PUBLIC juce::juce_recommended_config_flags juce::juce_recommended_lto_flags juce::juce_recommended_warning_flags)
+
+# Developer tool: off-screen render of the Visualize panel (not built by default, never shipped).
+option(MFX_BUILD_UI_SNAPSHOT "Build the mfx_ui_snapshot developer tool" OFF)
+if(MFX_BUILD_UI_SNAPSHOT)
+  juce_add_console_app(mfx_ui_snapshot PRODUCT_NAME "mfx_ui_snapshot")
+  target_sources(mfx_ui_snapshot PRIVATE ${CMAKE_SOURCE_DIR}/apps/mfx_ui_snapshot.cpp
+    ${CMAKE_SOURCE_DIR}/src/ui/AnalysisView.cpp ${CMAKE_SOURCE_DIR}/src/ui/LookAndFeel.cpp)
+  target_include_directories(mfx_ui_snapshot PRIVATE ${CMAKE_SOURCE_DIR}/src)
+  target_compile_definitions(mfx_ui_snapshot PRIVATE JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0)
+  target_link_libraries(mfx_ui_snapshot PRIVATE mfx_core juce::juce_gui_basics juce::juce_recommended_config_flags)
+endif()

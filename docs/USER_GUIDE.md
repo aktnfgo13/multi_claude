@@ -10,6 +10,22 @@
 * **파라미터 패널**: 노브(더블클릭 = 기본값, 값 직접 입력 가능), 선택 상자, 토글.
   Cabinet은 *Load IR*, NAM Amp는 *Load .nam*, DDSP Drive는 *Load knob LUT* 버튼이 있습니다. Tuner는 음정·센트를 표시합니다.
 
+## Visualize (파형 · 스펙트럼)
+상단 **Effects / Visualize** 버튼으로 화면을 전환합니다. Visualize를 열었을 때만 분석이 동작하며, 소리에는 영향이 없습니다.
+* 표시: Input(체인 입력, 입력 게인 적용 후) / Output(체인 출력) / Overlay. 입력은 체인 지연만큼 늦춰 출력과 맞춰 그립니다.
+* 채널: Mono(L+R) / Left / Right / Stereo L/R. Time(5 ms–2 s), Amp(1–32배) 줌, Pause/Resume.
+* 스펙트럼: FFT 2048/4096, Hann 창, 로그 주파수축, dBFS(풀스케일 사인 = 0 dBFS). 빈 사이 주파수는 최대 1.4 dB 낮게 보일 수 있습니다.
+* 아래 상태줄: 샘플레이트, 입·출력 채널, 체인 지연, 분석 데이터 누락(dropped) 수.
+
+## 입력 레벨
+* IN 미터: 체인 입력(입력 게인 적용 후). 흰 눈금 = 공칭 −20 dBFS RMS, LED 주황 = −3 dBFS(HOT), 빨강 = 0 dBFS(CLIP).
+* "Source peak": 입력 게인 적용 전 호스트/인터페이스 입력 피크. 비정상 샘플(NaN/Inf)이 오면 0으로 막고 표시합니다.
+
+## 캐비닛 IR과 프리셋
+프리셋에는 IR 파일 위치·이름·내용 확인값만 저장합니다(IR 샘플은 저장 안 함). 원래 위치에 없으면
+① 프리셋 파일과 같은 폴더(또는 그 안의 `ir/`, `IR/`) ② `~/Music/MFX Claude/IR` 에서 같은 이름을 찾고 내용이 같은지 확인합니다.
+이름은 같은데 내용이 다르면 경고와 함께 로드하고, 찾지 못하면 내장 캐비닛 시뮬레이션으로 대체하고 경고합니다.
+
 ## 자동화 · MIDI
 * 호스트 파라미터: `Input Gain`, `Output Gain`, `Parallel A/B Mix`, 슬롯 1–16 각각 `Bypass` + 파라미터 16개.
   이름은 슬롯의 이펙트를 따라갑니다(예: `S2 Drive`).

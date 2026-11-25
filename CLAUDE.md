@@ -1,6 +1,6 @@
 # CLAUDE.md — notes for coding agents working in this repository
 
-**Read `AGENTS.md` first.** Its mandatory requirements (R1–R6: modular architecture, JUCE/OS-independent core,
+**Read `AGENTS.md` first**, then `docs/AI_PROJECT_HANDOFF.md` (Quick Context) for the current state. Its mandatory requirements (R1–R6: modular architecture, JUCE/OS-independent core,
 macOS/Windows common DSP and preset compatibility, ARM hardware portability, real-time safety and memory management,
 preservation of existing models/presets) override anything below.
 
@@ -40,3 +40,4 @@ Plug-in: `-DMFX_BUILD_PLUGIN=ON [-DMFX_JUCE_DIR=...] [-DMFX_WITH_NAM=ON -DMFX_NA
   (finite/bounded, block-size invariance, parameter description).
 * Decisions: docs/DECISION_LOG.md. Experiments: docs/EXPERIMENT_LOG.md. Status: docs/INTEGRATION_REPORT.md
   (v0.1: docs/COMPLETION_REPORT.md). Open problems: docs/KNOWN_ISSUES.md. Parameters: docs/PARAMETER_SPECIFICATION.md.
+* Visualize: `src/engine/AnalysisTap.h` (RT, SPSC) -> `src/engine/AnalysisWorker.*` (non-RT) -> `src/ui/AnalysisView.*`.

@@ -25,3 +25,8 @@
 | K-019 | OPEN | P1 | (R6) 프리셋에 이펙트 모델 버전이 없어 Custom Drive v2가 기존 프리셋 소리를 바꿈(팩토리 프리셋은 레벨만 재조정, v1 경로는 코드에만 존재) | 블록별 `model_version`(없으면 1) + Custom Drive v1/v2 선택. v0.1 미출시라 사용자 피해는 없음 |
 | K-020 | OPEN | P1 | (R6) 팩토리 프리셋 렌더 회귀(골든 출력) 테스트 없음 — 소리 변화가 자동으로 검출되지 않음 | 프리셋별 고정 입력 렌더 해시/ESR 비교 테스트 |
 | K-021 | OPEN | P2 | (R6) 앰프 Model 같은 Choice 파라미터에 항목을 추가하면 호스트 정규화 값이 바뀌어 DAW 자동화가 다른 모델을 가리킬 수 있음(프리셋 JSON은 영향 없음) | 예비 슬롯 확보 또는 새 앰프는 새 type id 정책 결정 |
+| K-022 | OPEN | P1 | (시각화) Waveform/Spectrum·HOT/CLIP 표시·Effects/Visualize 전환을 Logic에서 확인하지 않음. Linux 오프스크린 렌더(`docs/images/ui_visualize_snapshot.png`)와 pluginval GUI 테스트만 수행 | 사용자 Logic 확인 |
+| K-023 | OPEN | P2 | 스펙트럼은 Hann 창이라 빈 사이 주파수에서 최대 1.42 dB 낮게 읽힘(스캘럽 손실). 저역 표시점은 빈 보간, 그 외는 피크 유지 | 정밀 레벨 측정은 미터 사용. 필요 시 Flat-top 옵션 |
+| K-024 | OPEN | P2 | 캐비닛 IR 파일이 없으면 프리셋 소리가 내장 시뮬레이션으로 바뀜(경고 표시). IR을 프리셋과 함께 옮기는 "번들 내보내기"는 없음 | 프리셋 폴더/ir/ 또는 ~/Music/MFX Claude/IR에 두면 자동 복원 |
+| K-025 | OPEN | P2 | 새 IR 상태 형식(`mfx-ir:1`)은 v0.2.0 이하 빌드에서 경로로 읽히지 않음(경고 후 내장 시뮬레이션). 이전 형식(경로 문자열)은 새 빌드에서 그대로 읽힘 | 하위 호환은 유지, 상위 호환 없음 |
+| K-026 | OPEN | P1 | macOS AU 후보 빌드·auval 미확인(작업 환경에서 macOS 툴체인 실행 불가). 코어·테스트는 사용자 Mac의 Linux arm64 VM에서 78/78 PASS, `~/multi_effects_claude` 반영 완료 | 사용자 Mac에서 `scripts/macos_build_install_verify.sh` |

@@ -7,6 +7,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include "core/Common.h"
 #include "core/Parameter.h"
@@ -54,6 +55,16 @@ public:
     virtual std::string getExtraState() const { return {}; }
     /// Returns false (and leaves the effect usable) when the state cannot be applied.
     virtual bool setExtraState(const std::string& /*state*/, std::string* /*error*/ = nullptr) { return true; }
+    /// Where to look for external files referenced by a state (preset folder, user libraries), and where
+    /// to report non-fatal problems (e.g. a file that was found but differs from the saved one).
+    struct StateContext {
+        std::vector<std::string> searchDirs;
+        std::vector<std::string>* warnings = nullptr;
+    };
+    /// Message thread. Default: ignores the context.
+    virtual bool setExtraStateWithContext(const std::string& state, const StateContext& /*ctx*/, std::string* error = nullptr) {
+        return setExtraState(state, error);
+    }
     /// Message thread: free resources retired by the audio thread (IR / model swaps).
     virtual void collectGarbage() {}
 

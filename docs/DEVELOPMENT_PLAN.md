@@ -37,6 +37,10 @@ Choice 파라미터 확장 정책, 블록별 메모리 보고, ARMv7 FTZ 경로.
 | P2 | DDSP loss 설정·Envelope loss·분할, 노브 매핑 비교, SPICE 공차 | 완료(시뮬레이션 데이터) |
 | P3 | Gray-box, Architecture Search, 임베디드 | 미착수(DEFER) |
 
+## Codex 기능 격차 해소 v1 (2026-11-24, 미커밋)
+실시간 분석 탭·파형·스펙트럼, 입력 시스템 보완, 캐비닛 IR 참조 복원 구현 완료(INTEGRATION_REPORT 추가 절).
+남은 것: Logic 확인(K-022), Mac 빌드(K-026), IR 번들 내보내기(K-024).
+
 ## 다음 마일스톤
 1. M1 (Mac, 사용자): `scripts/macos_build_install_verify.sh` → auval → Logic 체크리스트(BUILD_GUIDE §2) → 결과 로그 전달.
 2. M1b (청취, 사용자): `audio/compare_drive_v2/abx` 블라인드 청취, 프리셋 02/03/05 확인, Custom Drive v2 노브 감각 피드백.

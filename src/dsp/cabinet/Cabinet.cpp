@@ -3,6 +3,9 @@
 #include "dsp/utility/Resample.h"
 #include "platform/WavFile.h"
 
+#include <cstdio>
+#include <cstdlib>
+
 namespace mfx {
 
 static const char* kSources[] = {"Built-in Sim", "User IR"};
@@ -36,6 +39,8 @@ bool Cabinet::loadIR(const std::vector<float>& ir, double irSampleRate, const st
     rawIr_ = ir;
     rawSr_ = irSampleRate;
     irName_ = name;
+    irPath_.clear(); // in-memory IR: no file reference (loadIRFile sets path and hash after this)
+    irHash_ = 0;
     if (prepared_) publishKernel();
     return true;
 }
@@ -44,14 +49,97 @@ bool Cabinet::loadIRFile(const std::string& path, std::string* error) {
     WavData w;
     if (!readWav(path, w, error)) return false;
     if (w.numFrames() == 0) { if (error) *error = "empty IR"; return false; }
-    irPath_ = path;
     const auto slash = path.find_last_of("/\\");
-    return loadIR(w.channels[0], w.sampleRate, slash == std::string::npos ? path : path.substr(slash + 1));
+    if (!loadIR(w.channels[0], w.sampleRate, slash == std::string::npos ? path : path.substr(slash + 1))) {
+        if (error) *error = "invalid IR";
+        return false;
+    }
+    irPath_ = path;
+    irHash_ = hashSamples(w.channels[0]);
+    unresolvedState_.clear();
+    return true;
+}
+
+uint64_t Cabinet::hashSamples(const std::vector<float>& x) {
+    uint64_t h = 1469598103934665603ull;
+    const auto* b = reinterpret_cast<const unsigned char*>(x.data());
+    for (size_t i = 0; i < x.size() * sizeof(float); ++i) { h ^= b[i]; h *= 1099511628211ull; }
+    return h;
+}
+
+std::string Cabinet::getExtraState() const {
+    if (irPath_.empty()) return unresolvedState_; // nothing loaded from a file (keep an unresolved reference)
+    char hash[17];
+    std::snprintf(hash, sizeof(hash), "%016llx", (unsigned long long)irHash_);
+    char sr[32];
+    std::snprintf(sr, sizeof(sr), "%.17g", rawSr_);
+    return std::string("mfx-ir:1\npath=") + irPath_ + "\nfile=" + irName_ + "\nfnv64=" + hash + "\nsample_rate=" + sr +
+           "\nframes=" + std::to_string(rawIr_.size());
 }
 
 bool Cabinet::setExtraState(const std::string& state, std::string* error) {
+    return setExtraStateWithContext(state, StateContext{}, error);
+}
+
+namespace {
+struct IrRef { std::string path, file; uint64_t hash = 0; bool hasHash = false; };
+IrRef parseIrRef(const std::string& state) {
+    IrRef r;
+    if (state.rfind("mfx-ir:", 0) != 0) { // legacy: plain path
+        r.path = state;
+    } else {
+        size_t pos = 0;
+        while (pos < state.size()) {
+            size_t e = state.find('\n', pos);
+            if (e == std::string::npos) e = state.size();
+            const std::string line = state.substr(pos, e - pos);
+            const size_t eq = line.find('=');
+            if (eq != std::string::npos) {
+                const std::string k = line.substr(0, eq), v = line.substr(eq + 1);
+                if (k == "path") r.path = v;
+                else if (k == "file") r.file = v;
+                else if (k == "fnv64") { r.hash = std::strtoull(v.c_str(), nullptr, 16); r.hasHash = true; }
+            }
+            pos = e + 1;
+        }
+    }
+    if (r.file.empty()) {
+        const auto slash = r.path.find_last_of("/\\");
+        r.file = slash == std::string::npos ? r.path : r.path.substr(slash + 1);
+    }
+    return r;
+}
+} // namespace
+
+bool Cabinet::setExtraStateWithContext(const std::string& state, const StateContext& ctx, std::string* error) {
     if (state.empty()) return true;
-    return loadIRFile(state, error);
+    const IrRef ref = parseIrRef(state);
+    // candidates: saved path, then <dir>/<file>, <dir>/ir/<file>, <dir>/IR/<file> for every search dir
+    std::vector<std::string> cands;
+    if (!ref.path.empty()) cands.push_back(ref.path);
+    for (const auto& d : ctx.searchDirs) {
+        if (d.empty() || ref.file.empty()) continue;
+        const std::string base = (d.back() == '/' || d.back() == '\\') ? d : d + "/";
+        cands.push_back(base + ref.file);
+        cands.push_back(base + "ir/" + ref.file);
+        cands.push_back(base + "IR/" + ref.file);
+    }
+    std::string firstMismatch;
+    for (const auto& c : cands) {
+        WavData w;
+        if (!readWav(c, w, nullptr) || w.numFrames() == 0) continue;
+        if (!ref.hasHash || hashSamples(w.channels[0]) == ref.hash) return loadIRFile(c, error);
+        if (firstMismatch.empty()) firstMismatch = c;
+    }
+    if (!firstMismatch.empty()) { // same name but different content: load it, but say so
+        if (ctx.warnings) ctx.warnings->push_back("cabinet: IR '" + ref.file + "' found at '" + firstMismatch +
+                                                  "' but its content differs from the saved IR");
+        return loadIRFile(firstMismatch, error);
+    }
+    // not found: keep the reference (re-saving keeps it), fall back to the built-in cabinet simulation
+    unresolvedState_ = state;
+    if (error) *error = "IR file not found: '" + ref.file + "' (built-in cabinet simulation is used until it is found)";
+    return false;
 }
 
 void Cabinet::publishKernel() {

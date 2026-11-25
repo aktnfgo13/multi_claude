@@ -4,6 +4,7 @@
 #pragma once
 
 #include <atomic>
+#include <cstdint>
 #include <memory>
 #include <string>
 #include <vector>
@@ -30,8 +31,14 @@ public:
     bool hasIR() const { return !rawIr_.empty(); }
     const std::string& irName() const { return irName_; }
 
-    std::string getExtraState() const override { return irPath_; }
+    /// IR reference: "mfx-ir:1" header + path / file name / FNV-1a 64 of the samples / sample rate / frames.
+    /// A plain path (v0.1/v0.2 presets) is still accepted. IR samples are never stored in the preset.
+    std::string getExtraState() const override;
     bool setExtraState(const std::string& state, std::string* error) override;
+    bool setExtraStateWithContext(const std::string& state, const StateContext& ctx, std::string* error) override;
+    /// FNV-1a 64-bit hash of the loaded IR samples (as read from the file, before resampling); 0 = none.
+    uint64_t irHash() const { return irHash_; }
+    static uint64_t hashSamples(const std::vector<float>& x);
     void collectGarbage() override;
 
 protected:
@@ -45,6 +52,8 @@ private:
     std::vector<float> rawIr_;
     double rawSr_ = 48000.0;
     std::string irPath_, irName_;
+    uint64_t irHash_ = 0;
+    std::string unresolvedState_; // reference that could not be resolved: kept so re-saving does not lose it
     bool prepared_ = false;
 
     Convolver conv_[kMaxChannels];

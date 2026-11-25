@@ -16,13 +16,18 @@ void MeterBar::paint(juce::Graphics& g) {
     };
     g.setColour(colours::accent.withAlpha(0.45f));
     g.fillRoundedRectangle(r.withWidth(toX(rms_)).reduced(0, 2), 2.0f);
-    g.setColour(peak_ > 0.89f ? colours::warn : colours::accent);
+    g.setColour(peak_ > 0.89f || hot_ ? colours::warn : colours::accent);
     g.fillRect(r.getX() + toX(peak_), r.getY() + 2, 2.0f, r.getHeight() - 4);
-    g.setColour(clip_ ? colours::clip : colours::outline);
+    if (nominalDb_ < 6.0f) { // nominal input level reference (dashed-free thin tick)
+        g.setColour(colours::textDim);
+        g.fillRect(r.getX() + toX(std::pow(10.0f, nominalDb_ / 20.0f)), r.getY(), 1.0f, r.getHeight());
+    }
+    // LED: red = clip (0 dBFS), amber = hot (-3 dBFS), outline = ok
+    g.setColour(clip_ ? colours::clip : hot_ ? colours::warn : colours::outline);
     g.fillEllipse(r.getRight() - 10, r.getCentreY() - 4, 8, 8);
 }
 
-Editor::Editor(Processor& p) : AudioProcessorEditor(p), proc_(p), chain_(p), panel_(p) {
+Editor::Editor(Processor& p) : AudioProcessorEditor(p), proc_(p), chain_(p), panel_(p), analysis_(p.engine()) {
     setLookAndFeel(&lnf_);
     addAndMakeVisible(presets_);
     presets_.addItemList(proc_.factoryPresetNames(), 1);
@@ -61,6 +66,20 @@ Editor::Editor(Processor& p) : AudioProcessorEditor(p), proc_(p), chain_(p), pan
     setupKnob(outGain_, outLabel_, "OUT", "output_gain");
     setupKnob(parMix_, mixLabel_, "A/B", "parallel_mix");
     for (auto* l : {&cpu_, &latency_}) { l->setFont(juce::FontOptions(12.0f)); l->setColour(juce::Label::textColourId, colours::textDim); addAndMakeVisible(*l); }
+    srcLevel_.setFont(juce::FontOptions(11.0f));
+    srcLevel_.setColour(juce::Label::textColourId, colours::textDim);
+    srcLevel_.setTooltip("Host/device input peak before Input Gain. Meter tick = nominal -20 dBFS RMS; LED amber = -3 dBFS, red = 0 dBFS.");
+    addAndMakeVisible(srcLevel_);
+    inMeter_.setNominalMarkerDb(InputLevels::kNominalRmsDb);
+    for (auto* b : {&effectsTab_, &visualizeTab_}) {
+        b->setClickingTogglesState(true);
+        b->setRadioGroupId(4711);
+        addAndMakeVisible(*b);
+    }
+    effectsTab_.setToggleState(true, juce::dontSendNotification);
+    effectsTab_.onClick = [this] { showVisualize(false); };
+    visualizeTab_.onClick = [this] { showVisualize(true); };
+    addChildComponent(analysis_);
     addAndMakeVisible(inMeter_);
     addAndMakeVisible(outMeter_);
     addAndMakeVisible(chain_);
@@ -81,6 +100,14 @@ Editor::Editor(Processor& p) : AudioProcessorEditor(p), proc_(p), chain_(p), pan
 Editor::~Editor() {
     stopTimer();
     setLookAndFeel(nullptr);
+}
+
+void Editor::showVisualize(bool v) {
+    chain_.setVisible(!v);
+    panel_.setVisible(!v);
+    analysis_.setVisible(v); // enables/disables the engine's analysis tap
+    effectsTab_.setToggleState(!v, juce::dontSendNotification);
+    visualizeTab_.setToggleState(v, juce::dontSendNotification);
 }
 
 void Editor::paint(juce::Graphics& g) {
@@ -108,6 +135,9 @@ void Editor::resized() {
     load_.setBounds(row1.removeFromLeft(64).reduced(2, 7));
     parallel_.setBounds(row1.removeFromLeft(120).reduced(2, 7));
     inputMode_.setBounds(row1.removeFromLeft(170).reduced(2, 7));
+    row1.removeFromLeft(12);
+    effectsTab_.setBounds(row1.removeFromLeft(80).reduced(2, 7));
+    visualizeTab_.setBounds(row1.removeFromLeft(90).reduced(2, 7));
     auto row2 = top;
     row2.removeFromLeft(170);
     for (auto [s, l] : {std::pair{&inGain_, &inLabel_}, std::pair{&outGain_, &outLabel_}, std::pair{&parMix_, &mixLabel_}}) {
@@ -118,19 +148,25 @@ void Editor::resized() {
     auto meters = row2.removeFromLeft(220).reduced(8, 4);
     inMeter_.setBounds(meters.removeFromTop(meters.getHeight() / 2).reduced(0, 3));
     outMeter_.setBounds(meters.reduced(0, 3));
-    cpu_.setBounds(row2.removeFromTop(row2.getHeight() / 2).withTrimmedLeft(8));
-    latency_.setBounds(row2.withTrimmedLeft(8));
+    auto info = row2;
+    cpu_.setBounds(info.removeFromTop(info.getHeight() / 3).withTrimmedLeft(8));
+    latency_.setBounds(info.removeFromTop(info.getHeight() / 2).withTrimmedLeft(8));
+    srcLevel_.setBounds(info.withTrimmedLeft(8));
     r.removeFromTop(6);
     const int chainH = juce::jlimit(220, 340, r.getHeight() / 2);
     chain_.setBounds(r.removeFromTop(chainH));
     r.removeFromTop(8);
     panel_.setBounds(r);
+    analysis_.setBounds(chain_.getBounds().getUnion(r));
     chain_.rebuild();
 }
 
 void Editor::timerCallback() {
     const auto m = proc_.engine().readMeters();
-    inMeter_.set(m.inPeak, m.inRms, m.inClip);
+    inMeter_.set(m.inPeak, m.inRms, m.inClip, m.inHot);
+    srcPeakHold_ = std::max(m.srcPeak, srcPeakHold_ * 0.97f);
+    srcLevel_.setText("Source peak " + (srcPeakHold_ > 1e-6f ? juce::String(20.0f * std::log10(srcPeakHold_), 1) + " dBFS" : juce::String("-inf"))
+                      + (m.inNonFinite ? "  | invalid samples muted" : ""), juce::dontSendNotification);
     outMeter_.set(m.outPeak, m.outRms, m.outClip);
     cpuShown_ = 0.85f * cpuShown_ + 0.15f * m.cpuLoad;
     cpu_.setText("CPU " + juce::String(100.0f * cpuShown_, 1) + " %  (peak " + juce::String(100.0f * m.cpuPeak, 0) + " %)", juce::dontSendNotification);
@@ -162,7 +198,7 @@ void Editor::loadPresetFile() {
         const auto f = fc.getResult();
         if (!f.existsAsFile()) return;
         juce::String err;
-        if (!proc_.loadPresetJson(f.loadFileAsString(), err) || err.isNotEmpty())
+        if (!proc_.loadPresetJson(f.loadFileAsString(), err, f.getParentDirectory().getFullPathName()) || err.isNotEmpty())
             juce::AlertWindow::showMessageBoxAsync(juce::MessageBoxIconType::WarningIcon, "Preset", err.isEmpty() ? "Could not load preset" : err);
         chain_.setSelected(-1);
         chain_.rebuild();

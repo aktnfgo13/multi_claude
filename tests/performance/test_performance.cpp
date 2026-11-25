@@ -12,7 +12,7 @@
 #include "engine/Engine.h"
 
 static std::atomic<bool> gCountAllocs{false};
-static std::atomic<long> gAllocs{0};
+static std::atomic<long> gAllocs{0}, gFrees{0};
 
 void* operator new(std::size_t n) {
     if (gCountAllocs.load(std::memory_order_relaxed)) gAllocs.fetch_add(1);
@@ -24,10 +24,11 @@ void* operator new[](std::size_t n) {
     if (void* p = std::malloc(n ? n : 1)) return p;
     throw std::bad_alloc();
 }
-void operator delete(void* p) noexcept { std::free(p); }
-void operator delete[](void* p) noexcept { std::free(p); }
-void operator delete(void* p, std::size_t) noexcept { std::free(p); }
-void operator delete[](void* p, std::size_t) noexcept { std::free(p); }
+static void countFree(void* p) { if (p && gCountAllocs.load(std::memory_order_relaxed)) gFrees.fetch_add(1); }
+void operator delete(void* p) noexcept { countFree(p); std::free(p); }
+void operator delete[](void* p) noexcept { countFree(p); std::free(p); }
+void operator delete(void* p, std::size_t) noexcept { countFree(p); std::free(p); }
+void operator delete[](void* p, std::size_t) noexcept { countFree(p); std::free(p); }
 
 using namespace mfx;
 using namespace mfxtest;
@@ -56,7 +57,7 @@ TEST(performance, no_heap_allocation_in_audio_thread) {
     e.process(in, 1, out, 2, 256); // first block: routing activation
     // include parameter changes, bypass toggles and MIDI during processing
     const int slot = e.allSlotsInOrder()[2];
-    gAllocs = 0;
+    gAllocs = 0; gFrees = 0;
     gCountAllocs = true;
     for (int i = 0; i < 400; ++i) {
         if (i == 50) e.effect(slot)->setParam("drive", 90.0f);
@@ -68,6 +69,30 @@ TEST(performance, no_heap_allocation_in_audio_thread) {
     }
     gCountAllocs = false;
     CHECK_MSG(gAllocs.load() == 0, gAllocs.load() << " allocations in process()");
+    CHECK_MSG(gFrees.load() == 0, gFrees.load() << " frees in process()");
+}
+
+TEST(performance, no_heap_allocation_or_free_with_analysis_tap) {
+    // analysis tap enabled, queue overflowing (no consumer) and toggled while processing
+    Engine e;
+    e.prepare(48000, 512);
+    buildFullChain(e);
+    std::vector<float> x = makeNoise(512, 0.5), l(512), r(512);
+    const float* in[1] = {x.data()};
+    float* out[2] = {l.data(), r.data()};
+    e.process(in, 1, out, 2, 512);
+    e.analysisTap().setEnabled(true);
+    gAllocs = 0; gFrees = 0;
+    gCountAllocs = true;
+    for (int i = 0; i < 300; ++i) {
+        if (i == 100) e.analysisTap().setEnabled(false);
+        if (i == 120) e.analysisTap().setEnabled(true);
+        e.process(in, 1, out, 2, 512);
+    }
+    gCountAllocs = false;
+    CHECK_MSG(gAllocs.load() == 0 && gFrees.load() == 0, gAllocs.load() << " allocations, " << gFrees.load() << " frees in process()");
+    CHECK(e.analysisTap().droppedPackets() > 0); // queue full without consumer -> dropped, audio unaffected
+    CHECK(allFinite(l) && allFinite(r));
 }
 
 TEST(performance, per_effect_cost) {

@@ -77,6 +77,7 @@ add_library(mfx_core STATIC
   src/neural/NamAmp.cpp
   src/engine/Engine.cpp
   src/engine/EffectFactory.cpp
+  src/engine/AnalysisWorker.cpp
   src/presets/Json.cpp
   src/presets/Preset.cpp
   src/platform/WavFile.cpp
@@ -149,6 +150,7 @@ if(MFX_BUILD_TESTS)
     tests/audio/test_custom_drive.cpp
     tests/integration/test_engine.cpp
     tests/integration/test_concurrency.cpp
+  tests/integration/test_analysis.cpp
     tests/performance/test_performance.cpp)
   target_include_directories(mfx_tests PRIVATE tests)
   target_link_libraries(mfx_tests PRIVATE mfx_core)

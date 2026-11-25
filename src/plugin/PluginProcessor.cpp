@@ -255,11 +255,18 @@ void Processor::setEffectParam(int slot, int param, float plain) {
     }
 }
 
-bool Processor::loadPresetJson(const juce::String& json, juce::String& error) {
+juce::File Processor::userIrDirectory() {
+    return juce::File::getSpecialLocation(juce::File::userMusicDirectory).getChildFile("MFX Claude").getChildFile("IR");
+}
+
+bool Processor::loadPresetJson(const juce::String& json, juce::String& error, const juce::String& presetDir) {
     Json j;
     std::string err;
     if (!Json::parse(json.toStdString(), j, &err)) { error = err; return false; }
-    auto rep = presetFromJson(engine_, j);
+    PresetLoadContext ctx; // IR search: preset folder (if any), then the user IR library
+    if (presetDir.isNotEmpty()) ctx.searchDirs.push_back(presetDir.toStdString());
+    ctx.searchDirs.push_back(userIrDirectory().getFullPathName().toStdString());
+    auto rep = presetFromJson(engine_, j, ctx);
     if (!rep.ok) { error = rep.error; return false; }
     presetName_ = j.at("name").asString();
     inGain_->setValueNotifyingHost(inGain_->convertTo0to1(engine_.inputGainDb()));

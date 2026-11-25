@@ -1,0 +1,24 @@
+[PASS] integration.empty_engine_is_bit_transparent                  3.6 ms 
+[PASS] integration.bypass_signal_integrity_with_latency_compensation      4.6 ms 
+[PASS] integration.reported_latency_equals_measured_delay          45.1 ms 
+[PASS] integration.bypass_toggle_is_click_free                     15.3 ms 
+[PASS] integration.routing_changes_while_running_are_safe_and_faded    130.3 ms 
+[PASS] integration.parallel_lanes_are_latency_aligned              17.1 ms 
+[PASS] integration.mono_input_becomes_stereo_after_stereo_effect    254.2 ms 
+[PASS] integration.meters_and_clip_indicators                       1.4 ms 
+[PASS] integration.midi_cc_controls_parameter_and_bypass            1.6 ms 
+[PASS] integration.sample_rate_change_reprepares_everything       893.8 ms 
+[PASS] integration.preset_reload_while_running_keeps_slot_ids      68.6 ms 
+[PASS] integration.delay_and_reverb_trails_continue_after_bypass     62.5 ms 
+[PASS] integration.trails_bypass_passes_dry_signal_unchanged       27.6 ms 
+[PASS] integration.concurrent_routing_parameter_and_ir_changes    583.5 ms 
+[PASS] integration.tuner_ring_is_readable_while_processing       1619.9 ms 
+[PASS] integration.analysis_tap_does_not_change_output           1083.1 ms 
+[PASS] integration.analysis_tap_delivers_real_input_samples_with_metadata     66.1 ms 
+[PASS] integration.analysis_aligns_input_and_output_by_chain_latency    243.9 ms 
+[PASS] integration.analysis_spectrum_and_waveform_basic            70.6 ms 
+[PASS] integration.input_meters_source_peak_hot_and_nonfinite_guard      3.6 ms 
+[PASS] integration.cabinet_ir_reference_survives_moves_and_missing_files    147.3 ms 
+[PASS] integration.analysis_tap_concurrent_producer_consumer     1992.4 ms 
+
+22 passed, 0 failed, 89 checks

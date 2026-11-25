@@ -48,4 +48,5 @@
 - 참고 프로젝트(Codex, `~/multi_effects`)는 읽기 전용입니다. 코드·프리셋 복사 금지, 플러그인 ID 재사용 금지.
 - 검증하지 못한 항목은 NOT TESTED / BLOCKED로 기록합니다. 청취 결과를 지어내지 않습니다.
 - 변경 후 최소 실행: `./build/mfx_tests`, DSP 수식 변경 시 `python3 tests/parity/run_parity.py`.
+- 작업 인수인계 요약은 `docs/AI_PROJECT_HANDOFF.md`(Quick Context)에 있으며, 작업을 마치면 변경된 부분만 갱신합니다.
 - 위 요구사항과 현재 코드의 차이는 `docs/DEVELOPMENT_PLAN.md` "필수 요구사항 대비 현황"과 `docs/KNOWN_ISSUES.md`에서 관리합니다.
