@@ -25,6 +25,16 @@ Cabinet 블록(IR 또는 내장 시뮬레이션)을 뒤에 두세요(팩토리 �
 * **Premium Plate**: 새 리버브. Decay(RT60), Pre-Delay, Size, Damping(고역 감쇠), Bass Decay(저역 잔향 배수), Crossover, Diffusion,
   Mod Depth/Rate, Early, Low Cut, Width, Mix. 팩토리 프리셋 07 "Blackface M2 Plate".
 
+## v0.6 추가
+* **Tape Echo**: Time(40–1200 ms, Sync), Feedback(110 %까지 자기 발진), Mix, Tone, Drive(녹음 레벨), Age(마모: 어두움·포화·흔들림 증가),
+  Wow(느린 흔들림), Flutter(빠른 떨림), Modulation(불규칙성), Heads(1 / 1+2 / 1+2+3), Spread(헤드 좌우), Output Level.
+  Time을 돌리면 실제 테이프처럼 피치가 미끄러지며 바뀝니다.
+* **BBD Analog Delay**: Time(20–800 ms), Feedback, Mix, Tone, Mod Depth/Rate, Compander, Drive, Spread, Output Level.
+  긴 시간일수록 어둡고 거칠어집니다(실제 BBD 특성).
+* **FET Compressor**: Input(밀어 넣을수록 압축), Output, Attack(20–800 µs), Release(50–1100 ms), Ratio(4/8/12/20/All), SC High-Pass, Character, Mix.
+* **Delay**: Cross Feedback, Feedback L/R, Width, Right Time(Offset/Free), Time R 추가(기존 소리는 그대로).
+* 팩토리 프리셋 08 "Tape Echo Lead", 09 "FET Comp BBD Clean".
+
 ## Visualize (파형 · 스펙트럼)
 상단 **Effects / Visualize** 버튼으로 화면을 전환합니다. Visualize를 열었을 때만 분석이 동작하며, 소리에는 영향이 없습니다.
 * 표시: Input(체인 입력, 입력 게인 적용 후) / Output(체인 출력) / Overlay. 입력은 체인 지연만큼 늦춰 출력과 맞춰 그립니다.

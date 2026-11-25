@@ -21,6 +21,13 @@ Delay::Delay() {
     params_.add({"mod_rate_hz", "Mod Rate", 0.05f, 5, 0.6f, ParamUnit::Hertz, ParamScale::Log});
     params_.add({"age", "Age", 0, 100, 30, ParamUnit::Percent});
     params_.add({"offset", "Stereo Offset", -50, 50, 12, ParamUnit::Percent});
+    // v0.6 (appended, neutral defaults)
+    params_.add({"cross_fb", "Cross Feedback", 0, 100, 0, ParamUnit::Percent});
+    params_.add({"fb_lr_offset", "Feedback L/R", -50, 50, 0, ParamUnit::Percent});
+    params_.add({"width", "Width", 0, 200, 100, ParamUnit::Percent});
+    static const char* kRModes[] = {"Offset", "Free"};
+    ParamInfo rm{"time_r_mode", "Right Time", 0, 1, 0, ParamUnit::Choice}; rm.choices = kRModes; rm.numChoices = 2; params_.add(rm);
+    params_.add({"time_r_ms", "Time R", 10, 2000, 380, ParamUnit::Milliseconds, ParamScale::Log});
 }
 
 double Delay::effectiveTimeMs() const {
@@ -33,7 +40,7 @@ void Delay::onPrepare(const ProcessSpec& spec) {
     line_.prepare((int)(kMaxSeconds * spec.sampleRate * 1.6) + 64);
     wow_.prepare(spec.sampleRate); flutter_.prepare(spec.sampleRate); mod_.prepare(spec.sampleRate);
     wow_.setRate(0.45); flutter_.setRate(6.3);
-    mix_.reset(spec.sampleRate, 0.03); fb_.reset(spec.sampleRate, 0.03);
+    mix_.reset(spec.sampleRate, 0.03); fb_.reset(spec.sampleRate, 0.03); width_.reset(spec.sampleRate, 0.03);
     xfLen_ = (int)(0.05 * spec.sampleRate);
     slew_ = 1.0f - onePoleCoeff(0.12, spec.sampleRate);
 }
@@ -62,8 +69,12 @@ void Delay::onParametersChanged(bool immediate) {
     modDepth_ = params_.get(kModDepth) / 100.0f;
     const float fb = params_.get(kFeedback) / 100.0f * (mode_ == Digital ? 0.98f : 1.08f);
     const float mx = params_.get(kMix) / 100.0f;
-    if (immediate) { fb_.setImmediate(fb); mix_.setImmediate(mx); }
-    else { fb_.setTarget(fb); mix_.setTarget(mx); }
+    cross_ = params_.get(kCrossFb) / 100.0f;
+    fbOff_ = params_.get(kFbOffset) / 100.0f;
+    rFree_ = params_.getInt(kTimeRMode) == RFree;
+    const float wd = params_.get(kWidth) / 100.0f;
+    if (immediate) { fb_.setImmediate(fb); mix_.setImmediate(mx); width_.setImmediate(wd); }
+    else { fb_.setTarget(fb); mix_.setTarget(mx); width_.setTarget(wd); }
 }
 
 float Delay::readTap(int ch, float target, float& cur, float& prev, float& xf, int& xfLeft, float modS) {
@@ -90,7 +101,10 @@ void Delay::onProcess(AudioBlock& b) {
     const float base = (float)(effectiveTimeMs() * 0.001 * fs);
     const float off = params_.get(kOffset) / 100.0f;
     const float tL = base;
-    const float tR = routing_ == Stereo ? base * (1.0f + off) : base;
+    const float tR = routing_ != Stereo ? base
+                   : (rFree_ ? (float)(std::min((double)params_.get(kTimeR), kMaxSeconds * 1000.0 - 50.0) * 0.001 * fs)
+                             : base * (1.0f + off));
+    const bool fbMods = fbOff_ != 0.0f || cross_ > 0.0f;
     const float modAmp = modDepth_ * 0.002f * (float)fs * (mode_ == Digital ? 0.5f : 1.0f); // up to 2 ms
     const float wowAmp = mode_ == Tape ? age_ * 0.0025f * (float)fs : 0.0f;
     const float flutAmp = mode_ == Tape ? age_ * 0.00025f * (float)fs : 0.0f;
@@ -112,6 +126,12 @@ void Delay::onProcess(AudioBlock& b) {
             f[c] = v * fb;
         }
         if (!stereoIn) f[1] = f[0];
+        else if (fbMods) { // v0.6: L/R feedback offset and cross feedback (applied only when set)
+            const float fl = f[0] * (1.0f - fbOff_), fr = f[1] * (1.0f + fbOff_);
+            const float x = routing_ == PingPong ? 0.0f : cross_;
+            f[0] = fl + x * (fr - fl);
+            f[1] = fr + x * (fl - fr);
+        }
         float wL, wR;
         if (routing_ == PingPong && stereoIn) {
             const float mono = 0.5f * (inL + inR);
@@ -133,6 +153,11 @@ void Delay::onProcess(AudioBlock& b) {
         if (stereoIn) line_.push(flushDenorm(wR), 1);
         line_.advance();
         wow_.advance(); flutter_.advance(); mod_.advance();
+        const float wd = width_.next();
+        if (stereoIn && (wd != 1.0f || width_.isSmoothing())) { // v0.6: wet M/S width
+            const float m = 0.5f * (wet[0] + wet[1]), sd = 0.5f * (wet[0] - wet[1]) * wd;
+            wet[0] = m + sd; wet[1] = m - sd;
+        }
         b.ch[0][i] = inL + mix * (wet[0] - inL);
         if (stereoIn) b.ch[1][i] = inR + mix * (wet[1] - inR);
     }

@@ -1,0 +1,30 @@
+[PASS] audio.tape_echo_delay_time_accuracy_and_heads             1251.0 ms 
+[PASS] audio.tape_echo_repeats_darken_and_feedback_stays_bounded    469.0 ms 
+[PASS] audio.tape_echo_wow_and_flutter_are_separate_bands         670.7 ms 
+[PASS] audio.tape_echo_time_change_glides_without_clicks           54.2 ms 
+[PASS] audio.tape_echo_frequency_dependent_saturation              76.7 ms 
+
+5 passed, 0 failed, 38 checks
+[PASS] audio.bbd_delay_time_accuracy_bandwidth_and_aliasing       253.8 ms 
+[PASS] audio.bbd_compander_is_transparent_static_and_breathes_on_transients     80.2 ms 
+[PASS] audio.bbd_feedback_bounded_time_change_and_modulation     1653.1 ms 
+[PASS] audio.bbd_stereo_spread_decorrelates_and_memory_is_rate_independent     38.1 ms 
+
+4 passed, 0 failed, 19 checks
+[PASS] audio.fet_comp_static_curve_matches_ratio_and_threshold     94.2 ms 
+[PASS] audio.fet_comp_attack_release_and_program_dependence        57.4 ms 
+[PASS] audio.fet_comp_distortion_character_and_mix                119.0 ms 
+[PASS] audio.fet_comp_extreme_settings_bounded_at_all_rates        90.7 ms 
+
+4 passed, 0 failed, 22 checks
+[PASS] audio.stereo_delay_v06_cross_feedback_width_and_free_right_time     74.6 ms 
+
+1 passed, 0 failed, 6 checks
+[PASS] audio.stereo_delay_v06_cross_feedback_width_and_free_right_time     74.6 ms 
+[PASS] audio.v06_new_blocks_keep_trails_on_bypass                  52.0 ms 
+[PASS] performance.no_heap_allocation_or_free_v06_delays_and_fet    122.0 ms 
+
+3 passed, 0 failed, 10 checks
+[PASS] audio.all_effects_finite_bounded_at_all_rates_and_blocks  10781.1 ms 
+
+1 passed, 0 failed, 480 checks

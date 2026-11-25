@@ -5,6 +5,9 @@
 #include "dsp/amp/AmpSim.h"
 #include "dsp/amp/AB763Amp.h"
 #include "dsp/reverb/PremiumPlate.h"
+#include "dsp/delay/TapeEcho.h"
+#include "dsp/delay/BbdDelay.h"
+#include "dsp/dynamics/FetCompressor.h"
 #include "dsp/cabinet/Cabinet.h"
 #include "dsp/delay/Delay.h"
 #include "dsp/drive/CustomDrive.h"
@@ -30,6 +33,7 @@ const std::vector<Entry>& entries() {
     static const std::vector<Entry> e = {
         {"utility", mk<GainUtility>}, {"pan", mk<Pan>}, {"tuner", mk<Tuner>},
         {"noise_gate", mk<NoiseGate>}, {"compressor", mk<Compressor>}, {"limiter", mk<Limiter>},
+        {"comp_fet", mk<FetCompressor>},
         {"clean_boost", mk<CleanBoost>}, {"overdrive", mk<Overdrive>}, {"distortion", mk<Distortion>},
         {"fuzz", mk<Fuzz>}, {"custom_drive", mk<CustomDrive>}, {"ddsp_drive", mk<DdspDrive>},
         {"filter", mk<FilterBlock>}, {"parametric_eq", mk<ParametricEQ>}, {"graphic_eq", mk<GraphicEQ>},
@@ -37,6 +41,7 @@ const std::vector<Entry>& entries() {
         {"chorus", mk<Chorus>}, {"flanger", mk<Flanger>}, {"phaser", mk<Phaser>},
         {"tremolo", mk<Tremolo>}, {"vibrato", mk<Vibrato>},
         {"delay", mk<Delay>}, {"reverb", mk<Reverb>}, {"reverb_plate_premium", mk<PremiumPlate>},
+        {"delay_tape_premium", mk<TapeEcho>}, {"delay_bbd_premium", mk<BbdDelay>},
     };
     return e;
 }

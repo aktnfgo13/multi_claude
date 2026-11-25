@@ -23,6 +23,8 @@ preservation of existing models/presets) override anything below.
 * Custom Drive has a `model` parameter (v0.4): 0 = v1 (v0.1, bit-exact), 1 = v2 (default), 2 = v2 + ADAA. Never change
   what an existing model sounds like; add a new model value instead (R6).
   After mapping changes also re-run `apps/mfx_compare_drive` and `tools/benchmark/preset_mapping_impact.py`.
+* v0.6 types: `delay_tape_premium` (tape transport model), `delay_bbd_premium` (clocked BBD), `comp_fet` (feedback FET
+  compressor). `delay` gained 5 appended stereo params whose defaults keep v0.5 output bit-identical — keep it so.
 * Unverified items are written as NOT TESTED / BLOCKED. Never claim listening results; never call a GRU model "NAM".
 
 ## Build & test

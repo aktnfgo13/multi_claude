@@ -42,3 +42,10 @@
 | K-036 | OPEN | P2 | 구형 Claude AU(MultiEffects, Mfxp)가 Logic 목록에 중복 표시 | 플러그인 관리자에서 비활성화(BUILD_GUIDE §2-1), 필요 시 이동 스크립트 |
 | K-037 | OPEN | P1 | v0.5 후보의 macOS 네이티브 빌드·auval·Logic 미확인 | 사용자 Mac 1회 |
 | K-038 | OPEN | P2 | "Premium Audio Quality Standard"·"기술 연구 통합 보고서" 원문 미확보(지시서 요약만 반영) | 원문 제공 시 AUDIO_QUALITY_TARGETS/TECHNICAL_RESEARCH 갱신 |
+| K-039 | OPEN | P2 | Tape Echo 메모리 192 kHz 5 MiB(최장 3.6 s × 3헤드 대비) — 하드웨어에서는 큼 | 하드웨어 빌드에서 최대 시간 제한 또는 테이프 버퍼 다운샘플 |
+| K-040 | OPEN | P2 | BBD는 단일 4096단 칩 모델 → 300 ms 이상에서 강한 앨리어싱(800 ms, 3 kHz 톤이 440 Hz로 접힘) | 의도된 특성이지만 고음질 장지연용 "다중 칩" 옵션 검토 |
+| K-041 | OPEN | P2 | FET Compressor의 비율별 임계·니·All 모드·Character 계수는 추정값(1176 실측 없음) | 실기 또는 공개 측정 자료와 비교 |
+| K-042 | OPEN | P2 | Tape/BBD/FET 청취 평가·실기 비교 없음, parity 미러 없음 | 사용자 청취(K 항목) |
+| K-043 | OPEN | P3 | Tape Echo는 모노 테이프(스테레오 입력은 합산), 스테레오는 헤드 패닝(Spread)으로만 | 필요 시 듀얼 테이프 |
+| K-044 | OPEN | P3 | Delay `time_r_mode = Free`는 템포 싱크 시에도 ms 값 사용 | R 싱크 분할 파라미터 추가 검토 |
+| K-045 | OPEN | P1 | v0.6 macOS 네이티브 빌드·auval·Logic 미확인 (K-037 포함) | 사용자 Mac `scripts/macos_build_install_verify.sh` |

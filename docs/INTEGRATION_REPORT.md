@@ -160,3 +160,20 @@ python3 research/spice/run_spice.py tolerance …     → E-018
 | pluginval strictness 7 (VST3 Linux) | PASS | `pluginval_vst3_linux_strict7_v05.txt` |
 | Linux arm64 VM (사용자 Mac, g++ 11.4) | PASS 97/97 | `arm64_linux_vm_tests_v05.txt` |
 | macOS v0.5 빌드·auval·Logic | NOT TESTED | K-037 |
+
+---
+# 추가: v0.6 Premium Delay & Dynamics (2026-11-25)
+
+| 항목 | 상태 | 근거 |
+|---|---|---|
+| 팩토리 01–07, `delay` 3모드×3라우팅, compressor, limiter, Premium Plate = v0.5 | PASS (비트 동일) | v0.5 빌드(5b32e1a) vs 후보 `mfx_render` cmp |
+| Tape Echo (시간·헤드, 반복 어두워짐, 자기 발진 제한, Wow/Flutter 대역, 시간 변경, 주파수별 포화, 메모리) | PASS | `tape_echo_*` 5개 |
+| BBD (시간·대역·앨리어싱, 컴팬더, 피드백·시간 변경·변조, 스테레오·메모리) | PASS | `bbd_*` 4개 |
+| FET (정적 곡선, 어택·프로그램 의존 릴리즈, THD/IMD·Character·Mix, 극단 입력 44.1–192 kHz) | PASS | `fet_comp_*` 4개 |
+| Delay 스테레오 보강, 새 블록 바이패스 트레일 | PASS | `stereo_delay_v06_*`, `v06_new_blocks_keep_trails_on_bypass` |
+| 일반 테스트(유한·경계 44.1/48/96 kHz × 블록 1/17/512, 블록 크기 불변) | PASS | 자동 포함 |
+| 콜백 할당/해제 0 (FET + Tape + BBD + Delay, 실행 중 파라미터 변경) | PASS | performance |
+| C++ 전체 | PASS 113/113 | `cpp_tests.json` |
+| ASan (v0.6 관련 테스트) | PASS 0건 | `sanitizer_asan_v06.txt` |
+| pluginval strictness 7 (VST3 Linux, GUI 테스트 제외) | PASS | `pluginval_vst3_linux_strict7_v06.txt` |
+| macOS v0.6 빌드·auval·Logic, 청취 | NOT TESTED | K-045 |

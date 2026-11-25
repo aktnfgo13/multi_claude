@@ -162,3 +162,34 @@ TEST(performance, no_heap_allocation_or_free_ab763_and_custom_drive_adaa) {
     CHECK_MSG(gAllocs.load() == 0 && gFrees.load() == 0, gAllocs.load() << " allocations, " << gFrees.load() << " frees");
     CHECK(allFinite(l) && allFinite(r));
 }
+
+TEST(performance, no_heap_allocation_or_free_v06_delays_and_fet) {
+    Engine e;
+    e.prepare(48000, 512);
+    e.addEffect(createEffect("comp_fet"));
+    e.addEffect(createEffect("delay_tape_premium"));
+    e.addEffect(createEffect("delay_bbd_premium"));
+    auto d = createEffect("delay");
+    d->setParam("cross_fb", 50.0f); d->setParam("width", 150.0f); d->setParam("time_r_mode", 1.0f);
+    e.addEffect(std::move(d));
+    std::vector<float> x = makeNoise(512, 0.5), l(512), r(512);
+    const float* in[1] = {x.data()};
+    float* out[2] = {l.data(), r.data()};
+    e.process(in, 1, out, 2, 512);
+    const auto slots = e.allSlotsInOrder(); // (allocates: outside the counted region)
+    Effect* fet = e.effect(slots[0]);
+    Effect* tape = e.effect(slots[1]);
+    Effect* bbd = e.effect(slots[2]);
+    gAllocs = 0; gFrees = 0;
+    gCountAllocs = true;
+    for (int i = 0; i < 200; ++i) {
+        if (i == 40) tape->setParam("time_ms", 900.0f); // motor speed change while running
+        if (i == 60) tape->setParam("heads", 2.0f);
+        if (i == 80) bbd->setParam("time_ms", 50.0f);
+        if (i == 90) fet->setParam("ratio", 4.0f);
+        e.process(in, 1, out, 2, 512);
+    }
+    gCountAllocs = false;
+    CHECK_MSG(gAllocs.load() == 0 && gFrees.load() == 0, gAllocs.load() << " allocations, " << gFrees.load() << " frees");
+    CHECK(allFinite(l) && allFinite(r));
+}

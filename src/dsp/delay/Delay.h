@@ -1,6 +1,7 @@
 // Delay: Digital (click-free time changes by cross-fading taps), Analog-style (BBD: dark, saturating
 // loop, slight clock modulation), Tape-style (wow/flutter, record saturation, head-bump, slewing time).
-// Routing: Mono / Stereo (offset right time) / Ping-Pong. Tempo sync, tap tempo through setTempo().
+// Routing: Mono / Stereo (offset or free right time) / Ping-Pong. Tempo sync, tap tempo through setTempo().
+// v0.6: cross feedback, L/R feedback offset, wet stereo width, independent right time (Stereo routing).
 #pragma once
 
 #include "core/Effect.h"
@@ -12,7 +13,10 @@ namespace mfx {
 
 class Delay : public Effect {
 public:
-    enum P { kMode, kRouting, kTime, kSync, kFeedback, kMix, kLowCut, kHighCut, kModDepth, kModRate, kAge, kOffset };
+    enum P { kMode, kRouting, kTime, kSync, kFeedback, kMix, kLowCut, kHighCut, kModDepth, kModRate, kAge, kOffset,
+             // v0.6 stereo additions (appended; neutral defaults keep v0.5 output bit-identical)
+             kCrossFb, kFbOffset, kWidth, kTimeRMode, kTimeR };
+    enum TimeRMode { RFromOffset, RFree };
     enum Mode { Digital, Analog, Tape };
     enum Routing { Mono, Stereo, PingPong };
     static constexpr double kMaxSeconds = 2.5;
@@ -45,6 +49,9 @@ private:
     double bpm_ = 120.0;
     int mode_ = Digital, routing_ = Stereo;
     float age_ = 0.3f, modDepth_ = 0.0f, slew_ = 0.0f;
+    float cross_ = 0.0f, fbOff_ = 0.0f;
+    bool rFree_ = false;
+    LinearSmoothed width_;
 };
 
 } // namespace mfx

@@ -87,7 +87,12 @@ v2에서 값을 그대로 두면 02/03 프리셋의 출력이 14–19 dB 낮아�
   **청감 확인이 필요합니다(사용자 확인 항목).**
 * v0.1 사용자 프리셋은 마이그레이션하지 않습니다(미출시, D-017). 필요하면 `customDriveMappingV1`로 변환 도구를 만들 수 있습니다.
 
-## 3. 이펙트별 파라미터 (자동 생성, v0.5)
+### v0.6: 추가 파라미터
+* `delay`: `cross_fb`, `fb_lr_offset`, `width`, `time_r_mode`, `time_r_ms`를 끝에 추가. 기본값(0, 0, 100 %, Offset)은 v0.5 출력과 비트 동일이므로
+  레거시 값 훅이 필요 없습니다(저장 데이터에 없으면 기본값 = 기존 동작).
+* 새 타입: `delay_tape_premium`, `delay_bbd_premium`, `comp_fet`. 기존 프리셋은 이 타입을 포함하지 않으므로 자동 활성화되지 않습니다.
+
+## 3. 이펙트별 파라미터 (자동 생성, v0.6)
 
 ### `utility` — Gain / Volume
 
@@ -142,6 +147,19 @@ v2에서 값을 그대로 두면 02/03 프리셋의 출력이 14–19 dB 낮아�
 | `ceiling_db` | Ceiling | -24…0 | -0.300000012 | dB | linear |
 | `release_ms` | Release | 5…1000 | 80 | ms | log |
 | `input_db` | Input | -12…24 | 0 | dB | linear |
+
+### `comp_fet` — FET Compressor
+
+| id | 이름 | 범위 | 기본값 | 단위 | 스케일 |
+|---|---|---|---|---|---|
+| `input_db` | Input | -20…40 | 0 | dB | linear |
+| `output_db` | Output | -30…20 | 0 | dB | linear |
+| `attack_us` | Attack | 20…800 | 200 |  | log |
+| `release_ms` | Release | 50…1100 | 250 | ms | log |
+| `ratio` | Ratio | 4:1 / 8:1 / 12:1 / 20:1 / All | 0 |  | linear |
+| `sc_hpf_hz` | SC High-Pass | 20…500 | 20 | Hz | log |
+| `character` | Character | 0…100 | 50 | % | linear |
+| `mix` | Mix | 0…100 | 100 | % | linear |
 
 ### `clean_boost` — Clean Boost
 
@@ -377,6 +395,11 @@ v2에서 값을 그대로 두면 02/03 프리셋의 출력이 14–19 dB 낮아�
 | `mod_rate_hz` | Mod Rate | 0.0500000007…5 | 0.600000024 | Hz | log |
 | `age` | Age | 0…100 | 30 | % | linear |
 | `offset` | Stereo Offset | -50…50 | 12 | % | linear |
+| `cross_fb` | Cross Feedback | 0…100 | 0 | % | linear |
+| `fb_lr_offset` | Feedback L/R | -50…50 | 0 | % | linear |
+| `width` | Width | 0…200 | 100 | % | linear |
+| `time_r_mode` | Right Time | Offset / Free | 0 |  | linear |
+| `time_r_ms` | Time R | 10…2000 | 380 | ms | log |
 
 ### `reverb` — Reverb
 
@@ -411,3 +434,36 @@ v2에서 값을 그대로 두면 02/03 프리셋의 출력이 14–19 dB 낮아�
 | `width` | Width | 0…100 | 100 | % | linear |
 | `mix` | Mix | 0…100 | 30 | % | linear |
 
+### `delay_tape_premium` — Tape Echo
+
+| id | 이름 | 범위 | 기본값 | 단위 | 스케일 |
+|---|---|---|---|---|---|
+| `time_ms` | Time | 40…1200 | 350 | ms | log |
+| `sync` | Sync | Off / 1/1 / 1/2 / 1/4 / 1/4 D / 1/4 T / 1/8 / 1/8 D / 1/8 T / 1/16 | 0 |  | linear |
+| `feedback` | Feedback | 0…110 | 40 | % | linear |
+| `mix` | Mix | 0…100 | 35 | % | linear |
+| `tone` | Tone | 0…100 | 50 | % | linear |
+| `drive` | Drive | 0…100 | 40 | % | linear |
+| `age` | Age | 0…100 | 30 | % | linear |
+| `wow` | Wow | 0…100 | 25 | % | linear |
+| `flutter` | Flutter | 0…100 | 20 | % | linear |
+| `modulation` | Modulation | 0…100 | 20 | % | linear |
+| `heads` | Heads | Head 1 / Heads 1+2 / Heads 1+2+3 | 0 |  | linear |
+| `spread` | Spread | 0…100 | 30 | % | linear |
+| `level_db` | Output Level | -24…12 | 0 | dB | linear |
+
+### `delay_bbd_premium` — BBD Analog Delay
+
+| id | 이름 | 범위 | 기본값 | 단위 | 스케일 |
+|---|---|---|---|---|---|
+| `time_ms` | Time | 20…800 | 300 | ms | log |
+| `sync` | Sync | Off / 1/1 / 1/2 / 1/4 / 1/4 D / 1/4 T / 1/8 / 1/8 D / 1/8 T / 1/16 | 0 |  | linear |
+| `feedback` | Feedback | 0…110 | 40 | % | linear |
+| `mix` | Mix | 0…100 | 35 | % | linear |
+| `tone` | Tone | 0…100 | 45 | % | linear |
+| `mod_depth` | Mod Depth | 0…100 | 15 | % | linear |
+| `mod_rate_hz` | Mod Rate | 0.100000001…8 | 0.5 | Hz | log |
+| `compander` | Compander | 0…100 | 100 | % | linear |
+| `drive` | Drive | 0…100 | 30 | % | linear |
+| `spread` | Spread | 0…100 | 40 | % | linear |
+| `level_db` | Output Level | -24…12 | 0 | dB | linear |

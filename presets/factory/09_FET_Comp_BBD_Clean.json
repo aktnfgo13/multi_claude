@@ -1,0 +1,17 @@
+{
+  "format": "mfx-preset",
+  "version": 1,
+  "name": "FET Comp BBD Clean",
+  "input_gain_db": 0,
+  "output_gain_db": 0,
+  "tempo_bpm": 120,
+  "parallel": false,
+  "parallel_mix": 0.5,
+  "chain": [
+    {"type": "comp_fet", "params": {"input_db": 6, "output_db": 9, "attack_us": 400, "release_ms": 300, "ratio": 0, "character": 50, "mix": 100}},
+    {"type": "amp_ab763", "params": {"volume": 3, "treble": 6, "bass": 4, "mix": 100, "level": 0, "oversampling": 1, "model": 1}},
+    {"type": "cabinet", "params": {}},
+    {"type": "delay_bbd_premium", "params": {"time_ms": 420, "feedback": 50, "mix": 32, "tone": 45, "mod_depth": 30, "mod_rate_hz": 0.6, "compander": 100, "drive": 30, "spread": 50, "level_db": 0}},
+    {"type": "reverb_plate_premium", "params": {"decay_s": 1.8, "predelay_ms": 20, "mix": 15}}
+  ]
+}

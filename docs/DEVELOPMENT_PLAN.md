@@ -49,6 +49,11 @@ AB763 M2(PI·6V6·Sag·NFB·OT/스피커 부하, 지연 없는 NFB 루프), Cust
 음질 목표·기술 연구 문서. 다음 사이클 우선순위: ① v0.5 Mac/Logic 확인 ② 측정 인프라(리앰프/DI)와 AB763 SPICE 비교
 ③ Plate 청취 튜닝·Shimmer/Freeze ④ Delay(BBD/Tape)·Dynamics(FET) ⑤ parity 확장 ⑥ 출시 준비.
 
+## v0.6 Premium Delay & Dynamics (2026-11-25)
+Tape Echo(테이프 전송 모델), BBD Analog Delay(클록 샘플링), FET Compressor(피드백 검출), 기존 Delay 스테레오 보강, 프리셋 08/09.
+v0.7 우선순위: ① v0.5/v0.6 Mac·Logic 확인과 청취 피드백 반영 ② 측정 인프라(리앰프/DI) — Tape/BBD/FET는 실기 또는 공개 측정과 비교
+③ BBD 다중 칩·Tape 하드웨어 메모리 예산 ④ Premium Plate 청취 튜닝·Shimmer/Freeze ⑤ parity 확장(새 블록) ⑥ 출시 준비(설치 패키지·서명).
+
 ## 다음 마일스톤
 1. M1 (Mac, 사용자): `scripts/macos_build_install_verify.sh` → auval → Logic 체크리스트(BUILD_GUIDE §2) → 결과 로그 전달.
 2. M1b (청취, 사용자): `audio/compare_drive_v2/abx` 블라인드 청취, 프리셋 02/03/05 확인, Custom Drive v2 노브 감각 피드백.
