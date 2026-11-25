@@ -11,7 +11,18 @@
 // Around the chip: NE570-style compander (2:1 compressor before, 1:2 expander after, rectified-average detectors
 // that see different signals -> program-dependent breathing on transients), 4th-order anti-aliasing and
 // reconstruction filters (Tone), bucket overload soft-clip (Drive), saturating feedback amplifier, feedback DC block.
-// Memory is independent of the sample rate (2 x 4096 floats + filter state): suited to ARM hardware.
+// Memory is independent of the sample rate: suited to ARM hardware.
+//
+// v0.7 "model" (appended): v1 = the v0.6 single-chip model above, bit-identical (old saves load v1);
+// v2 (new instances) adds
+//  * Chips 1/2/4 in series: buckets per pass N = 2048 * chips, clock r = N / T (same delay, N/1 times faster clock,
+//    sampled-stream Nyquist r/2 = 1024 * chips / T),
+//  * clock-tracking anti-alias and reconstruction filters: cut-off = min(Tone, 0.4 r) - content the bucket
+//    stream cannot carry is removed before sampling instead of folding back (long delays stay dark, not aliased),
+//  * compander floor match: below the compressor's detector floor the expander gain is held at the matching
+//    value, so very quiet repeats are not expanded downward (v1 loses up to ~20 dB at -70 dBFS),
+//  * in-loop feedback level regulation: a slow envelope of the recirculating signal lowers the loop gain above
+//    -6 dBFS before the soft saturator, so self-oscillation settles smoothly instead of living in the clipper.
 #pragma once
 
 #include <cstdint>
@@ -25,7 +36,9 @@ namespace mfx {
 
 class BbdDelay : public Effect {
 public:
-    enum P { kTime, kSync, kFeedback, kMix, kTone, kModDepth, kModRate, kCompander, kDrive, kSpread, kLevel, kNumParams };
+    enum P { kTime, kSync, kFeedback, kMix, kTone, kModDepth, kModRate, kCompander, kDrive, kSpread, kLevel,
+             kModel, kChips, kNumParams };
+    enum Model { kV1, kV2 };
     static constexpr int kBuckets = 2048;
     static constexpr double kMinTimeMs = 20.0, kMaxTimeMs = 800.0;
     BbdDelay();
@@ -38,7 +51,14 @@ public:
     double effectiveTimeMs() const;
     /// Current clock rate of channel c (Hz).
     double clockHz(int c) const { return spec_.sampleRate / spc_[c]; }
-    size_t memoryBytes() const { return sizeof(float) * (size_t)kRing * 2; }
+    size_t memoryBytes() const { return sizeof(ring_); }
+    int bucketsPerPass() const { return buckets_; }
+    /// Current anti-alias / reconstruction cut-off (Hz).
+    double filterCutoffHz() const { return faCur_; }
+    bool legacyValueForMissingParam(int index, float& v) const override {
+        if (index == kModel) { v = (float)kV1; return true; } // saves without "model" are v0.6 = v1
+        return false;
+    }
 
 protected:
     void onPrepare(const ProcessSpec& spec) override;
@@ -47,7 +67,8 @@ protected:
     void onProcess(AudioBlock& b) override;
 
 private:
-    static constexpr int kRing = 4096, kMask = kRing - 1;
+    static constexpr int kRing = 16384, kMask = kRing - 1; // up to 4 chips (8192 buckets)
+    void designFilters(double fa);
     float processChannel(int c, float x, double sPerTick);
     float ring_[2][kRing];
     int64_t count_[2] = {0, 0};
@@ -61,6 +82,9 @@ private:
     float fbState_[2] = {0, 0};
     double timeA_ = 0, lfoPh_ = 0, lfoInc_ = 0, spcTarget_[2] = {1, 1}, spcBase_[2] = {1, 1};
     float modDepth_ = 0, spread_ = 0;
+    int model_ = kV2, buckets_ = kBuckets, ctl_ = 0;
+    double faTone_ = 4000, faCur_ = 4000;
+    float envFb_[2] = {0, 0}, fbEnvA_ = 0, fbEnvR_ = 0;
     LinearSmoothed mix_, fb_, level_;
     double bpm_ = 120.0;
 };

@@ -43,7 +43,7 @@
 | K-037 | OPEN | P1 | v0.5 후보의 macOS 네이티브 빌드·auval·Logic 미확인 | 사용자 Mac 1회 |
 | K-038 | OPEN | P2 | "Premium Audio Quality Standard"·"기술 연구 통합 보고서" 원문 미확보(지시서 요약만 반영) | 원문 제공 시 AUDIO_QUALITY_TARGETS/TECHNICAL_RESEARCH 갱신 |
 | K-039 | OPEN | P2 | Tape Echo 메모리 192 kHz 5 MiB(최장 3.6 s × 3헤드 대비) — 하드웨어에서는 큼 | 하드웨어 빌드에서 최대 시간 제한 또는 테이프 버퍼 다운샘플 |
-| K-040 | OPEN | P2 | BBD는 단일 4096단 칩 모델 → 300 ms 이상에서 강한 앨리어싱(800 ms, 3 kHz 톤이 440 Hz로 접힘) | 의도된 특성이지만 고음질 장지연용 "다중 칩" 옵션 검토 |
+| K-040 | MITIGATED (v0.7 BBD v2: 2/4 chips + 클록 추종 필터, 800 ms 비결맞음 +7.0 → −20.6 dB(2 chips)) | P2 | BBD는 단일 4096단 칩 모델 → 300 ms 이상에서 강한 앨리어싱(800 ms, 3 kHz 톤이 440 Hz로 접힘) | 의도된 특성이지만 고음질 장지연용 "다중 칩" 옵션 검토 |
 | K-041 | OPEN | P2 | FET Compressor의 비율별 임계·니·All 모드·Character 계수는 추정값(1176 실측 없음) | 실기 또는 공개 측정 자료와 비교 |
 | K-042 | OPEN | P2 | Tape/BBD/FET 청취 평가·실기 비교 없음, parity 미러 없음 | 사용자 청취(K 항목) |
 | K-043 | OPEN | P3 | Tape Echo는 모노 테이프(스테레오 입력은 합산), 스테레오는 헤드 패닝(Spread)으로만 | 필요 시 듀얼 테이프 |
@@ -51,3 +51,8 @@
 | K-045 | OPEN | P1 | v0.6 macOS 네이티브 빌드·auval·Logic 미확인 (K-037 포함) | 사용자 Mac `scripts/macos_build_install_verify.sh` |
 | K-046 | FIXED (v0.6.1) | P1 | **AB763 M2 고역 잡음 증폭(026.wav DI 히스)**. 원인: NFB 경로에 넣었던 20 kHz(또는 0.2·fs_OS) 2차 LPF가 Nyquist 근처에서 피드백을 잃게 해 10–20 kHz를 M1 대비 +5…+15 dB(1x에서는 14 kHz +18 dB 피크, 샘플레이트 의존) 끌어올림 → DI의 백색 히스(−74.5 dBFS RMS)가 증폭. DSP 자체 잡음·발진은 없음(디지털 무음 → 정확히 0, 조용한 구간 출력 = |H|²×입력 잡음 ±0.1 dB). | 수정: 회로처럼 저항성(광대역) 피드백. 7 kHz 이하 응답 변화 ≤ 0.3 dB, THD 동일, M1 비트 동일. 테스트 `ab763_m2_no_hf_peaking_and_rate_independent_treble` |
 | K-047 | OPEN (특성) | P3 | 수정 후에도 M2는 M1보다 10 kHz +4 dB, 95 Hz +6 dB(스피커 보이스코일·공진과 출력관 출력 임피던스의 상호작용, NFB로 제한된 물리적 특성). 잡음이 많은 DI에서는 M2의 히스·저역 잡음이 M1보다 약 2–4 dB 더 들림. 톤스택(Treble 6)이 M1/M2 공통으로 고역 +9 dB | 캐비닛 IR 사용, DI 녹음 레벨 확보(026.wav는 피크 −16.6 dBFS, 잡음 −74.5 dBFS로 SNR이 낮은 편). Noise Gate·고역 컷으로 가리지 않음 |
+| K-048 | OPEN | P2 | 호스트 자동화는 슬롯당 앞 16개 파라미터만 노출. `delay.time_r_ms`(16), `eq_parametric_premium` 밴드 타입(16–20)은 Logic 자동화 불가 | 슬롯당 파라미터 수 확장은 AU 파라미터 레이아웃 변경 → 별도 마이그레이션 설계 필요 |
+| K-049 | OPEN | P2 | BBD v1은 컴팬더 바닥 불일치로 −60/−70 dBFS에서 −7/−17 dB, 110 % 발진이 잡음에서 시작하지 않음 | v1은 보존(비트 동일), v2에서 수정 |
+| K-050 | OPEN | P3 | Premium EQ는 쌍선형(SVF) — fs/8 위에서 아날로그 원형 대비 벨·셸프 압축(cramping) | 정합(Vicanek) 설계 검토 |
+| K-051 | OPEN | P2 | Premium Gate·EQ·BBD v2 청취, EQ 응답 곡선 화면, Logic 자동화·로딩 미확인 | 사용자 Mac |
+| K-052 | OPEN | P3 | 실제 깨끗한 기타 DI 미보유 — 게이트 검증은 026.wav(잡음 많은 DI)와 합성 신호(SYNTHETIC)로만 | 깨끗한 DI 제공 시 재측정 |

@@ -1,0 +1,19 @@
+{
+  "format": "mfx-preset",
+  "version": 1,
+  "name": "Premium Gate EQ BBD",
+  "input_gain_db": 0,
+  "output_gain_db": 0,
+  "tempo_bpm": 120,
+  "parallel": false,
+  "parallel_mix": 0.5,
+  "chain": [
+    {"type": "gate_premium", "params": {"threshold_db": -56, "range_db": -60, "mode": 1, "ratio": 4, "release_ms": 250, "hold_ms": 40, "sc_hpf_hz": 100, "adaptive_release": 1}},
+    {"type": "comp_fet", "params": {"input_db": 6, "output_db": 2, "attack_us": 400, "release_ms": 300, "ratio": 0, "mix": 100}},
+    {"type": "amp_ab763", "params": {"volume": 4, "treble": 6, "bass": 4, "mix": 100, "level": 0, "oversampling": 1, "model": 1}},
+    {"type": "cabinet", "params": {}},
+    {"type": "eq_parametric_premium", "params": {"b1_type": 4, "b1_hz": 90, "b2_db": -2, "b2_hz": 350, "b2_q": 1.2, "b4_db": 1.5, "b4_hz": 3000, "b5_type": 6, "b5_hz": 9000}},
+    {"type": "delay_bbd_premium", "params": {"model": 1, "chips": 1, "time_ms": 420, "feedback": 45, "mix": 30, "tone": 55, "mod_depth": 25, "mod_rate_hz": 0.6, "spread": 50}},
+    {"type": "reverb_plate_premium", "params": {"decay_s": 1.8, "predelay_ms": 20, "mix": 14}}
+  ]
+}

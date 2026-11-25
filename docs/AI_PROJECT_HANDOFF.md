@@ -1,25 +1,24 @@
 # AI 프로젝트 인수인계 (MFX Claude)
 
-- 갱신일: 2026-11-25 · GitHub `aktnfgo13/multi_claude` `main` · 버전 **0.6.1** (v0.6 구현 `d7d40e1`, v0.6.1 = AB763 M2 고역 피크 수정, `git log`로 확인)
+- 갱신일: 2026-11-25 · GitHub `aktnfgo13/multi_claude` `main` · 버전 **0.7.0** (v0.7 커밋은 `git log`로 확인, 직전 v0.6.1 = `ef6c9da`)
 - 대상: ChatGPT / Claude / Codex 등 후속 개발 AI. 추측하지 말고 이 문서와 링크된 파일을 근거로 진행하세요.
 
 ## Quick Context
-- 제품: 기타 멀티이펙터 **MFX Claude 0.6.0** (AU/VST3/Standalone, JUCE 8, 코어 JUCE·OS 독립 C++20). 필수 규칙 `AGENTS.md` R1–R6.
-- v0.6 신규 DSP (새 type, 기존 블록 무변경):
-  ① `delay_tape_premium` Tape Echo — 테이프 위치 기반 전송 모델(Wow/Flutter/드리프트 분리, 모터 관성 글라이드, 헤드 1:2:3), 프리엠퍼시스 포화, 속도 연동 갭 손실·헤드 범프
-  ② `delay_bbd_premium` BBD — 4096단 클록 샘플링, 컴팬더, AA/재구성 4차, 버킷 과부하, 클록 변조, 메모리 32 KiB 고정
-  ③ `comp_fet` FET Compressor — 피드백 검출 지연 없는 해, 20–800 µs 어택(유효값), 프로그램 의존 릴리즈, 4/8/12/20/All, FET 2차 왜곡
-  ④ 기존 `delay`에 Cross FB·L/R FB·Width·Free R Time(기본값 중립) ⑤ 팩토리 08/09.
-- v0.6.1 수정: AB763 M2 NFB 경로의 20 kHz LPF가 10–20 kHz를 +5…+15 dB 끌어올려 잡음 많은 DI(026.wav)의 히스를 키움 → 회로처럼 저항성 피드백으로 수정(K-046). 7 kHz 이하 ≤ 0.3 dB, M1·팩토리 01–06 비트 동일. 잡음은 원본 DI 히스의 선형 증폭이었고 DSP 자체 잡음·발진 없음.
-- 이전 버전 DSP: Custom Drive v1/v2/v2+ADAA(+보정), AB763 M1/M2, Premium Plate, Cabinet IR, NAM 로더, 기존 이펙트 25종.
-- 보존 확인: 팩토리 01–07, `delay` 9개 모드×라우팅, compressor, limiter, Premium Plate 출력이 v0.5와 **비트 동일**. 파라미터 id·AU ID 불변.
-- 검증 환경: Linux x86_64 (C++ 113/113, ASan 0건, pluginval strictness 7 PASS), Linux arm64 VM on 사용자 Mac (113/113, `tests/results/arm64_linux_vm_tests_v06.txt`). macOS 네이티브 v0.6 미확인.
-- 미검증: **v0.5·v0.6 macOS AU 빌드·auval·Logic GUI·청취 전부 NOT TESTED**(사용자 Mac 필요), 실기(테이프 에코·BBD 페달·1176) 비교 없음.
-- 품질 Level: Tape/BBD/FET = 3(청취 전), AB763 M2 = 3, Premium Plate = 2–3, 기존 Delay = 2. Level 4 이상은 실측·청취 필요.
-- 남은 문제: K-047(M2가 M1보다 고역 +4 dB·95 Hz +6 dB — 물리적 특성, 잡음 많은 DI에서 히스 2–4 dB 더 들림), K-039(Tape 메모리 192 kHz 5 MiB), K-040(BBD 장지연 앨리어싱 — 다중 칩 옵션), K-041(FET 계수 추정), K-032(AB763 파라미터), K-045(Mac).
-- 다음 우선순위(v0.7): Mac·Logic 확인과 청취 반영 → 리앰프/DI 측정 인프라·실기 비교 → BBD 다중 칩·하드웨어 메모리 예산 → Plate 튜닝·Shimmer → parity 확장 → 출시 준비.
-- 보호 대상: 위 비트 동일 항목, 설치된 AU(Claude·Codex·구형), Codex 프로젝트, Logic 프로젝트, 스냅샷.
-- 읽을 파일: `AGENTS.md` → 이 문서 → `docs/KNOWN_ISSUES.md` → `docs/DSP_SPECIFICATION.md`(Tape/BBD/FET 절) → `docs/AUDIO_QUALITY_TARGETS.md`.
+- 제품: 기타 멀티이펙터 **MFX Claude 0.7.0** (AU/VST3/Standalone, JUCE 8, 코어 JUCE·OS 독립 C++20). 필수 규칙 `AGENTS.md` R1–R6.
+- v0.7 신규/개선 DSP:
+  ① `gate_premium` — Gate/Expander(소프트 니·Ratio·Range), Peak/RMS 검출, 히스테리시스·Hold, 사이드체인 HPF(오디오 경로 무필터), Stereo Link, dB 영역 램프, 적응 릴리즈(측정으로 채택)
+  ② `eq_parametric_premium` — TPT SVF 5밴드(Off/Bell/Shelf/HPF·LPF 12·24/Notch), log/dB 평활 + 샘플별 계수 램프, 타입 전환 크로스페이드, 응답 곡선 UI
+  ③ BBD v2 (`delay_bbd_premium` `model`/`chips`) — 1/2/4 칩, 클록 추종 AA/재구성, 컴팬더 바닥 정합, 루프 레벨 조절. v1 = v0.6 비트 동일
+  ④ 팩토리 프리셋 10.
+- 측정 요약: 게이트 임계 ±0.1 dB·개폐 0/s(히스 6 dB)·어택 −0.7 dB·서스테인 0 dB, 026.wav 조용한 구간 −49.5 dB(기존 −10.1); EQ 설계 대비 0.027 dB·타입 전환 클릭 없음;
+  BBD 800 ms 비결맞음(앨리어싱) v1 +7.0 dB → v2 2 chips −20.6 dB(대역 1.2 → 1.7 kHz), −70 dBFS 컴팬더 오차 −17 → 0 dB, 110 % 발진 0.49 유지.
+- 호환성: 팩토리 01–09, BBD v1, 기존 noise_gate/parametric_eq/graphic_eq/filter 출력이 v0.6.1과 **비트 동일**. 파라미터 id·AU ID 불변. 기존 저장의 BBD는 v1로 열림.
+- 검증 환경: Linux x86_64 (C++ 130/130, ASan 0건, pluginval strictness 7 PASS). arm64 VM 결과는 INTEGRATION_REPORT 참고. macOS 네이티브 v0.5–v0.7 미확인.
+- 청취·화면 미확인: Premium Gate/EQ/BBD v2 청취, EQ 곡선 표시, Logic 로딩·자동화(K-051). 깨끗한 실제 DI 없음(K-052).
+- 남은 문제: K-048(호스트 자동화 슬롯당 16개), K-049(BBD v1 컴팬더 바닥), K-050(EQ cramping), K-047(M2 고역 특성), K-039(Tape 메모리).
+- v0.8 방향: Mac/Logic 확인·청취 반영 → 호스트 파라미터 레이아웃 설계 → 깨끗한 DI·리앰프 측정 → EQ 정합 설계·BBD 잡음 바닥 → 출시 준비(설치·서명·Windows).
+- 보호 대상: 위 비트 동일 항목, AB763 M1/M2(v0.6.1 NFB 수정), Custom Drive, Premium Plate, Tape Echo, FET, NAM, Cabinet IR, 설치된 AU, Codex 프로젝트.
+- 읽을 파일: `AGENTS.md` → 이 문서 → `docs/KNOWN_ISSUES.md` → `docs/DSP_SPECIFICATION.md`(Gate/EQ/BBD v2 절) → `docs/INTEGRATION_REPORT.md`(v0.7 표).
 
 ## A. 프로젝트 개요
 | 항목 | 내용 |
@@ -126,6 +125,17 @@ src/plugin    JUCE AudioProcessor/Editor (얇은 래퍼)       src/ui  JUCE 컴�
 | `presets/factory/08_Tape_Echo_Lead.json`, `09_FET_Comp_BBD_Clean.json` (신규) | |
 | 문서: DSP_SPECIFICATION, AUDIO_QUALITY_TARGETS, KNOWN_ISSUES, DECISION_LOG, DEVELOPMENT_PLAN, PARAMETER_SPECIFICATION, USER_GUIDE, INTEGRATION_REPORT, CLAUDE.md | |
 | v0.6.1: `src/dsp/amp/AB763Amp.*` (NFB LPF 제거), `tests/audio/test_amp_ab763.cpp` (+1), `tools/benchmark/di_noise_analysis.py` | K-046 |
+
+## D-5. v0.7 변경 (2026-11-25)
+| 파일 | 변경 |
+|---|---|
+| `src/dsp/dynamics/PremiumGate.*` (신규) | Premium Gate / Expander |
+| `src/dsp/filters/PremiumEQ.*` (신규) | Premium EQ |
+| `src/dsp/delay/BbdDelay.*` | `model`/`chips`, v2 처리(v1 경로 무변경), 링 16384 |
+| `src/ui/ParamPanel.*` | Premium EQ 응답 곡선 |
+| `src/engine/EffectFactory.cpp`, `CMakeLists.txt` | 등록, 0.7.0 |
+| `tests/audio/test_gate_eq_bbd_v07.cpp` (신규), `tests/audio/test_delay_dynamics_v06.cpp`(v0.6 BBD 테스트를 v1로 고정), `tests/performance/test_performance.cpp` | 테스트 +16 |
+| `presets/factory/10_Premium_Gate_EQ_BBD.json` (신규) | |
 
 ## E. 테스트 및 검증 (이번 작업, Linux x86_64 클라우드, Release)
 | 명령 | 결과 |

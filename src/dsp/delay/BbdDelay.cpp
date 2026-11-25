@@ -26,6 +26,10 @@ BbdDelay::BbdDelay() {
     params_.add({"drive", "Drive", 0, 100, 30, ParamUnit::Percent});
     params_.add({"spread", "Spread", 0, 100, 40, ParamUnit::Percent});
     params_.add({"level_db", "Output Level", -24, 12, 0, ParamUnit::Decibels});
+    static const char* kModels[] = {"v1 (1 chip, v0.6)", "v2"};
+    ParamInfo m{"model", "Model", 0, 1, (float)kV2, ParamUnit::Choice}; m.choices = kModels; m.numChoices = 2; params_.add(m);
+    static const char* kChipChoices[] = {"1 chip", "2 chips", "4 chips"};
+    ParamInfo ch{"chips", "Chips (v2)", 0, 2, 1, ParamUnit::Choice}; ch.choices = kChipChoices; ch.numChoices = 3; params_.add(ch);
 }
 
 double BbdDelay::effectiveTimeMs() const {
@@ -40,6 +44,8 @@ void BbdDelay::onPrepare(const ProcessSpec& spec) {
     envR_ = onePoleCoeff(0.040, fs);
     timeA_ = 1.0 - std::exp(-1.0 / (0.06 * fs)); // clock VCO / time-knob lag
     fbHp_.design(FilterType::HighPass1, fs, 40.0);
+    fbEnvA_ = 1.0f - onePoleCoeff(0.005, fs);
+    fbEnvR_ = 1.0f - onePoleCoeff(0.150, fs);
     mix_.reset(fs, 0.03); fb_.reset(fs, 0.03); level_.reset(fs, 0.03);
 }
 
@@ -47,22 +53,30 @@ void BbdDelay::onReset() {
     std::memset(ring_, 0, sizeof(ring_));
     for (auto* f : {&aa1_, &aa2_, &rc1_, &rc2_, &fbHp_}) f->reset();
     for (int c = 0; c < 2; ++c) {
-        count_[c] = 0; phase_[c] = 0.0; xPrev_[c] = 0.0f; envC_[c] = envE_[c] = 0.0f; fbState_[c] = 0.0f;
+        count_[c] = 0; phase_[c] = 0.0; xPrev_[c] = 0.0f; envC_[c] = envE_[c] = 0.0f; fbState_[c] = 0.0f; envFb_[c] = 0.0f;
         spcBase_[c] = spcTarget_[c];
         spc_[c] = spcBase_[c];
     }
     lfoPh_ = 0.0;
+    ctl_ = 0;
 }
 
 void BbdDelay::onParametersChanged(bool immediate) {
     const double fs = spec_.sampleRate;
     spread_ = params_.get(kSpread) / 100.0f;
-    const double base = effectiveTimeMs() * 0.001 * fs / kBuckets;
+    const int model = params_.getInt(kModel);
+    const int buckets = model == kV1 ? kBuckets : kBuckets * (1 << params_.getInt(kChips));
+    if (model != model_ || buckets != buckets_) { // structure change: restart the chips (no allocation)
+        model_ = model; buckets_ = buckets;
+        std::memset(ring_, 0, sizeof(ring_));
+        for (int c = 0; c < 2; ++c) { count_[c] = 0; phase_[c] = 0.0; }
+        immediate = true;
+    }
+    const double base = effectiveTimeMs() * 0.001 * fs / buckets_;
     spcTarget_[0] = base;
     spcTarget_[1] = base * (1.0 + 0.03 * spread_); // second chip runs slightly slower
-    const double fa = std::min(mapLog(params_.get(kTone) / 100.0, 2000.0, 9000.0), 0.45 * fs);
-    aa1_.design(FilterType::LowPass, fs, fa, 0.5412); aa2_.design(FilterType::LowPass, fs, fa, 1.3066);
-    rc1_.design(FilterType::LowPass, fs, fa, 0.5412); rc2_.design(FilterType::LowPass, fs, fa, 1.3066);
+    faTone_ = std::min(mapLog(params_.get(kTone) / 100.0, 2000.0, 9000.0), 0.45 * fs);
+    designFilters(model_ == kV1 ? faTone_ : std::min(faTone_, 0.4 * fs / std::max(spcTarget_[0], spcTarget_[1])));
     modDepth_ = params_.get(kModDepth) / 100.0f;
     lfoInc_ = params_.get(kModRate) / fs;
     const float amt = params_.get(kCompander) / 100.0f;
@@ -76,6 +90,13 @@ void BbdDelay::onParametersChanged(bool immediate) {
         fb_.setImmediate(fb); mix_.setImmediate(mx); level_.setImmediate(lv);
         for (int c = 0; c < 2; ++c) spcBase_[c] = spcTarget_[c];
     } else { fb_.setTarget(fb); mix_.setTarget(mx); level_.setTarget(lv); }
+}
+
+void BbdDelay::designFilters(double fa) {
+    const double fs = spec_.sampleRate;
+    faCur_ = fa;
+    aa1_.design(FilterType::LowPass, fs, fa, 0.5412); aa2_.design(FilterType::LowPass, fs, fa, 1.3066);
+    rc1_.design(FilterType::LowPass, fs, fa, 0.5412); rc2_.design(FilterType::LowPass, fs, fa, 1.3066);
 }
 
 float BbdDelay::processChannel(int c, float x, double s) {
@@ -101,7 +122,7 @@ float BbdDelay::processChannel(int c, float x, double s) {
     phase_[c] = ph;
     xPrev_[c] = a;
     // reconstruct the output stream: entry (K-1-N) emerged at the last tick, ph/s ticks ago
-    const int64_t base = count_[c] - 1 - kBuckets;
+    const int64_t base = count_[c] - 1 - buckets_;
     const float u = (float)clampv(ph / s, 0.0, 1.0);
     const float xm1 = ring[(base - 1) & kMask], x0 = ring[base & kMask];
     const float x1 = ring[(base + 1) & kMask], x2 = ring[(base + 2) & kMask];
@@ -111,7 +132,12 @@ float BbdDelay::processChannel(int c, float x, double s) {
     // expander (detector on the chip output)
     const float ar = std::fabs(r);
     envE_[c] = ar + (ar > envE_[c] ? envA_ : envR_) * (envE_[c] - ar);
-    const float ge = expPow_ == 1.0f ? envE_[c] / kRef : (expPow_ > 0.0f ? std::pow(envE_[c] / kRef, expPow_) : 1.0f);
+    float ee = envE_[c];
+    if (model_ == kV2) { // v2: expander floor matched to the compressor floor -> unity below the detector floor too
+        const float floorE = compA_ > 0.0f ? std::pow(kEnvFloor, 1.0f - compA_) * std::pow(kRef, compA_) : 0.0f;
+        ee = std::max(ee, floorE);
+    }
+    const float ge = expPow_ == 1.0f ? ee / kRef : (expPow_ > 0.0f ? std::pow(ee / kRef, expPow_) : 1.0f);
     return r * ge * driveOut_;
 }
 
@@ -119,6 +145,11 @@ void BbdDelay::onProcess(AudioBlock& b) {
     const bool stereo = b.numChannels == 2;
     const int nch = stereo ? 2 : 1;
     for (int i = 0; i < b.numSamples; ++i) {
+        if (model_ == kV2 && ++ctl_ >= 32) { // clock-tracking filters (control rate, block-size independent)
+            ctl_ = 0;
+            const double fa = std::min(faTone_, 0.4 * spec_.sampleRate / std::max(spcBase_[0], spcBase_[1]));
+            if (std::fabs(fa - faCur_) > 0.01 * faCur_) designFilters(fa);
+        }
         const float fb = fb_.next(), mix = mix_.next(), lvl = level_.next();
         const float lfo[2] = {(float)std::sin(kTwoPi * lfoPh_), (float)std::sin(kTwoPi * (lfoPh_ + 0.5 * spread_))};
         lfoPh_ += lfoInc_; lfoPh_ -= std::floor(lfoPh_);
@@ -128,7 +159,13 @@ void BbdDelay::onProcess(AudioBlock& b) {
             spc_[c] = spcBase_[c] * (1.0 + 0.01 * modDepth_ * lfo[c]);
             const float in = b.ch[c][i];
             y[c] = processChannel(c, in + fbState_[c], spc_[c]);
-            fbState_[c] = nl::diodeFeedback(fbHp_.process(y[c], c) * fb, 1.2f);
+            float f = fbHp_.process(y[c], c) * fb;
+            if (model_ == kV2) { // in-loop level regulation above -6 dBFS, then the soft saturator
+                const float a = std::fabs(f);
+                envFb_[c] = flushDenorm(envFb_[c] + (a > envFb_[c] ? fbEnvA_ : fbEnvR_) * (a - envFb_[c]));
+                if (envFb_[c] > 0.5f) f *= 0.5f / envFb_[c];
+            }
+            fbState_[c] = nl::diodeFeedback(f, 1.2f);
         }
         const float dg = std::min(1.0f, 2.0f * (1.0f - mix)), wg = std::min(1.0f, 2.0f * mix);
         for (int c = 0; c < nch; ++c) b.ch[c][i] = lvl * (dg * b.ch[c][i] + wg * y[c]);

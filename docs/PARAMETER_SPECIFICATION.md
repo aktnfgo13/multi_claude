@@ -92,7 +92,14 @@ v2에서 값을 그대로 두면 02/03 프리셋의 출력이 14–19 dB 낮아�
   레거시 값 훅이 필요 없습니다(저장 데이터에 없으면 기본값 = 기존 동작).
 * 새 타입: `delay_tape_premium`, `delay_bbd_premium`, `comp_fet`. 기존 프리셋은 이 타입을 포함하지 않으므로 자동 활성화되지 않습니다.
 
-## 3. 이펙트별 파라미터 (자동 생성, v0.6)
+### v0.7: 추가 파라미터
+* `delay_bbd_premium`: `model`(v1/v2), `chips`(1/2/4, v2 전용)을 끝에 추가. 저장 데이터에 `model`이 없으면 v1(= v0.6 출력 비트 동일),
+  새 인스턴스는 v2·2 chips.
+* 새 타입: `gate_premium`(12개), `eq_parametric_premium`(21개: 밴드별 freq/gain/Q 15개 + output = 인덱스 0–15 호스트 자동화 범위,
+  밴드 타입 5개는 16–20 → Logic 자동화 대상 아님).
+* 호스트 자동화는 슬롯당 앞 16개 파라미터만 노출(`kParamsPerSlot` = 16). `delay`의 `time_r_ms`(인덱스 16)는 자동화 불가(K-048).
+
+## 3. 이펙트별 파라미터 (자동 생성, v0.7)
 
 ### `utility` — Gain / Volume
 
@@ -160,6 +167,23 @@ v2에서 값을 그대로 두면 02/03 프리셋의 출력이 14–19 dB 낮아�
 | `sc_hpf_hz` | SC High-Pass | 20…500 | 20 | Hz | log |
 | `character` | Character | 0…100 | 50 | % | linear |
 | `mix` | Mix | 0…100 | 100 | % | linear |
+
+### `gate_premium` — Premium Gate
+
+| id | 이름 | 범위 | 기본값 | 단위 | 스케일 |
+|---|---|---|---|---|---|
+| `threshold_db` | Threshold | -90…0 | -55 | dB | linear |
+| `range_db` | Range | -90…0 | -60 | dB | linear |
+| `attack_ms` | Attack | 0.0500000007…20 | 0.5 | ms | log |
+| `hold_ms` | Hold | 0…500 | 40 | ms | linear |
+| `release_ms` | Release | 5…3000 | 250 | ms | log |
+| `ratio` | Ratio | 1.5…20 | 4 | :1 | log |
+| `hysteresis_db` | Hysteresis | 0…20 | 6 | dB | linear |
+| `mode` | Mode | Gate / Expander | 1 |  | linear |
+| `detector` | Detector | Peak / RMS | 0 |  | linear |
+| `sc_hpf_hz` | SC High-Pass | 20…500 | 80 | Hz | log |
+| `stereo_link` | Stereo Link | 0…1 | 1 |  | linear |
+| `adaptive_release` | Adaptive Release | 0…1 | 1 |  | linear |
 
 ### `clean_boost` — Clean Boost
 
@@ -278,6 +302,32 @@ v2에서 값을 그대로 두면 02/03 프리셋의 출력이 14–19 dB 낮아�
 | `b8k` | 8 kHz | -12…12 | 0 | dB | linear |
 | `b16k` | 16 kHz | -12…12 | 0 | dB | linear |
 | `output_db` | Output | -24…12 | 0 | dB | linear |
+
+### `eq_parametric_premium` — Premium EQ
+
+| id | 이름 | 범위 | 기본값 | 단위 | 스케일 |
+|---|---|---|---|---|---|
+| `b1_hz` | Band 1 Freq | 20…20000 | 100 | Hz | log |
+| `b1_db` | Band 1 Gain | -24…24 | 0 | dB | linear |
+| `b1_q` | Band 1 Q | 0.100000001…18 | 0.707099974 |  | log |
+| `b2_hz` | Band 2 Freq | 20…20000 | 400 | Hz | log |
+| `b2_db` | Band 2 Gain | -24…24 | 0 | dB | linear |
+| `b2_q` | Band 2 Q | 0.100000001…18 | 0.707099974 |  | log |
+| `b3_hz` | Band 3 Freq | 20…20000 | 1500 | Hz | log |
+| `b3_db` | Band 3 Gain | -24…24 | 0 | dB | linear |
+| `b3_q` | Band 3 Q | 0.100000001…18 | 0.707099974 |  | log |
+| `b4_hz` | Band 4 Freq | 20…20000 | 4000 | Hz | log |
+| `b4_db` | Band 4 Gain | -24…24 | 0 | dB | linear |
+| `b4_q` | Band 4 Q | 0.100000001…18 | 0.707099974 |  | log |
+| `b5_hz` | Band 5 Freq | 20…20000 | 8000 | Hz | log |
+| `b5_db` | Band 5 Gain | -24…24 | 0 | dB | linear |
+| `b5_q` | Band 5 Q | 0.100000001…18 | 0.707099974 |  | log |
+| `output_db` | Output | -24…24 | 0 | dB | linear |
+| `b1_type` | Band 1 Type | Off / Bell / Low Shelf / High Shelf / HPF 12 / HPF 24 / LPF 12 / LPF 24 / Notch | 2 |  | linear |
+| `b2_type` | Band 2 Type | Off / Bell / Low Shelf / High Shelf / HPF 12 / HPF 24 / LPF 12 / LPF 24 / Notch | 1 |  | linear |
+| `b3_type` | Band 3 Type | Off / Bell / Low Shelf / High Shelf / HPF 12 / HPF 24 / LPF 12 / LPF 24 / Notch | 1 |  | linear |
+| `b4_type` | Band 4 Type | Off / Bell / Low Shelf / High Shelf / HPF 12 / HPF 24 / LPF 12 / LPF 24 / Notch | 1 |  | linear |
+| `b5_type` | Band 5 Type | Off / Bell / Low Shelf / High Shelf / HPF 12 / HPF 24 / LPF 12 / LPF 24 / Notch | 3 |  | linear |
 
 ### `amp` — Amp
 
@@ -467,3 +517,5 @@ v2에서 값을 그대로 두면 02/03 프리셋의 출력이 14–19 dB 낮아�
 | `drive` | Drive | 0…100 | 30 | % | linear |
 | `spread` | Spread | 0…100 | 40 | % | linear |
 | `level_db` | Output Level | -24…12 | 0 | dB | linear |
+| `model` | Model | v1 (1 chip, v0.6) / v2 | 1 |  | linear |
+| `chips` | Chips (v2) | 1 chip / 2 chips / 4 chips | 1 |  | linear |

@@ -193,3 +193,32 @@ TEST(performance, no_heap_allocation_or_free_v06_delays_and_fet) {
     CHECK_MSG(gAllocs.load() == 0 && gFrees.load() == 0, gAllocs.load() << " allocations, " << gFrees.load() << " frees");
     CHECK(allFinite(l) && allFinite(r));
 }
+
+TEST(performance, no_heap_allocation_or_free_v07_gate_eq_bbd2) {
+    Engine e;
+    e.prepare(48000, 512);
+    e.addEffect(createEffect("gate_premium"));
+    e.addEffect(createEffect("eq_parametric_premium"));
+    e.addEffect(createEffect("delay_bbd_premium")); // v2 default
+    std::vector<float> x = makeNoise(512, 0.5), l(512), r(512);
+    const float* in[1] = {x.data()};
+    float* out[2] = {l.data(), r.data()};
+    e.process(in, 1, out, 2, 512);
+    const auto slots = e.allSlotsInOrder(); // (allocates: outside the counted region)
+    Effect* gate = e.effect(slots[0]);
+    Effect* eq = e.effect(slots[1]);
+    Effect* bbd = e.effect(slots[2]);
+    gAllocs = 0; gFrees = 0;
+    gCountAllocs = true;
+    for (int i = 0; i < 200; ++i) {
+        if (i == 20) eq->setParam("b2_type", 5.0f);      // type cross-fade
+        if (i == 30) eq->setParam("b3_hz", 9000.0f);     // sweep
+        if (i == 40) gate->setParam("mode", 0.0f);
+        if (i == 60) bbd->setParam("chips", 2.0f);        // structure change (ring cleared, no allocation)
+        if (i == 80) bbd->setParam("model", 0.0f);
+        e.process(in, 1, out, 2, 512);
+    }
+    gCountAllocs = false;
+    CHECK_MSG(gAllocs.load() == 0 && gFrees.load() == 0, gAllocs.load() << " allocations, " << gFrees.load() << " frees");
+    CHECK(allFinite(l) && allFinite(r));
+}

@@ -25,6 +25,8 @@ preservation of existing models/presets) override anything below.
   After mapping changes also re-run `apps/mfx_compare_drive` and `tools/benchmark/preset_mapping_impact.py`.
 * v0.6 types: `delay_tape_premium` (tape transport model), `delay_bbd_premium` (clocked BBD), `comp_fet` (feedback FET
   compressor). `delay` gained 5 appended stereo params whose defaults keep v0.5 output bit-identical — keep it so.
+* v0.7 types: `gate_premium`, `eq_parametric_premium` (TPT SVF). `delay_bbd_premium` gained `model` (v1 = v0.6 bit-exact,
+  legacy default) and `chips`. Host automation exposes only the first 16 params per slot: keep continuous params first.
 * Unverified items are written as NOT TESTED / BLOCKED. Never claim listening results; never call a GRU model "NAM".
 
 ## Build & test

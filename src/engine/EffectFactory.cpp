@@ -8,6 +8,8 @@
 #include "dsp/delay/TapeEcho.h"
 #include "dsp/delay/BbdDelay.h"
 #include "dsp/dynamics/FetCompressor.h"
+#include "dsp/dynamics/PremiumGate.h"
+#include "dsp/filters/PremiumEQ.h"
 #include "dsp/cabinet/Cabinet.h"
 #include "dsp/delay/Delay.h"
 #include "dsp/drive/CustomDrive.h"
@@ -33,10 +35,11 @@ const std::vector<Entry>& entries() {
     static const std::vector<Entry> e = {
         {"utility", mk<GainUtility>}, {"pan", mk<Pan>}, {"tuner", mk<Tuner>},
         {"noise_gate", mk<NoiseGate>}, {"compressor", mk<Compressor>}, {"limiter", mk<Limiter>},
-        {"comp_fet", mk<FetCompressor>},
+        {"comp_fet", mk<FetCompressor>}, {"gate_premium", mk<PremiumGate>},
         {"clean_boost", mk<CleanBoost>}, {"overdrive", mk<Overdrive>}, {"distortion", mk<Distortion>},
         {"fuzz", mk<Fuzz>}, {"custom_drive", mk<CustomDrive>}, {"ddsp_drive", mk<DdspDrive>},
         {"filter", mk<FilterBlock>}, {"parametric_eq", mk<ParametricEQ>}, {"graphic_eq", mk<GraphicEQ>},
+        {"eq_parametric_premium", mk<PremiumEQ>},
         {"amp", mk<AmpSim>}, {"amp_ab763", mk<AB763Amp>}, {"nam_amp", mk<NamAmp>}, {"cabinet", mk<Cabinet>},
         {"chorus", mk<Chorus>}, {"flanger", mk<Flanger>}, {"phaser", mk<Phaser>},
         {"tremolo", mk<Tremolo>}, {"vibrato", mk<Vibrato>},

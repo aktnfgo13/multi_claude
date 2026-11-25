@@ -201,6 +201,7 @@ TEST(audio, bbd_delay_time_accuracy_bandwidth_and_aliasing) {
     for (double fs : {44100.0, 48000.0, 96000.0}) {
         for (float ms : {20.f, 300.f, 800.f}) {
             BbdDelay d;
+            d.setParam("model", 0.f); // v0.6 = v1
             d.setParam("time_ms", ms); d.setParam("mix", 100.f); d.setParam("feedback", 0.f); d.setParam("mod_depth", 0.f);
             d.setParam("compander", 0.f); d.setParam("spread", 0.f);
             d.prepare({fs, 256, 2});
@@ -217,6 +218,7 @@ TEST(audio, bbd_delay_time_accuracy_bandwidth_and_aliasing) {
     // aliasing grows with delay time (clock falls): 3 kHz tone, energy outside the tone
     auto alias = [](float ms) {
         BbdDelay d;
+        d.setParam("model", 0.f); // v0.6 = v1
         d.setParam("time_ms", ms); d.setParam("mix", 100.f); d.setParam("feedback", 0.f); d.setParam("mod_depth", 0.f);
         d.setParam("compander", 0.f); d.setParam("tone", 100.f); d.setParam("drive", 0.f);
         d.prepare({48000, 256, 2});
@@ -235,6 +237,7 @@ TEST(audio, bbd_delay_time_accuracy_bandwidth_and_aliasing) {
 TEST(audio, bbd_compander_is_transparent_static_and_breathes_on_transients) {
     auto level = [](double amp, float comp) {
         BbdDelay d;
+        d.setParam("model", 0.f); // v0.6 = v1
         d.setParam("time_ms", 100.f); d.setParam("mix", 100.f); d.setParam("feedback", 0.f); d.setParam("mod_depth", 0.f);
         d.setParam("compander", comp); d.setParam("drive", 0.f);
         d.prepare({48000, 256, 2});
@@ -249,6 +252,7 @@ TEST(audio, bbd_compander_is_transparent_static_and_breathes_on_transients) {
     }
     // transient: a step from -40 to -6 dBFS shows a compander overshoot that settles
     BbdDelay d;
+    d.setParam("model", 0.f); // v0.6 = v1
     d.setParam("time_ms", 50.f); d.setParam("mix", 100.f); d.setParam("feedback", 0.f); d.setParam("mod_depth", 0.f);
     d.prepare({48000, 256, 2});
     auto x = makeSine(48000, 500.0, 1.0, 48000);
@@ -262,6 +266,7 @@ TEST(audio, bbd_compander_is_transparent_static_and_breathes_on_transients) {
 
 TEST(audio, bbd_feedback_bounded_time_change_and_modulation) {
     BbdDelay d;
+    d.setParam("model", 0.f); // v0.6 = v1
     d.setParam("feedback", 110.f); d.setParam("mix", 100.f); d.setParam("time_ms", 20.f); d.setParam("drive", 100.f);
     d.setParam("mod_depth", 100.f); d.setParam("mod_rate_hz", 8.f);
     d.prepare({48000, 256, 2});
@@ -274,6 +279,7 @@ TEST(audio, bbd_feedback_bounded_time_change_and_modulation) {
     CHECK(allFinite(o.l) && allFinite(o.r) && pk < 4.0);
     // time change: no step larger than the steady-state sine slope allows
     BbdDelay e;
+    e.setParam("model", 0.f); // v0.6 = v1
     e.setParam("time_ms", 300.f); e.setParam("mix", 100.f); e.setParam("feedback", 30.f); e.setParam("mod_depth", 0.f);
     e.prepare({48000, 256, 2});
     auto x = makeSine(48000, 440.0, 0.3, 48000 * 4);
@@ -288,6 +294,7 @@ TEST(audio, bbd_feedback_bounded_time_change_and_modulation) {
     CHECK_MSG(during < 2.5 * before, "during " << during << " before " << before); // pitch rises while the clock speeds up
     // clock modulation shows up as frequency modulation at the LFO rate
     BbdDelay m;
+    m.setParam("model", 0.f); // v0.6 = v1
     m.setParam("time_ms", 300.f); m.setParam("mix", 100.f); m.setParam("feedback", 0.f); m.setParam("mod_depth", 100.f);
     m.setParam("mod_rate_hz", 2.f); m.setParam("compander", 0.f);
     m.prepare({48000, 256, 2});
@@ -301,6 +308,7 @@ TEST(audio, bbd_feedback_bounded_time_change_and_modulation) {
 
 TEST(audio, bbd_stereo_spread_decorrelates_and_memory_is_rate_independent) {
     BbdDelay d;
+    d.setParam("model", 0.f); // v0.6 = v1
     d.setParam("time_ms", 300.f); d.setParam("mix", 100.f); d.setParam("feedback", 40.f); d.setParam("spread", 100.f);
     d.setParam("mod_depth", 60.f);
     d.prepare({48000, 256, 2});
@@ -312,6 +320,7 @@ TEST(audio, bbd_stereo_spread_decorrelates_and_memory_is_rate_independent) {
     record("bbd_lr_corr_spread100", corr, "");
     CHECK(corr < 0.9);
     BbdDelay a, b;
+    a.setParam("model", 0.f); b.setParam("model", 0.f);
     a.prepare({44100, 64, 2}); b.prepare({192000, 64, 2});
     CHECK(a.memoryBytes() == b.memoryBytes());
     record("bbd_memory_kib", (double)a.memoryBytes() / 1024.0, "KiB");

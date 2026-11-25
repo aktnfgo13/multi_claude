@@ -1,0 +1,26 @@
+[PASS] audio.gate_premium_threshold_accuracy_and_hysteresis       112.7 ms 
+[PASS] audio.gate_premium_hysteresis_prevents_chattering           62.3 ms 
+[PASS] audio.gate_premium_expander_curve_and_unity                 32.5 ms 
+[PASS] audio.gate_premium_preserves_attack_and_sustain_and_reduces_noise    226.6 ms 
+[PASS] audio.gate_premium_adaptive_release_closes_abrupt_stops_faster     66.7 ms 
+[PASS] audio.gate_premium_sidechain_hpf_link_and_safety            49.3 ms 
+
+6 passed, 0 failed, 24 checks
+[PASS] audio.eq_premium_response_matches_design_at_all_rates     1413.2 ms 
+[PASS] audio.eq_premium_bell_phase_and_bandwidth                   12.9 ms 
+[PASS] audio.eq_premium_sweeps_are_cleaner_than_legacy_and_type_switch_is_click_free     38.3 ms 
+[PASS] audio.eq_premium_nyquist_extremes_and_denormals            925.0 ms 
+
+4 passed, 0 failed, 3241 checks
+[PASS] audio.bbd_v2_multichip_reduces_aliasing_without_losing_coherent_bandwidth   5709.5 ms 
+[PASS] audio.bbd_v2_defaults_legacy_and_regulated_self_oscillation   1880.1 ms 
+[PASS] audio.bbd_v2_compander_low_level_transparency              111.1 ms 
+[PASS] audio.bbd_v2_time_accuracy_modulation_and_time_change      148.8 ms 
+
+4 passed, 0 failed, 23 checks
+[PASS] integration.v07_full_chain_gain_staging_trails_presets_and_rates   6200.8 ms 
+
+1 passed, 0 failed, 129 checks
+[PASS] audio.all_effects_finite_bounded_at_all_rates_and_blocks  10598.4 ms 
+
+1 passed, 0 failed, 512 checks

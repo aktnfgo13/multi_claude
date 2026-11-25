@@ -189,3 +189,31 @@ python3 research/spice/run_spice.py tolerance …     → E-018
 | DSP 자체 잡음(−120 dBFS 사인 입력) | 출력 잡음 바닥 M1 −116 / M2 −108 dBFS(float 연산 잡음) — 원본 잡음보다 약 50 dB 낮음 | 동 |
 | 결함 | M2 피드백 경로 LPF → 10–20 kHz 피크(샘플레이트 의존). 수정 후 M2 10–20 kHz 잡음 −5 dB, 조용한 구간 SNR 23.9 → 26.2 dB(M1 29.8) | K-046, D-059 |
 | 회귀 | 팩토리 01–06 비트 동일, M1 비트 동일, 07–09(M2 포함) 캐비닛 후 대역 차 ≤ 0.5 dB, C++ 114/114 | |
+
+---
+# 추가: v0.7 Premium Gate / EQ / BBD Refinement (2026-11-25)
+| 항목 | 상태 | 근거 |
+|---|---|---|
+| 기준 확인: `ef6c9da`, C++ 114/114 | PASS | 작업 전 실행 |
+| 팩토리 01–09, BBD v1(20/300/800 ms × FB 40/105), noise_gate, parametric_eq, graphic_eq, filter = v0.6.1 | PASS (비트 동일) | v0.6.1 빌드 vs 후보 cmp |
+| Premium Gate (임계·히스테리시스·익스팬더·어택/서스테인·적응 릴리즈·SC HPF·링크·안전성) | PASS | `gate_premium_*` 6개 |
+| Premium EQ (응답·위상·대역·스윕·타입 전환·Nyquist·디노멀·투명성) | PASS | `eq_premium_*` 4개 |
+| BBD v2 (다중 칩 비교, 기본값·레거시·발진, 컴팬더 저레벨, 시간·변화) | PASS | `bbd_v2_*` 4개 |
+| 전체 체인(Gate→Comp→Drive→Amp→Cab→EQ→BBD→Plate) 44.1/48/96 kHz: 피크 −16…−14 dBFS, 트레일 유지(게이트 닫힘 후 꼬리 −46 dBFS vs 바닥 −96), 지연 62샘플 보고, 자동화·프리셋 왕복·전환 | PASS | `v07_full_chain_*` |
+| 026.wav(실제 DI, 저장소 외부): 조용한 구간 감쇠 Premium Gate −49.5 dB / 기존 −10.1 dB(임계 −52), 어택·연주 RMS 변화 0.00 dB | 측정 | 아래 표 |
+| 콜백 할당 0 (타입 크로스페이드·칩 변경·모델 변경 포함) | PASS | performance |
+| C++ 전체 | PASS 130/130 | `cpp_tests.json` |
+| ASan (v0.7 관련) | PASS 0건 | `sanitizer_asan_v07.txt` |
+| pluginval strictness 7 (VST3 Linux, GUI 테스트 제외) | PASS | `pluginval_vst3_linux_strict7_v07.txt` |
+| EQ 응답 곡선 화면, macOS·auval·Logic, 청취 | NOT TESTED | K-051 |
+
+026.wav 게이트 비교(게이트 단독, 임계 −52 dBFS / −46 dBFS):
+| 게이트 | 조용한 구간 감쇠 | 1–20 kHz 히스 감쇠 | 연주 RMS 변화 | 어택(10 ms) | 저레벨 꼬리 평균 이득 | 개폐 횟수 |
+|---|---|---|---|---|---|---|
+| noise_gate(기존) −52 | 10.1 dB | 22.6 dB | 0.00 | 0.00 | −3.5 dB | 3 |
+| gate_premium Gate −52 | 49.5 dB | 60.0 dB | 0.00 | 0.00 | −4.1 dB | 4 |
+| gate_premium SC HPF 끔 −52 | 2.7 dB | 12.7 dB | 0.00 | 0.00 | −2.0 dB | 8 |
+| gate_premium Expander −52 | 8.9 dB | 23.1 dB | 0.00 | 0.00 | −1.4 dB | 10 |
+| noise_gate(기존) −46 | 19.2 dB | 42.7 dB | 0.00 | −0.08 | −5.8 dB | 3 |
+| gate_premium Gate −46 | 52.6 dB | 60.0 dB | 0.00 | 0.00 | −5.2 dB | 4 |
+| gate_premium Expander −46 | 26.3 dB | 39.9 dB | 0.00 | 0.00 | −3.0 dB | 4 |

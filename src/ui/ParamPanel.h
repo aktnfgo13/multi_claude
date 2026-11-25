@@ -33,6 +33,7 @@ private:
     std::unique_ptr<juce::TextButton> fileButton_;
     std::unique_ptr<juce::Label> status_;
     std::unique_ptr<juce::FileChooser> chooser_;
+    juce::Rectangle<int> curveArea_;
 };
 
 } // namespace mfx::ui

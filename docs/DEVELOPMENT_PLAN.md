@@ -54,6 +54,12 @@ Tape Echo(테이프 전송 모델), BBD Analog Delay(클록 샘플링), FET Comp
 v0.7 우선순위: ① v0.5/v0.6 Mac·Logic 확인과 청취 피드백 반영 ② 측정 인프라(리앰프/DI) — Tape/BBD/FET는 실기 또는 공개 측정과 비교
 ③ BBD 다중 칩·Tape 하드웨어 메모리 예산 ④ Premium Plate 청취 튜닝·Shimmer/Freeze ⑤ parity 확장(새 블록) ⑥ 출시 준비(설치 패키지·서명).
 
+## v0.7 Premium Gate / EQ / BBD Refinement (2026-11-25)
+`gate_premium`(익스팬더·SC HPF·히스테리시스·적응 릴리즈), `eq_parametric_premium`(TPT SVF 5밴드, 응답 곡선 UI), BBD v2(다중 칩·클록 추종 필터·
+컴팬더 바닥 정합·루프 레벨 조절), 프리셋 10, 전체 체인 통합 테스트.
+v0.8 방향: ① Mac/Logic 청취·자동화 확인과 반영 ② 호스트 파라미터 레이아웃(슬롯당 16개 한계) 설계 ③ 실제 깨끗한 DI·리앰프 측정 인프라
+④ EQ 정합 설계·BBD 잡음 바닥 모델 ⑤ 출시 준비(설치 패키지·서명·Windows 빌드 확인).
+
 ## 다음 마일스톤
 1. M1 (Mac, 사용자): `scripts/macos_build_install_verify.sh` → auval → Logic 체크리스트(BUILD_GUIDE §2) → 결과 로그 전달.
 2. M1b (청취, 사용자): `audio/compare_drive_v2/abx` 블라인드 청취, 프리셋 02/03/05 확인, Custom Drive v2 노브 감각 피드백.

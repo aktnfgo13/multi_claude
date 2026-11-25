@@ -2,6 +2,7 @@
 
 #include "dsp/cabinet/Cabinet.h"
 #include "dsp/drive/Drives.h"
+#include "dsp/filters/PremiumEQ.h"
 #include "dsp/utility/Tuner.h"
 #include "neural/NamAmp.h"
 #include "ui/LookAndFeel.h"
@@ -106,11 +107,31 @@ void ParamPanel::paint(juce::Graphics& g) {
         juce::String s = r.valid ? juce::String(r.noteName()) + juce::String(r.midiNote / 12 - 1) + "  " + juce::String(r.cents, 1) + " ct  (" + juce::String(r.frequency, 1) + " Hz)" : "--";
         g.drawText(s, getLocalBounds().removeFromBottom(48), juce::Justification::centred);
     }
+    if (dynamic_cast<PremiumEQ*>(fx_) && !curveArea_.isEmpty()) { // magnitude response from the same design code as the DSP
+        const auto r = curveArea_.toFloat();
+        g.setColour(colours::panel.darker(0.4f));
+        g.fillRoundedRectangle(r, 4.0f);
+        const double fs = proc_.getSampleRate() > 0 ? proc_.getSampleRate() : 48000.0;
+        auto xOf = [&](double f) { return r.getX() + (float)(std::log(f / 20.0) / std::log(1000.0)) * r.getWidth(); };
+        auto yOf = [&](double d) { return r.getCentreY() - (float)(juce::jlimit(-24.0, 24.0, d) / 24.0) * (r.getHeight() * 0.5f - 4.0f); };
+        g.setColour(colours::textDim.withAlpha(0.3f));
+        for (double f : {50.0, 100.0, 200.0, 500.0, 1000.0, 2000.0, 5000.0, 10000.0}) g.drawVerticalLine((int)xOf(f), r.getY(), r.getBottom());
+        for (double d : {-12.0, 0.0, 12.0}) g.drawHorizontalLine((int)yOf(d), r.getX(), r.getRight());
+        juce::Path path;
+        for (int i = 0; i <= (int)r.getWidth(); ++i) {
+            const double f = 20.0 * std::pow(1000.0, i / (double)r.getWidth());
+            const float y = yOf(PremiumEQ::targetResponseDb(fx_->params(), fs, std::min(f, 0.499 * fs)));
+            if (i == 0) path.startNewSubPath(r.getX(), y); else path.lineTo(r.getX() + (float)i, y);
+        }
+        g.setColour(colours::forCategory(fx_->category()));
+        g.strokePath(path, juce::PathStrokeType(2.0f));
+    }
 }
 
 void ParamPanel::resized() {
     auto area = getLocalBounds().reduced(10).withTrimmedTop(26);
     auto bottom = area.removeFromBottom(30);
+    curveArea_ = dynamic_cast<PremiumEQ*>(fx_) ? area.removeFromBottom(juce::jmin(150, area.getHeight() / 3)).reduced(4) : juce::Rectangle<int>();
     if (fileButton_) fileButton_->setBounds(bottom.removeFromLeft(200).reduced(2));
     if (status_) status_->setBounds(bottom.reduced(6, 2));
     const int cellW = 96, cellH = juce::jmin(120, area.getHeight());
@@ -136,7 +157,7 @@ void ParamPanel::timerCallback() {
         if (c.combo) c.combo->setSelectedId(ps.getInt(c.param) + 1, juce::dontSendNotification);
         if (c.toggle) c.toggle->setToggleState(ps.getInt(c.param) != 0, juce::dontSendNotification);
     }
-    if (dynamic_cast<Tuner*>(fx_)) repaint();
+    if (dynamic_cast<Tuner*>(fx_) || dynamic_cast<PremiumEQ*>(fx_)) repaint();
 }
 
 } // namespace mfx::ui
