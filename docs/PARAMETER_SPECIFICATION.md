@@ -99,7 +99,7 @@ v2에서 값을 그대로 두면 02/03 프리셋의 출력이 14–19 dB 낮아�
   밴드 타입 5개는 16–20 → Logic 자동화 대상 아님).
 * 호스트 자동화는 슬롯당 앞 16개 파라미터만 노출(`kParamsPerSlot` = 16). `delay`의 `time_r_ms`(인덱스 16)는 자동화 불가(K-048).
 
-## 3. 이펙트별 파라미터 (자동 생성, v0.7)
+## 3. 이펙트별 파라미터 (자동 생성, v0.8)
 
 ### `utility` — Gain / Volume
 
@@ -429,6 +429,109 @@ v2에서 값을 그대로 두면 02/03 프리셋의 출력이 14–19 dB 낮아�
 | `rate_hz` | Rate | 0.100000001…12 | 5 | Hz | log |
 | `depth` | Depth | 0…100 | 40 | % | linear |
 
+### `chorus_premium` — Premium Chorus
+
+| id | 이름 | 범위 | 기본값 | 단위 | 스케일 |
+|---|---|---|---|---|---|
+| `rate_hz` | Rate | 0.0500000007…10 | 0.600000024 | Hz | log |
+| `depth` | Depth | 0…100 | 50 | % | linear |
+| `delay_ms` | Delay | 3…30 | 10 | ms | linear |
+| `feedback` | Feedback | -70…70 | 0 | % | linear |
+| `tone_hz` | Tone | 1000…18000 | 9000 | Hz | log |
+| `mix` | Mix | 0…100 | 50 | % | linear |
+| `spread_deg` | Stereo Phase | 0…180 | 90 |  | linear |
+| `voices` | Voices | 1 / 2 / 3 | 0 |  | linear |
+| `character` | Character | Clean / BBD | 1 |  | linear |
+| `drift` | Drift | 0…100 | 20 | % | linear |
+| `shape` | LFO Shape | Sine / Triangle | 0 |  | linear |
+| `sync` | Sync | Off / 1/1 / 1/2 / 1/4 / 1/4 D / 1/4 T / 1/8 / 1/8 D / 1/8 T / 1/16 | 0 |  | linear |
+| `level_db` | Output Level | -24…12 | 0 | dB | linear |
+
+### `vibrato_premium` — Premium Vibrato
+
+| id | 이름 | 범위 | 기본값 | 단위 | 스케일 |
+|---|---|---|---|---|---|
+| `rate_hz` | Rate | 0.100000001…14 | 5 | Hz | log |
+| `depth_cents` | Depth | 0…100 | 25 |  | linear |
+| `shape` | Shape | Sine / Triangle / Asymmetric | 0 |  | linear |
+| `skew` | Skew | 10…90 | 35 | % | linear |
+| `drift` | Analog Drift | 0…100 | 10 | % | linear |
+| `stereo` | Stereo Variation | 0…100 | 0 | % | linear |
+| `sync` | Sync | Off / 1/1 / 1/2 / 1/4 / 1/4 D / 1/4 T / 1/8 / 1/8 D / 1/8 T / 1/16 | 0 |  | linear |
+| `level_db` | Output Level | -24…12 | 0 | dB | linear |
+| `mix` | Mix | 0…100 | 100 | % | linear |
+
+### `phaser_premium` — Premium Phaser
+
+| id | 이름 | 범위 | 기본값 | 단위 | 스케일 |
+|---|---|---|---|---|---|
+| `rate_hz` | Rate | 0.0199999996…10 | 0.400000006 | Hz | log |
+| `depth` | Depth | 0…100 | 80 | % | linear |
+| `freq_lo_hz` | Low Freq | 40…2000 | 200 | Hz | log |
+| `freq_hi_hz` | High Freq | 200…10000 | 2500 | Hz | log |
+| `feedback` | Feedback | -95…95 | 40 | % | linear |
+| `mix` | Mix | 0…100 | 50 | % | linear |
+| `stages` | Stages | 2 / 4 / 6 / 8 / 12 | 2 |  | linear |
+| `stereo_deg` | Stereo Phase | 0…180 | 90 |  | linear |
+| `character` | Character | 0…100 | 30 | % | linear |
+| `shape` | LFO Shape | Sine / Triangle | 0 |  | linear |
+| `sync` | Sync | Off / 1/1 / 1/2 / 1/4 / 1/4 D / 1/4 T / 1/8 / 1/8 D / 1/8 T / 1/16 | 0 |  | linear |
+| `level_db` | Output Level | -24…12 | 0 | dB | linear |
+
+### `univibe_premium` — Premium Uni-Vibe
+
+| id | 이름 | 범위 | 기본값 | 단위 | 스케일 |
+|---|---|---|---|---|---|
+| `speed_hz` | Speed | 0.300000012…12 | 2.5 | Hz | log |
+| `intensity` | Intensity | 0…100 | 70 | % | linear |
+| `mode` | Mode | Chorus / Vibrato | 0 |  | linear |
+| `volume_db` | Volume | -24…12 | 0 | dB | linear |
+| `sync` | Sync | Off / 1/1 / 1/2 / 1/4 / 1/4 D / 1/4 T / 1/8 / 1/8 D / 1/8 T / 1/16 | 0 |  | linear |
+
+### `flanger_premium` — Premium Flanger
+
+| id | 이름 | 범위 | 기본값 | 단위 | 스케일 |
+|---|---|---|---|---|---|
+| `rate_hz` | Rate | 0.0199999996…5 | 0.200000003 | Hz | log |
+| `depth` | Depth | 0…100 | 70 | % | linear |
+| `manual_ms` | Manual | -4…4 | 0.5 | ms | linear |
+| `feedback` | Feedback | -95…95 | 50 | % | linear |
+| `mix` | Mix | 0…100 | 50 | % | linear |
+| `mode` | Mode | Classic / Through-Zero | 1 |  | linear |
+| `stereo_deg` | Stereo Phase | 0…180 | 90 |  | linear |
+| `shape` | LFO Shape | Sine / Triangle | 1 |  | linear |
+| `sync` | Sync | Off / 1/1 / 1/2 / 1/4 / 1/4 D / 1/4 T / 1/8 / 1/8 D / 1/8 T / 1/16 | 0 |  | linear |
+| `level_db` | Output Level | -24…12 | 0 | dB | linear |
+
+### `tremolo_premium` — Premium Tremolo
+
+| id | 이름 | 범위 | 기본값 | 단위 | 스케일 |
+|---|---|---|---|---|---|
+| `rate_hz` | Rate | 0.200000003…16 | 4.5 | Hz | log |
+| `depth` | Depth | 0…100 | 50 | % | linear |
+| `model` | Model | Optical / Bias / Harmonic | 0 |  | linear |
+| `shape` | Shape | Sine / Triangle / Square | 0 |  | linear |
+| `sync` | Sync | Off / 1/1 / 1/2 / 1/4 / 1/4 D / 1/4 T / 1/8 / 1/8 D / 1/8 T / 1/16 | 0 |  | linear |
+| `stereo` | Stereo (Pan) | 0…1 | 0 |  | linear |
+| `crossover_hz` | Crossover | 200…2000 | 700 | Hz | log |
+| `character` | Character | 0…100 | 50 | % | linear |
+| `level_db` | Output Level | -24…12 | 0 | dB | linear |
+
+### `rotary_premium` — Premium Rotary
+
+| id | 이름 | 범위 | 기본값 | 단위 | 스케일 |
+|---|---|---|---|---|---|
+| `speed` | Speed | Slow / Fast / Brake | 0 |  | linear |
+| `accel` | Acceleration | 25…400 | 100 | % | log |
+| `horn_db` | Horn Level | -24…6 | 0 | dB | linear |
+| `drum_db` | Drum Level | -24…6 | 0 | dB | linear |
+| `depth` | Depth | 0…100 | 80 | % | linear |
+| `width` | Stereo Width | 0…100 | 70 | % | linear |
+| `mix` | Mix | 0…100 | 100 | % | linear |
+| `drive` | Drive | 0…100 | 0 | % | linear |
+| `crossover_hz` | Crossover | 400…1600 | 800 | Hz | log |
+| `level_db` | Output Level | -24…12 | 0 | dB | linear |
+
 ### `delay` — Delay
 
 | id | 이름 | 범위 | 기본값 | 단위 | 스케일 |
@@ -519,3 +622,21 @@ v2에서 값을 그대로 두면 02/03 프리셋의 출력이 14–19 dB 낮아�
 | `level_db` | Output Level | -24…12 | 0 | dB | linear |
 | `model` | Model | v1 (1 chip, v0.6) / v2 | 1 |  | linear |
 | `chips` | Chips (v2) | 1 chip / 2 chips / 4 chips | 1 |  | linear |
+
+## 4. 호스트 파라미터 레이아웃 (v0.8, K-048)
+JUCE AU/VST3 래퍼는 `SlotParameter`(ID 없는 `AudioProcessorParameter`)의 호스트 ID를 **파라미터 인덱스**로 만듭니다
+(`LegacyAudioParameter::getParamID` → `String(index)`; AU는 그 해시, VST3도 인덱스 기반). 따라서 인덱스의 의미가 곧 호환성입니다.
+
+| 인덱스 | 내용 | 도입 |
+|---|---|---|
+| 0, 1, 2 | Input Gain, Output Gain, Parallel A/B Mix | v0.2 |
+| 3 + s·17 | 슬롯 s 바이패스 (s = 0..15) | v0.2 |
+| 3 + s·17 + 1 + p | 슬롯 s 파라미터 p (p = 0..15) | v0.2 |
+| 275 + s·8 + (p − 16) | 슬롯 s 파라미터 p (p = 16..23), version hint 2 | **v0.8** |
+
+* 기존 275개는 순서·의미 불변 → 기존 Logic 오토메이션·세션의 ID 그대로. 확장 128개는 맨 뒤에 추가(AU는 version hint로 정렬 유지).
+* 확장 범위 16..23 = 코어 최대 파라미터 수(`ParameterSet::kMaxParams` 24)까지 — 모든 이펙트의 모든 파라미터가 자동화 가능.
+* 세션 상태: 바운드 파라미터는 프리셋 JSON(id 기반)으로 저장. 바운드되지 않은 호스트 값은 기존 키(`s·16 + p`, p < 16)를 그대로 쓰고,
+  확장은 새 키 `x<s>_<p>` — v0.7 이전 세션은 그대로 복원, 이전 빌드는 새 키를 무시.
+* 검증: `mfx_plugin_host_tests`(실제 Processor 헤드리스, `-DMFX_BUILD_PLUGIN_TESTS=ON`) — 레이아웃·버전 힌트·v0.7 세션 복원·확장 자동화·상태 왕복 PASS.
+  Logic에서 기존 프로젝트를 열어 오토메이션이 그대로인지는 **수동 확인 필요**(NOT TESTED, K-053).

@@ -218,3 +218,18 @@ python3 research/spice/run_spice.py tolerance …     → E-018
 | noise_gate(기존) −46 | 19.2 dB | 42.7 dB | 0.00 | −0.08 | −5.8 dB | 3 |
 | gate_premium Gate −46 | 52.6 dB | 60.0 dB | 0.00 | 0.00 | −5.2 dB | 4 |
 | gate_premium Expander −46 | 26.3 dB | 39.9 dB | 0.00 | 0.00 | −3.0 dB | 4 |
+
+---
+# 추가: v0.8 Premium Modulation & Host Automation (2026-11-25)
+| 항목 | 상태 | 근거 |
+|---|---|---|
+| 기준 확인: `20e85e4`, 130/130 | PASS | 작업 전 |
+| 팩토리 01–10, 기존 chorus/flanger/phaser/tremolo/vibrato, Gate/EQ/BBD/Tape/FET/AB763/Custom Drive/Plate = v0.7 | PASS (비트 동일) | v0.7 빌드 vs 후보 cmp |
+| 새 모듈레이션 7종 측정 테스트(보간 비교 포함) | PASS | `test_modulation_v08.cpp` 9개 |
+| 일반 테스트(44.1/48/96 kHz × 블록 1/17/512 유한·경계, 블록 크기 불변), 극단 파라미터·NaN·무음(44.1–192 kHz) | PASS | 자동 + `premium_modulation_extremes_*` |
+| 콜백 할당 0 (모드·스테이지·속도 변경 포함) | PASS | performance |
+| C++ 전체 | PASS 141/141 | `cpp_tests.json` |
+| ASan (v0.8 관련) | PASS 0건 | `sanitizer_asan_v08.txt` |
+| 호스트 파라미터 레이아웃(실제 Processor, 헤드리스) | PASS | `plugin_host_params_v08.txt` |
+| pluginval strictness 7 (VST3 Linux, GUI 제외, `--timeout-ms` 연장) | PASS | `pluginval_vst3_linux_strict7_v08.txt`, K-054 |
+| macOS·auval·Logic(오토메이션·로딩), 청취 | NOT TESTED | K-053, K-058 |

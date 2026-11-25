@@ -10,6 +10,7 @@
 #include "dsp/dynamics/FetCompressor.h"
 #include "dsp/dynamics/PremiumGate.h"
 #include "dsp/filters/PremiumEQ.h"
+#include "dsp/modulation/PremiumMod.h"
 #include "dsp/cabinet/Cabinet.h"
 #include "dsp/delay/Delay.h"
 #include "dsp/drive/CustomDrive.h"
@@ -43,6 +44,9 @@ const std::vector<Entry>& entries() {
         {"amp", mk<AmpSim>}, {"amp_ab763", mk<AB763Amp>}, {"nam_amp", mk<NamAmp>}, {"cabinet", mk<Cabinet>},
         {"chorus", mk<Chorus>}, {"flanger", mk<Flanger>}, {"phaser", mk<Phaser>},
         {"tremolo", mk<Tremolo>}, {"vibrato", mk<Vibrato>},
+        {"chorus_premium", mk<PremiumChorus>}, {"vibrato_premium", mk<PremiumVibrato>}, {"phaser_premium", mk<PremiumPhaser>},
+        {"univibe_premium", mk<PremiumUnivibe>}, {"flanger_premium", mk<PremiumFlanger>}, {"tremolo_premium", mk<PremiumTremolo>},
+        {"rotary_premium", mk<PremiumRotary>},
         {"delay", mk<Delay>}, {"reverb", mk<Reverb>}, {"reverb_plate_premium", mk<PremiumPlate>},
         {"delay_tape_premium", mk<TapeEcho>}, {"delay_bbd_premium", mk<BbdDelay>},
     };

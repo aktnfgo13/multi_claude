@@ -146,6 +146,12 @@ Processor::Processor() : AudioProcessor(makeBuses()) {
             addParameter(slotParams_[(size_t)s][(size_t)p]);
         }
     }
+    // v0.8 extension: appended after the whole legacy layout (existing indices / IDs unchanged)
+    for (int s = 0; s < Engine::kMaxSlots; ++s)
+        for (int p = kParamsPerSlot; p < kTotalParamsPerSlot; ++p) {
+            slotParams_[(size_t)s][(size_t)p] = new SlotParameter(engine_, s, p, kExtVersionHint);
+            addParameter(slotParams_[(size_t)s][(size_t)p]);
+        }
     for (int i = 0; i < BinaryData::namedResourceListSize; ++i) {
         int size = 0;
         const char* data = BinaryData::getNamedResource(BinaryData::namedResourceList[i], size);
@@ -193,7 +199,7 @@ void Processor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer&
     // host automation -> live effect parameters (audio-thread safe path)
     for (int s = 0; s < Engine::kMaxSlots; ++s) {
         if (bypassParams_[(size_t)s]->consumeDirty()) engine_.setBypass(s, bypassParams_[(size_t)s]->getValue() >= 0.5f);
-        for (int p = 0; p < kParamsPerSlot; ++p) {
+        for (int p = 0; p < kTotalParamsPerSlot; ++p) {
             auto* sp = slotParams_[(size_t)s][(size_t)p];
             if (sp->consumeDirty()) engine_.setParameterRT(s, p, sp->getValue());
         }
@@ -213,7 +219,7 @@ void Processor::timerCallback() {
         Effect* fx = engine_.effect(s);
         if (!fx) continue; // unbound host parameters keep whatever the host set
         bypassParams_[(size_t)s]->mirror(engine_.isBypassed(s) ? 1.0f : 0.0f);
-        for (int p = 0; p < std::min(kParamsPerSlot, fx->params().size()); ++p) {
+        for (int p = 0; p < std::min(kTotalParamsPerSlot, fx->params().size()); ++p) {
             auto* sp = slotParams_[(size_t)s][(size_t)p];
             if (sp->consumeHostChange()) fx->params().setNormalized(p, sp->getValue()); // host wins
             else sp->mirror(fx->params().getNormalized(p));                            // MIDI / UI / internal
@@ -246,7 +252,7 @@ void Processor::setEffectParam(int slot, int param, float plain) {
     Effect* fx = engine_.effect(slot);
     if (!fx || param < 0 || param >= fx->params().size()) return;
     fx->params().set(param, plain); // immediate (atomic) for responsiveness
-    if (param < kParamsPerSlot) {
+    if (param < kTotalParamsPerSlot) {
         auto* sp = slotParams_[(size_t)slot][(size_t)param];
         const float n = fx->params().getNormalized(param);
         sp->beginChangeGesture();
@@ -296,11 +302,16 @@ void Processor::setCurrentProgram(int i) {
     loadPresetJson(factory_[(size_t)i].second, err);
 }
 
+std::string Processor::hostParamKey(int s, int p) {
+    // legacy keys (p < 16) keep the v0.2 format so older builds read them; extension keys are distinct
+    return p < kParamsPerSlot ? std::to_string(s * kParamsPerSlot + p) : "x" + std::to_string(s) + "_" + std::to_string(p);
+}
+
 void Processor::getStateInformation(juce::MemoryBlock& dest) {
     // Host changes that the audio thread may not have applied yet (e.g. transport stopped)
     for (int s = 0; s < Engine::kMaxSlots; ++s) {
         Effect* fx = engine_.effect(s); // message thread: owned pointer is stable here
-        for (int p = 0; p < kParamsPerSlot; ++p) {
+        for (int p = 0; p < kTotalParamsPerSlot; ++p) {
             auto* sp = slotParams_[(size_t)s][(size_t)p];
             if (sp->consumeHostChange() && fx && p < fx->params().size()) fx->params().setNormalized(p, sp->getValue());
         }
@@ -311,9 +322,9 @@ void Processor::getStateInformation(juce::MemoryBlock& dest) {
     for (int s = 0; s < Engine::kMaxSlots; ++s) {
         Effect* fx = engine_.effect(s);
         if (!fx) unbound["b" + std::to_string(s)] = bypassParams_[(size_t)s]->getValue();
-        for (int p = 0; p < kParamsPerSlot; ++p)
+        for (int p = 0; p < kTotalParamsPerSlot; ++p)
             if (!fx || p >= fx->params().size())
-                unbound[std::to_string(s * kParamsPerSlot + p)] = slotParams_[(size_t)s][(size_t)p]->getValue();
+                unbound[hostParamKey(s, p)] = slotParams_[(size_t)s][(size_t)p]->getValue();
     }
     j[kHostParamsKey] = unbound;
     const auto s = j.dump(2);
@@ -332,9 +343,17 @@ void Processor::setStateInformation(const void* data, int size) {
                 if (s >= 0 && s < Engine::kMaxSlots && !engine_.effect(s)) bypassParams_[(size_t)s]->mirror((float)v.asNumber());
                 continue;
             }
-            const int id = std::atoi(k.c_str());
-            const int s = id / kParamsPerSlot, p = id % kParamsPerSlot;
-            if (s >= 0 && s < Engine::kMaxSlots) slotParams_[(size_t)s][(size_t)p]->mirror((float)v.asNumber());
+            int s = -1, p = -1;
+            if (k[0] == 'x') { // v0.8 extension key "x<slot>_<param>"
+                s = std::atoi(k.c_str() + 1);
+                const auto u = k.find('_');
+                p = u == std::string::npos ? -1 : std::atoi(k.c_str() + u + 1);
+            } else {           // legacy key: slot * 16 + param (v0.2 - v0.7)
+                const int id = std::atoi(k.c_str());
+                s = id / kParamsPerSlot; p = id % kParamsPerSlot;
+            }
+            if (s >= 0 && s < Engine::kMaxSlots && p >= 0 && p < kTotalParamsPerSlot)
+                slotParams_[(size_t)s][(size_t)p]->mirror((float)v.asNumber());
         }
 }
 

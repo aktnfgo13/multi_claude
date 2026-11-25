@@ -274,6 +274,76 @@ UI 표시는 아직 없습니다(KNOWN_ISSUES K-006).
 * 메모리 128 KiB(16384 × 2 float, v1 포함 고정, 샘플레이트 무관). CPU 스테레오 48 kHz 0.84 %(v2 2 chips; v1 0.61 %).
 * 미구현: BBD 히스/클록 누설(잡음 바닥 상호작용은 컴팬더 정합까지만), 칩별 전하 전송 손실.
 
+## Premium Modulation (v0.8)
+### 기존 모듈레이션 감사 (변경 없음, 출력 비트 동일)
+| 타입 | 클래스 | 구조 | 한계 |
+|---|---|---|---|
+| `chorus` | Chorus(ModDelayEffect) | Hermite 지연 1탭, 사인 LFO, L/R 위상 오프셋 | 피드백·톤·캐릭터 없음 |
+| `flanger` | Flanger | 같은 코어, 8 kHz 1극 LPF 피드백 | 스루제로 없음, 피드백 루프가 전체 지연 |
+| `vibrato` | Vibrato | 1 ms + 최대 3 ms 스윙 | 깊이가 ms(레이트에 따라 음정 편차 변함), 비대칭·드리프트 없음 |
+| `phaser` | Phaser | 1차 올패스 4/6/8/12 동일, 8샘플마다 계수 | 범위가 중심 ±2옥타브 고정, 스테이지 불일치 없음 |
+| `tremolo` | Tremolo | 선형 이득 LFO(사인/삼각/소프트 사각), 팬 | 광학/바이어스/하모닉 없음 |
+| (없음) | — | 로터리·유니바이브 | — |
+
+### 공통 기반 (`src/dsp/modulation/PremiumMod.h`)
+* `ModLfo`: double 위상 누적(`cyc_`), 증분을 50 ms 1극으로 평활(레이트 변경 시 위상 점프 없음), Sine/Triangle/Asym(skew)/Smooth Random
+  (정수 사이클 해시 + smoothstep — 블록 크기·재생 위치 무관, 재현 가능), 채널별 위상 오프셋, `maxSlope()`로 깊이 보정. 템포 싱크 공통.
+* 분수 지연 보간 비교(6 kHz 사인, 5 Hz ±40샘플 변조, 해석해 대비 오차 / x86 ns/샘플):
+  선형 −25.3 dB / 37, **Hermite −42.2 dB / 46(채택: 기존 `DelayLine` 재사용)**, Lagrange 3차 −44.5 dB / 43, Thiran 1차 +3.0 dB / 39
+  (Thiran은 시변 지연에서 상태 과도 — 부적합). Lagrange는 +2.3 dB 개선이지만 기존 검증된 경로 재사용을 우선(D-066).
+* 필터: 1차 TPT 올패스(`ApTpt`, 제어율 8샘플 목표 + 샘플별 G 선형 램프), `Lr4` 크로스오버(합 = 평탄 올패스).
+
+### Premium Chorus (`chorus_premium`)
+지연 = Delay + Depth·6 ms·(1+m)/2 + Drift(최대 1.5 ms, 0.13 Hz 무작위). Voices 1–3(위상 균등 분배, 1/√V 정규화), Stereo Phase 0–180°,
+Feedback ±70 %(tanh), Tone. Character BBD: 칩 입력 소프트 리밋 + 4차 AA + 4차 재구성(지연 경로 앞뒤), Clean: 2차 LPF.
+측정: 레이트 1.000 Hz(설정 1), 피크 음정 16.35 cents(이론 16.24), L/R 상관 0.75, 모노 합 레벨 변동 0.43 dB, 빠른 파라미터 변경 클릭 없음(1.30배).
+장기 스펙트럼 콤 피크도(1/24 옥타브): 1 voice 2.31 dB, 2 voices 2.72, 3 voices 3.05, 기존 chorus 2.30 → 기본 1 voice(D-067). 32 KiB(48 kHz).
+
+### Premium Vibrato (`vibrato_premium`)
+100 % 웻 피치 변조. 깊이는 **cents**: 스윙 A = (2^(c/1200) − 1)/(f·maxSlope)·fs → 레이트·파형과 무관하게 피크 음정 편차 = 설정값
+(측정 오차 ≤ 3 %, 사인/삼각/비대칭, 2–9 Hz, 10–50 cents). 중심 지연 5 ms 정수 샘플 = 보고 지연(48 kHz 240샘플), 깊이 0이면 지연된 입력과 비트 동일.
+스윙 한계(중심 지연 − 3샘플)로 느린 레이트에서 최대 깊이 제한. Analog Drift(깊이 ±30 %·위상 흔들림), Stereo Variation. 레이트 급변 클릭 없음(1.02배).
+
+### Premium Phaser (`phaser_premium`)
+2/4/6/8/12단 1차 TPT 올패스, 스윕 f = Lo·(Hi/Lo)^((1+depth·m)/2)(지수), 깊이·범위는 log 영역 50 ms 평활(점프 클릭 8.2 → 1.33배로 수정),
+Feedback ±95 %(포화 앰프 tanh(k v)/k, Character가 k와 스테이지 불일치 ±12 % 결정), Stereo Phase.
+측정: 정적 노치 = 이론 fc·tan((2k+1)π/2N)(쌍선형 보정) 대비 −0.02 %(4·8단), 스윕 300.0–3000.0 Hz(설정 300–3000), ±95 % 피크 < 1.1, 180° L/R 상관 0.32.
+
+### Premium Uni-Vibe (`univibe_premium`) — 페이저 재명명이 아님
+4단 커패시터 15 nF / 220 nF / 470 pF / 4.7 nF(공개 회로도 값)에 **하나의 LDR 저항** → 스테이지 코너 비 468배(페이저는 동일 스테이지).
+비대칭 위상천이 발진기 → 램프(가열 8 ms / 냉각 30 ms) → 포토셀(어택 5 ms / 릴리즈 40 ms) → R = 4 kΩ·(1/c)^0.7(근사, 실측 아님).
+측정(1 Hz, 100 %): 스윕 상승 0.21 s vs 하강 0.38 s(비대칭), 범위 5.2배; Vibrato 모드 피크 6.3 cents vs Chorus 모드 3.1 cents(노치 중심).
+
+### Premium Flanger (`flanger_premium`)
+같은 선에서 고정 드라이 탭 D = 4.5 ms(보고 지연 216샘플@48 kHz)와 변조 웻 탭 D + rel.
+Through-Zero: rel ∈ [−D, D] — 웻과 드라이의 상대 시간이 실제로 교차(측정 −2.16…+3.16 ms), rel = 0이면 출력 = 지연된 입력(콤 소멸).
+Classic: rel > 0, 피드백 루프가 상대 지연 주위(w(t) = x(t−D−rel) + fb·w(t−rel)) — 양/음 피드백 피크가 k/τ, (k+½)/τ에 정확히(±18.2 dB).
+TZ 모드의 피드백은 rel ≤ 0 때문에 전체 탭(D + rel) 주위(문서화된 차이). 정적 노치 500/1500 Hz(τ 1 ms) 완전 소거, ±95 % 유한.
+
+### Premium Tremolo (`tremolo_premium`)
+* Optical: 램프 가열 4 ms / 냉각 12–42 ms(Character) → 광 ^0.6 → 이득. 깊이가 얕고 둥근 엔벨로프(측정 100 %에서 11.0 dB, 상승 443 < 하강 480 프레임).
+* Bias: 이득 곡선 1 − d·((1−m)/2)^1.4 + 바이어스 이동에 비례한 2차 고조파(THD 1.30 % vs Optical 0.00 %), 깊이 62.9 dB.
+* Harmonic: LR4 크로스오버(200–2000 Hz), 저역/고역 반대 위상 이득(엔벨로프 상관 −0.92), 깊이 0에서 평탄도 0.00 dB.
+레이트 정확도 5.00 Hz(세 모델), Square 모양 최대 이득 계단 0.004/샘플, Pan 모드 L/R 균형 −0.08 dB.
+
+### Premium Rotary (`rotary_premium`)
+LR4 800 Hz → 혼(고역) / 드럼(저역). 속도 Slow/Fast/Brake: 혼 0.80/6.80 rev/s, 드럼 0.66/5.90(공개 자료의 대표값), 관성 1차
+(혼 0.7 s 가속/0.9 s 감속, 드럼 3.5/4.5 s, Acceleration으로 배율). 도플러 지연 r/c·cos θ(혼 0.15 m, 드럼 0.10 m), 지향성 AM
+(혼 0.6, 드럼 0.35 × Depth), 가상 마이크 2개 ±Width·90°, Drive(전단 tanh). 기본 지연 69샘플@48 kHz(보고).
+측정: 혼 0.79/6.80 Hz, 드럼 0.66/5.90 Hz, 63 % 가속 혼 0.70 s / 드럼 3.50 s, 혼 도플러 32.6 cents(이론 32.0), Fast L/R 상관 0.03,
+모노 합 레벨 변동 2.98 dB(실제 로터리처럼 진폭 변조 남음), 깊이 0 크로스오버 평탄 0.00 dB.
+
+### CPU / 메모리 / 지연 (스테레오 48 kHz, x86 단일 코어, `cpu_percent_stereo_48k_*`)
+| 타입 | CPU | 메모리(48 kHz / 192 kHz) | 지연 |
+|---|---|---|---|
+| chorus_premium | 0.74 % (기존 0.36) | 32 / 128 KiB | 0 |
+| vibrato_premium | 0.59 % (기존 0.36) | 4 / 16 KiB | 5 ms (240) |
+| phaser_premium | 0.67 % (기존 0.21) | < 1 KiB | 0 |
+| univibe_premium | 0.21 % | < 1 KiB | 0 |
+| flanger_premium | 0.22 % (기존 0.35) | 16 / 64 KiB | 4.5 ms (216) |
+| tremolo_premium | 0.42 % (기존 0.16) | < 1 KiB | 0 |
+| rotary_premium | 0.52 % | 4 / 16 KiB | 1.4 ms (69) |
+
 ## Delay 스테레오 보강 (v0.6, 기존 `delay`)
 확인 결과 기존: Mono/Stereo(R 시간 = L × (1 + Offset))/Ping-Pong, 템포 싱크, Mix/Feedback 평활, 트레일 있음.
 추가(끝에 덧붙임, 기본값 = 기존 동작, v0.5와 출력 비트 동일 확인):

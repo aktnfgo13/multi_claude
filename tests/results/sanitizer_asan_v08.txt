@@ -1,0 +1,31 @@
+[PASS] audio.mod_fractional_delay_interpolator_comparison          12.1 ms 
+
+1 passed, 0 failed, 1 checks
+[PASS] audio.chorus_premium_rate_depth_stereo_and_mono            278.6 ms 
+[PASS] audio.chorus_premium_metallic_artifacts_and_fast_changes   9166.2 ms 
+
+2 passed, 0 failed, 5 checks
+[PASS] audio.vibrato_premium_depth_accuracy_zero_depth_and_rate_changes   1045.7 ms 
+
+1 passed, 0 failed, 8 checks
+[PASS] audio.phaser_premium_notches_sweep_feedback_and_stereo    1530.8 ms 
+
+1 passed, 0 failed, 13 checks
+[PASS] audio.univibe_premium_differs_from_phaser                   45.4 ms 
+
+1 passed, 0 failed, 3 checks
+[PASS] audio.flanger_premium_comb_through_zero_feedback_latency     88.3 ms 
+
+1 passed, 0 failed, 8 checks
+[PASS] audio.tremolo_premium_models_differ_rate_depth_crossover    343.5 ms 
+
+1 passed, 0 failed, 9 checks
+[PASS] audio.rotary_premium_speeds_inertia_doppler_stereo         719.0 ms 
+
+1 passed, 0 failed, 6 checks
+[PASS] audio.premium_modulation_extremes_nan_silence_all_rates    836.4 ms 
+
+1 passed, 0 failed, 56 checks
+[PASS] audio.all_effects_finite_bounded_at_all_rates_and_blocks  11060.5 ms 
+
+1 passed, 0 failed, 624 checks

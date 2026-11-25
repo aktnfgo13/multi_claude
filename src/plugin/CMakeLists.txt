@@ -61,3 +61,19 @@ if(MFX_BUILD_UI_SNAPSHOT)
   target_compile_definitions(mfx_ui_snapshot PRIVATE JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0)
   target_link_libraries(mfx_ui_snapshot PRIVATE mfx_core juce::juce_gui_basics juce::juce_recommended_config_flags)
 endif()
+
+# Developer test (never shipped): host-parameter layout / session compatibility of the real Processor (K-048).
+option(MFX_BUILD_PLUGIN_TESTS "Build the headless plug-in host-parameter tests" OFF)
+if(MFX_BUILD_PLUGIN_TESTS)
+  juce_add_console_app(mfx_plugin_host_tests PRODUCT_NAME "mfx_plugin_host_tests")
+  target_sources(mfx_plugin_host_tests PRIVATE ${CMAKE_SOURCE_DIR}/tests/plugin/test_host_params.cpp
+    PluginProcessor.cpp PluginEditor.cpp
+    ${CMAKE_SOURCE_DIR}/src/ui/LookAndFeel.cpp ${CMAKE_SOURCE_DIR}/src/ui/ChainView.cpp
+    ${CMAKE_SOURCE_DIR}/src/ui/ParamPanel.cpp ${CMAKE_SOURCE_DIR}/src/ui/AnalysisView.cpp)
+  target_include_directories(mfx_plugin_host_tests PRIVATE ${CMAKE_SOURCE_DIR}/src)
+  target_compile_definitions(mfx_plugin_host_tests PRIVATE JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0
+    JucePlugin_Name="MFX Claude" JucePlugin_IsSynth=0 JucePlugin_WantsMidiInput=1 JucePlugin_ProducesMidiOutput=0
+    JucePlugin_IsMidiEffect=0 JucePlugin_EditorRequiresKeyboardFocus=0 JUCE_STANDALONE_APPLICATION=1)
+  target_link_libraries(mfx_plugin_host_tests PRIVATE mfx_core MultiEffectsPresets juce::juce_audio_utils juce::juce_dsp
+    juce::juce_recommended_config_flags)
+endif()

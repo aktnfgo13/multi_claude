@@ -104,3 +104,14 @@
 | D-063 | ADOPT | BBD `model` v1/v2 + `chips`, 기존 저장은 v1 | R6, v1 비트 동일(12 조건 cmp) | 새 타입(중복) |
 | D-064 | ADOPT | v2 컴팬더 바닥 정합 | 저레벨 정적 이득 1(−70 dBFS v1 −17 dB), 발진 시작 가능 | 유지 |
 | D-065 | ADOPT | v2 루프 레벨 조절(포락선 기반) + asinh | 클리퍼에만 의존하지 않는 자기 발진 안정화(0.49 유지) | 출력 클리핑 |
+
+## v0.8 Premium Modulation & Host Automation (2026-11-25)
+
+| ID | 분류 | 결정 | 이유 | 대안 |
+|---|---|---|---|---|
+| D-066 | KEEP | 분수 지연 = 기존 Hermite `DelayLine` | 선형 대비 −17 dB 오차, Lagrange와 2.3 dB 차, 검증된 경로 재사용 | Lagrange 3차, Thiran(시변 부적합) |
+| D-067 | ADOPT | Premium Chorus 기본 1 voice | 측정상 voice가 늘수록 콤 피크도 증가(2.31/2.72/3.05 dB) | 2 voices 기본 |
+| D-068 | ADOPT | Vibrato 깊이 단위 = cents(레이트·파형 보정) | 레이트를 바꿔도 음정 편차 일정, 측정 가능 | ms 스윙(기존) |
+| D-069 | ADOPT | Flanger: 고정 드라이 탭 + 변조 탭(TZ), 지연 4.5 ms 상시 보고 | 실제 스루제로 교차, 모드 전환 시 지연 불변 | 모드별 지연(호스트 지연 재보고) |
+| D-070 | ADOPT | 호스트 파라미터 확장 = 기존 레이아웃 뒤에 슬롯당 8개 추가(version hint 2) | JUCE ID가 인덱스 기반 → 기존 인덱스 불변이면 기존 오토메이션 유지. 8 = kMaxParams − 16(최소) | kParamsPerSlot 증가(슬롯 1 이후 ID 전부 이동 — 금지), 문자열 ID 전환(기존 세션 깨짐) |
+| D-071 | ADOPT | 7종 모두 새 타입, 기존 5종 무변경 | R6, 기존 프리셋·자동화 보존 | 기존 타입에 모델 파라미터 추가 |

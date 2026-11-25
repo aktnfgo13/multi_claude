@@ -1,0 +1,19 @@
+{
+  "format": "mfx-preset",
+  "version": 1,
+  "name": "Univibe Rotary Lead",
+  "input_gain_db": 0,
+  "output_gain_db": 0,
+  "tempo_bpm": 120,
+  "parallel": false,
+  "parallel_mix": 0.5,
+  "chain": [
+    {"type": "gate_premium", "params": {"threshold_db": -54, "mode": 1, "ratio": 4, "sc_hpf_hz": 100}},
+    {"type": "univibe_premium", "params": {"speed_hz": 2.2, "intensity": 75, "mode": 0, "volume_db": 0}},
+    {"type": "custom_drive", "params": {"drive": 40, "tone": 55, "level": -2}},
+    {"type": "amp_ab763", "params": {"volume": 5, "treble": 6, "bass": 4, "mix": 100, "level": -5, "oversampling": 1, "model": 1}},
+    {"type": "cabinet", "params": {}},
+    {"type": "rotary_premium", "params": {"speed": 0, "accel": 100, "depth": 70, "width": 70, "mix": 40}},
+    {"type": "reverb_plate_premium", "params": {"decay_s": 1.8, "predelay_ms": 20, "mix": 12}}
+  ]
+}

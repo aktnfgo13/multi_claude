@@ -222,3 +222,29 @@ TEST(performance, no_heap_allocation_or_free_v07_gate_eq_bbd2) {
     CHECK_MSG(gAllocs.load() == 0 && gFrees.load() == 0, gAllocs.load() << " allocations, " << gFrees.load() << " frees");
     CHECK(allFinite(l) && allFinite(r));
 }
+
+TEST(performance, no_heap_allocation_or_free_v08_modulation) {
+    Engine e;
+    e.prepare(48000, 512);
+    for (const char* id : {"chorus_premium", "vibrato_premium", "phaser_premium", "univibe_premium", "flanger_premium",
+                           "tremolo_premium", "rotary_premium"})
+        e.addEffect(createEffect(id));
+    std::vector<float> x = makeNoise(512, 0.5), l(512), r(512);
+    const float* in[1] = {x.data()};
+    float* out[2] = {l.data(), r.data()};
+    e.process(in, 1, out, 2, 512);
+    const auto slots = e.allSlotsInOrder(); // (allocates: outside the counted region)
+    gAllocs = 0; gFrees = 0;
+    gCountAllocs = true;
+    for (int i = 0; i < 200; ++i) {
+        if (i == 20) e.effect(slots[0])->setParam("voices", 2.0f);
+        if (i == 30) e.effect(slots[2])->setParam("stages", 4.0f);
+        if (i == 40) e.effect(slots[4])->setParam("mode", 0.0f);
+        if (i == 50) e.effect(slots[5])->setParam("model", 2.0f);
+        if (i == 60) e.effect(slots[6])->setParam("speed", 1.0f);
+        e.process(in, 1, out, 2, 512);
+    }
+    gCountAllocs = false;
+    CHECK_MSG(gAllocs.load() == 0 && gFrees.load() == 0, gAllocs.load() << " allocations, " << gFrees.load() << " frees");
+    CHECK(allFinite(l) && allFinite(r));
+}

@@ -51,8 +51,14 @@
 | K-045 | OPEN | P1 | v0.6 macOS 네이티브 빌드·auval·Logic 미확인 (K-037 포함) | 사용자 Mac `scripts/macos_build_install_verify.sh` |
 | K-046 | FIXED (v0.6.1) | P1 | **AB763 M2 고역 잡음 증폭(026.wav DI 히스)**. 원인: NFB 경로에 넣었던 20 kHz(또는 0.2·fs_OS) 2차 LPF가 Nyquist 근처에서 피드백을 잃게 해 10–20 kHz를 M1 대비 +5…+15 dB(1x에서는 14 kHz +18 dB 피크, 샘플레이트 의존) 끌어올림 → DI의 백색 히스(−74.5 dBFS RMS)가 증폭. DSP 자체 잡음·발진은 없음(디지털 무음 → 정확히 0, 조용한 구간 출력 = |H|²×입력 잡음 ±0.1 dB). | 수정: 회로처럼 저항성(광대역) 피드백. 7 kHz 이하 응답 변화 ≤ 0.3 dB, THD 동일, M1 비트 동일. 테스트 `ab763_m2_no_hf_peaking_and_rate_independent_treble` |
 | K-047 | OPEN (특성) | P3 | 수정 후에도 M2는 M1보다 10 kHz +4 dB, 95 Hz +6 dB(스피커 보이스코일·공진과 출력관 출력 임피던스의 상호작용, NFB로 제한된 물리적 특성). 잡음이 많은 DI에서는 M2의 히스·저역 잡음이 M1보다 약 2–4 dB 더 들림. 톤스택(Treble 6)이 M1/M2 공통으로 고역 +9 dB | 캐비닛 IR 사용, DI 녹음 레벨 확보(026.wav는 피크 −16.6 dBFS, 잡음 −74.5 dBFS로 SNR이 낮은 편). Noise Gate·고역 컷으로 가리지 않음 |
-| K-048 | OPEN | P2 | 호스트 자동화는 슬롯당 앞 16개 파라미터만 노출. `delay.time_r_ms`(16), `eq_parametric_premium` 밴드 타입(16–20)은 Logic 자동화 불가 | 슬롯당 파라미터 수 확장은 AU 파라미터 레이아웃 변경 → 별도 마이그레이션 설계 필요 |
+| K-048 | FIXED (v0.8: 슬롯당 파라미터 16..23을 레이아웃 끝에 추가, 기존 275개 ID 불변, 헤드리스 테스트 PASS — Logic 수동 확인은 K-053) | P2 | 호스트 자동화는 슬롯당 앞 16개 파라미터만 노출. `delay.time_r_ms`(16), `eq_parametric_premium` 밴드 타입(16–20)은 Logic 자동화 불가 | 슬롯당 파라미터 수 확장은 AU 파라미터 레이아웃 변경 → 별도 마이그레이션 설계 필요 |
 | K-049 | OPEN | P2 | BBD v1은 컴팬더 바닥 불일치로 −60/−70 dBFS에서 −7/−17 dB, 110 % 발진이 잡음에서 시작하지 않음 | v1은 보존(비트 동일), v2에서 수정 |
 | K-050 | OPEN | P3 | Premium EQ는 쌍선형(SVF) — fs/8 위에서 아날로그 원형 대비 벨·셸프 압축(cramping) | 정합(Vicanek) 설계 검토 |
 | K-051 | OPEN | P2 | Premium Gate·EQ·BBD v2 청취, EQ 응답 곡선 화면, Logic 자동화·로딩 미확인 | 사용자 Mac |
 | K-052 | OPEN | P3 | 실제 깨끗한 기타 DI 미보유 — 게이트 검증은 026.wav(잡음 많은 DI)와 합성 신호(SYNTHETIC)로만 | 깨끗한 DI 제공 시 재측정 |
+| K-053 | OPEN | P1 | v0.8 호스트 파라미터 확장(403개)의 Logic 실제 확인 미실행: 기존 프로젝트 오토메이션 유지, 새 파라미터(인덱스 275+) 자동화, AU 캐시 갱신 | 사용자 Mac: v0.7 프로젝트 열기 → 오토메이션 재생 비교, 확장 파라미터 기록·재생 |
+| K-054 | OPEN | P3 | pluginval "Parameter thread safety"가 이 VM에서 기본 30 s 제한에 근접(확장 0개도 전체 35 s) — `--timeout-ms` 연장 시 PASS | Mac에서 재측정 |
+| K-055 | OPEN | P2 | Premium Phaser 스테이지 수 변경은 즉시 전환(크로스페이드 없음) — 변경 순간 위상 불연속 가능 | 이중 체인 크로스페이드 |
+| K-056 | OPEN | P2 | Premium Vibrato 최대 깊이는 중심 지연 5 ms에 묶임 → 0.5 Hz 이하에서 50 cents 이상 불가 | 중심 지연 확장(지연 증가와 교환) |
+| K-057 | OPEN | P2 | Uni-Vibe 램프/LDR, Rotary 회전 속도·반경, Tremolo 광학 계수는 근사/대표값(실측 없음) | 실측 또는 공개 자료 |
+| K-058 | OPEN | P2 | 새 모듈레이션 7종 청취, Logic 로딩, 실제 기타 DI 검증 없음 | 사용자 |

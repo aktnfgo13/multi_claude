@@ -1,0 +1,4 @@
+host parameters: 403 (legacy block 275, extension 128)
+legacy session: slot1=eq_parametric_premium b1_db=6.00 b2_type=5
+slot1 p16 name: S2 Band 1 Type
+host parameter layout: PASS

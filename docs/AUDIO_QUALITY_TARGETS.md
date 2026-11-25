@@ -30,7 +30,7 @@
 | 4 | 실측·청음 기반 최적화 | 실제 장비 측정 데이터 대비 오차, 블라인드 청취 |
 | 5 | 상용 고급 제품과 비교 검증 완료 | 같은 조건의 ABX·지표 비교 |
 
-## 3. 현재 블록 평가 (2026-11-25, v0.7 코드·테스트 기준)
+## 3. 현재 블록 평가 (2026-11-25, v0.8 코드·테스트 기준)
 | 블록 | Level | 근거 / 부족한 점 |
 |---|---|---|
 | Custom Drive v2 | 2 | 해석적 곡선, parity(Python/C++), Codex 대비 공통 하니스 측정. 실측·청취 없음 |
@@ -52,6 +52,13 @@
 | Premium EQ (`eq_parametric_premium`) | 2 | 설계 대비 0.027 dB, 4개 레이트 일치, 스윕·타입 전환 클릭 없음. 정합 설계 미적용 |
 | BBD v2 | 3 (청취 전) | 다중 칩·클록 추종 필터·컴팬더 바닥 정합·루프 레벨 조절, v1/v2 비교표. 실기 비교 없음 |
 | Noise Gate / Parametric EQ / Graphic EQ (기존) | 1–2 | 보존(비트 동일) |
+| Premium Chorus / Vibrato | 2–3 (청취 전) | 레이트·깊이(cents) 측정 일치, 클릭 없음. 실기 비교 없음 |
+| Premium Phaser | 2 | 노치 위치 이론 대비 0.02 %, 범위 정확, 피드백 안정 |
+| Premium Uni-Vibe | 3 (근사, 청취 전) | 비균일 스테이지·램프/LDR 비대칭 모델. 램프·LDR 계수는 실측 아님 |
+| Premium Flanger | 2–3 | 스루제로 교차 실제 구현, 콤·피드백 피크 이론 일치 |
+| Premium Tremolo | 2–3 | 세 모델 측정상 구별(깊이·THD·대역 위상) |
+| Premium Rotary | 3 (청취 전) | 혼/드럼 속도·관성·도플러 이론 일치. 캐비닛 공진·반사 없음 |
+| 기존 chorus/flanger/phaser/tremolo/vibrato | 1–2 | 보존(비트 동일) |
 | NAM | 2 (로더) | 공식 core, 모델 품질은 캡처에 의존. SR 불일치 시 바이패스 |
 | 실시간/플랫폼 | — | Linux x86_64·arm64 VM 테스트, macOS 네이티브 빌드·auval PASS(v0.4), Logic GUI는 사용자 확인 |
 

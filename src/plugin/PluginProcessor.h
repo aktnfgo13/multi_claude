@@ -31,7 +31,8 @@ public:
         ParamInfo toInfo(const char** choicePtrs) const;
     };
 
-    SlotParameter(Engine& e, int slot, int index) : engine_(e), slot_(slot), index_(index) {}
+    SlotParameter(Engine& e, int slot, int index, int versionHint = 0)
+        : juce::AudioProcessorParameter(versionHint), engine_(e), slot_(slot), index_(index) {}
     float getValue() const override { return value_.load(); }
     void setValue(float v) override;
     float getDefaultValue() const override;
@@ -63,7 +64,14 @@ private:
 
 class Processor : public juce::AudioProcessor, private juce::Timer {
 public:
-    static constexpr int kParamsPerSlot = 16;
+    // Host parameter layout (IDs are index-based in the JUCE AU/VST3 wrappers, see docs/PARAMETER_SPECIFICATION.md §4):
+    //   [0..2] globals, then per slot s: bypass + parameters 0..15  (v0.2 layout, never reordered)
+    //   v0.8: per slot s parameters 16..(kMaxParams-1) = 16..23 APPENDED after all of the above (version hint 2), so existing
+    //   automation / session data keep their IDs.
+    static constexpr int kParamsPerSlot = 16;      // legacy block per slot
+    static constexpr int kExtParamsPerSlot = ParameterSet::kMaxParams - 16; // v0.8 extension block per slot (appended): up to kMaxParams
+    static constexpr int kTotalParamsPerSlot = kParamsPerSlot + kExtParamsPerSlot;
+    static constexpr int kExtVersionHint = 2;
     Processor();
     ~Processor() override;
 
@@ -85,6 +93,7 @@ public:
     const juce::String getProgramName(int index) override;
     void changeProgramName(int, const juce::String&) override {}
     void getStateInformation(juce::MemoryBlock& destData) override;
+    static std::string hostParamKey(int slot, int param);
     void setStateInformation(const void* data, int sizeInBytes) override;
 
     // ---- message-thread API used by the editor
@@ -106,7 +115,7 @@ private:
     static BusesProperties makeBuses();
     void timerCallback() override;
     Engine engine_;
-    std::array<std::array<SlotParameter*, kParamsPerSlot>, Engine::kMaxSlots> slotParams_{};
+    std::array<std::array<SlotParameter*, kTotalParamsPerSlot>, Engine::kMaxSlots> slotParams_{};
     std::array<SlotParameter*, Engine::kMaxSlots> bypassParams_{};
     juce::AudioParameterFloat* inGain_ = nullptr;
     juce::AudioParameterFloat* outGain_ = nullptr;

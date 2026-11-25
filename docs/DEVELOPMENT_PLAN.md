@@ -60,6 +60,12 @@ v0.7 우선순위: ① v0.5/v0.6 Mac·Logic 확인과 청취 피드백 반영 �
 v0.8 방향: ① Mac/Logic 청취·자동화 확인과 반영 ② 호스트 파라미터 레이아웃(슬롯당 16개 한계) 설계 ③ 실제 깨끗한 DI·리앰프 측정 인프라
 ④ EQ 정합 설계·BBD 잡음 바닥 모델 ⑤ 출시 준비(설치 패키지·서명·Windows 빌드 확인).
 
+## v0.8 Premium Modulation & Host Automation (2026-11-25)
+새 타입 7종(chorus/vibrato/phaser/univibe/flanger/tremolo/rotary _premium), 공통 LFO·올패스·LR4, 호스트 파라미터 확장(K-048), 프리셋 11–12,
+헤드리스 플러그인 호스트 테스트.
+v0.9 방향: ① Mac/Logic 확인(v0.5–v0.8, 특히 K-053 오토메이션) ② 청취 기반 튜닝(모듈레이션·Plate·Gate) ③ 실측(LDR·로터리·실제 DI)
+④ 출시 준비(설치 패키지·코드 서명·Windows 빌드·사용자 매뉴얼) ⑤ 하드웨어 플랫폼 선정 후 ARM 최적화.
+
 ## 다음 마일스톤
 1. M1 (Mac, 사용자): `scripts/macos_build_install_verify.sh` → auval → Logic 체크리스트(BUILD_GUIDE §2) → 결과 로그 전달.
 2. M1b (청취, 사용자): `audio/compare_drive_v2/abx` 블라인드 청취, 프리셋 02/03/05 확인, Custom Drive v2 노브 감각 피드백.

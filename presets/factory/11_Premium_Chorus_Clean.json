@@ -1,0 +1,18 @@
+{
+  "format": "mfx-preset",
+  "version": 1,
+  "name": "Premium Chorus Clean",
+  "input_gain_db": 0,
+  "output_gain_db": 0,
+  "tempo_bpm": 120,
+  "parallel": false,
+  "parallel_mix": 0.5,
+  "chain": [
+    {"type": "gate_premium", "params": {"threshold_db": -56, "mode": 1, "ratio": 4, "sc_hpf_hz": 100}},
+    {"type": "comp_fet", "params": {"input_db": 4, "output_db": 9, "attack_us": 400, "release_ms": 300, "ratio": 0, "mix": 100}},
+    {"type": "amp_ab763", "params": {"volume": 3, "treble": 6, "bass": 4, "mix": 100, "level": 0, "oversampling": 1, "model": 1}},
+    {"type": "cabinet", "params": {}},
+    {"type": "chorus_premium", "params": {"rate_hz": 0.6, "depth": 45, "delay_ms": 10, "mix": 45, "character": 1, "voices": 0, "drift": 20, "spread_deg": 90, "tone_hz": 8000}},
+    {"type": "reverb_plate_premium", "params": {"decay_s": 1.6, "predelay_ms": 15, "mix": 14}}
+  ]
+}

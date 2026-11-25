@@ -26,7 +26,10 @@ preservation of existing models/presets) override anything below.
 * v0.6 types: `delay_tape_premium` (tape transport model), `delay_bbd_premium` (clocked BBD), `comp_fet` (feedback FET
   compressor). `delay` gained 5 appended stereo params whose defaults keep v0.5 output bit-identical — keep it so.
 * v0.7 types: `gate_premium`, `eq_parametric_premium` (TPT SVF). `delay_bbd_premium` gained `model` (v1 = v0.6 bit-exact,
-  legacy default) and `chips`. Host automation exposes only the first 16 params per slot: keep continuous params first.
+  legacy default) and `chips`. Host automation: all params (up to 24 per effect) since v0.8.
+* v0.8 types: chorus/vibrato/phaser/univibe/flanger/tremolo/rotary `_premium` (src/dsp/modulation/PremiumMod.*).
+  Host parameters: the 275-entry v0.2 layout is frozen (index = AU/VST3 ID); params 16..23 per slot are appended after it
+  (version hint 2). Never insert host parameters before existing ones. Plug-in tests: `-DMFX_BUILD_PLUGIN_TESTS=ON`.
 * Unverified items are written as NOT TESTED / BLOCKED. Never claim listening results; never call a GRU model "NAM".
 
 ## Build & test

@@ -1,24 +1,25 @@
 # AI 프로젝트 인수인계 (MFX Claude)
 
-- 갱신일: 2026-11-25 · GitHub `aktnfgo13/multi_claude` `main` · 버전 **0.7.0** (구현 `8b8f942`, 이후 로그 커밋은 `git log`, 직전 v0.6.1 = `ef6c9da`)
+- 갱신일: 2026-11-25 · GitHub `aktnfgo13/multi_claude` `main` · 버전 **0.8.0** (v0.8 커밋은 `git log`로 확인, 직전 v0.7 = `20e85e4`)
 - 대상: ChatGPT / Claude / Codex 등 후속 개발 AI. 추측하지 말고 이 문서와 링크된 파일을 근거로 진행하세요.
 
 ## Quick Context
-- 제품: 기타 멀티이펙터 **MFX Claude 0.7.0** (AU/VST3/Standalone, JUCE 8, 코어 JUCE·OS 독립 C++20). 필수 규칙 `AGENTS.md` R1–R6.
-- v0.7 신규/개선 DSP:
-  ① `gate_premium` — Gate/Expander(소프트 니·Ratio·Range), Peak/RMS 검출, 히스테리시스·Hold, 사이드체인 HPF(오디오 경로 무필터), Stereo Link, dB 영역 램프, 적응 릴리즈(측정으로 채택)
-  ② `eq_parametric_premium` — TPT SVF 5밴드(Off/Bell/Shelf/HPF·LPF 12·24/Notch), log/dB 평활 + 샘플별 계수 램프, 타입 전환 크로스페이드, 응답 곡선 UI
-  ③ BBD v2 (`delay_bbd_premium` `model`/`chips`) — 1/2/4 칩, 클록 추종 AA/재구성, 컴팬더 바닥 정합, 루프 레벨 조절. v1 = v0.6 비트 동일
-  ④ 팩토리 프리셋 10.
-- 측정 요약: 게이트 임계 ±0.1 dB·개폐 0/s(히스 6 dB)·어택 −0.7 dB·서스테인 0 dB, 026.wav 조용한 구간 −49.5 dB(기존 −10.1); EQ 설계 대비 0.027 dB·타입 전환 클릭 없음;
-  BBD 800 ms 비결맞음(앨리어싱) v1 +7.0 dB → v2 2 chips −20.6 dB(대역 1.2 → 1.7 kHz), −70 dBFS 컴팬더 오차 −17 → 0 dB, 110 % 발진 0.49 유지.
-- 호환성: 팩토리 01–09, BBD v1, 기존 noise_gate/parametric_eq/graphic_eq/filter 출력이 v0.6.1과 **비트 동일**. 파라미터 id·AU ID 불변. 기존 저장의 BBD는 v1로 열림.
-- 검증 환경: Linux x86_64 (C++ 130/130, ASan 0건, pluginval strictness 7 PASS), Linux arm64 VM on 사용자 Mac (130/130, `tests/results/arm64_linux_vm_tests_v07.txt` — macOS 네이티브 아님). macOS 네이티브 v0.5–v0.7 미확인.
-- 청취·화면 미확인: Premium Gate/EQ/BBD v2 청취, EQ 곡선 표시, Logic 로딩·자동화(K-051). 깨끗한 실제 DI 없음(K-052).
-- 남은 문제: K-048(호스트 자동화 슬롯당 16개), K-049(BBD v1 컴팬더 바닥), K-050(EQ cramping), K-047(M2 고역 특성), K-039(Tape 메모리).
-- v0.8 방향: Mac/Logic 확인·청취 반영 → 호스트 파라미터 레이아웃 설계 → 깨끗한 DI·리앰프 측정 → EQ 정합 설계·BBD 잡음 바닥 → 출시 준비(설치·서명·Windows).
-- 보호 대상: 위 비트 동일 항목, AB763 M1/M2(v0.6.1 NFB 수정), Custom Drive, Premium Plate, Tape Echo, FET, NAM, Cabinet IR, 설치된 AU, Codex 프로젝트.
-- 읽을 파일: `AGENTS.md` → 이 문서 → `docs/KNOWN_ISSUES.md` → `docs/DSP_SPECIFICATION.md`(Gate/EQ/BBD v2 절) → `docs/INTEGRATION_REPORT.md`(v0.7 표).
+- 제품: 기타 멀티이펙터 **MFX Claude 0.8.0** (AU/VST3/Standalone, JUCE 8, 코어 JUCE·OS 독립 C++20). 필수 규칙 `AGENTS.md` R1–R6.
+- v0.8 신규 모듈레이션(새 타입, 기존 5종 무변경) — `src/dsp/modulation/PremiumMod.*`:
+  `chorus_premium`(Hermite 변조 지연, 1–3 voices, BBD 캐릭터 AA/재구성, 피드백·드리프트), `vibrato_premium`(cents 단위 깊이 보정, 비대칭·드리프트, 지연 5 ms),
+  `phaser_premium`(2–12단 TPT 올패스, Lo/Hi 지수 스윕, 포화 피드백, 스테이지 불일치), `univibe_premium`(비균일 4단 + 램프/LDR 비대칭 모델),
+  `flanger_premium`(실제 스루제로: 고정 드라이 탭 4.5 ms + 변조 탭, Classic 피드백은 상대 지연 주위), `tremolo_premium`(Optical/Bias/Harmonic LR4),
+  `rotary_premium`(혼/드럼 LR4, 관성 가감속, 도플러 + 지향성 AM, 2 마이크). 공통: `ModLfo`(위상 연속·smooth random), `ApTpt`, `Lr4`.
+- CPU(스테레오 48 kHz, x86): 0.21–0.74 % / 메모리 ≤ 32 KiB(48 kHz) / 지연: Vibrato 240, Flanger 216, Rotary 69샘플(보고), 나머지 0.
+- 측정 요약: 보간 비교 Hermite −42.2 dB(선형 −25.3), Vibrato 깊이 오차 ≤ 3 %, Phaser 노치 0.02 %, Flanger TZ 교차 −2.2…+3.2 ms·피드백 피크 ±18 dB,
+  Tremolo 3모델 구별(THD 1.3 % vs 0 %, 대역 상관 −0.92), Rotary 속도 0.79/6.80·0.66/5.90 Hz·가속 0.70/3.50 s·도플러 32.6 cents(이론 32.0).
+- Host Automation(K-048): 해결 — 기존 275개 파라미터 인덱스(=JUCE AU/VST3 ID) 불변, 슬롯당 16..23 확장 128개를 맨 뒤에 추가(version hint 2),
+  세션 키 호환. 헤드리스 Processor 테스트 PASS. **Logic 수동 확인 필요(K-053)**.
+- 호환성: 팩토리 01–10과 기존 이펙트 전부 v0.7과 비트 동일. 새 프리셋 11–12.
+- 검증 환경: Linux x86_64 (C++ 141/141, ASan 0건, pluginval 7 PASS(타임아웃 연장, K-054)). arm64 VM은 INTEGRATION_REPORT. macOS 네이티브 v0.5–v0.8 미확인.
+- 미해결: K-053(Logic 오토메이션), K-055(Phaser 스테이지 전환), K-056(Vibrato 저속 최대 깊이), K-057(근사 계수), K-058(청취·DI), K-047/K-050.
+- 다음 우선순위(v0.9): Mac/Logic 확인 → 청취 튜닝 → 실측(LDR·로터리·DI) → 출시 준비(설치·서명·Windows·매뉴얼) → 하드웨어 ARM 최적화.
+- 읽을 파일: `AGENTS.md` → 이 문서 → `docs/KNOWN_ISSUES.md` → `docs/DSP_SPECIFICATION.md`(Premium Modulation 절) → `docs/PARAMETER_SPECIFICATION.md` §4.
 
 ## A. 프로젝트 개요
 | 항목 | 내용 |
@@ -136,6 +137,16 @@ src/plugin    JUCE AudioProcessor/Editor (얇은 래퍼)       src/ui  JUCE 컴�
 | `src/engine/EffectFactory.cpp`, `CMakeLists.txt` | 등록, 0.7.0 |
 | `tests/audio/test_gate_eq_bbd_v07.cpp` (신규), `tests/audio/test_delay_dynamics_v06.cpp`(v0.6 BBD 테스트를 v1로 고정), `tests/performance/test_performance.cpp` | 테스트 +16 |
 | `presets/factory/10_Premium_Gate_EQ_BBD.json` (신규) | |
+
+## D-6. v0.8 변경 (2026-11-25)
+| 파일 | 변경 |
+|---|---|
+| `src/dsp/modulation/PremiumMod.*` (신규) | 모듈레이션 7종 + 공통 LFO/올패스/LR4 |
+| `src/plugin/PluginProcessor.*` | 호스트 파라미터 확장(뒤에 추가), 세션 키 `x<s>_<p>` |
+| `src/plugin/CMakeLists.txt`, `tests/plugin/test_host_params.cpp` (신규) | `MFX_BUILD_PLUGIN_TESTS` 헤드리스 호스트 테스트 |
+| `src/engine/EffectFactory.cpp`, `CMakeLists.txt` | 등록, 0.8.0 |
+| `tests/audio/test_modulation_v08.cpp` (신규), `tests/performance/test_performance.cpp` | 테스트 +11 |
+| `presets/factory/11_Premium_Chorus_Clean.json`, `12_Univibe_Rotary_Lead.json` (신규) | |
 
 ## E. 테스트 및 검증 (이번 작업, Linux x86_64 클라우드, Release)
 | 명령 | 결과 |
