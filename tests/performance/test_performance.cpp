@@ -248,3 +248,34 @@ TEST(performance, no_heap_allocation_or_free_v08_modulation) {
     CHECK_MSG(gAllocs.load() == 0 && gFrees.load() == 0, gAllocs.load() << " allocations, " << gFrees.load() << " frees");
     CHECK(allFinite(l) && allFinite(r));
 }
+
+TEST(performance, no_heap_allocation_or_free_v09_reverbs) {
+    Engine e;
+    e.prepare(48000, 512);
+    e.addEffect(createEffect("reverb_spring_premium"));
+    e.addEffect(createEffect("reverb_hall_premium"));
+    e.addEffect(createEffect("reverb_shimmer"));
+    std::vector<float> x = makeNoise(512, 0.5), l(512), r(512);
+    const float* in[1] = {x.data()};
+    float* out[2] = {l.data(), r.data()};
+    e.process(in, 1, out, 2, 512);
+    const auto slots = e.allSlotsInOrder();
+    Effect* sp = e.effect(slots[0]);
+    Effect* hall = e.effect(slots[1]);
+    Effect* shim = e.effect(slots[2]);
+    gAllocs = 0; gFrees = 0;
+    gCountAllocs = true;
+    for (int i = 0; i < 200; ++i) {   // size / freeze / interval / structure / character changes while running
+        if (i == 30) hall->setParam("size", 100.0f);
+        if (i == 40) hall->setParam("freeze", 1.0f);
+        if (i == 60) shim->setParam("interval", 2.0f);
+        if (i == 70) shim->setParam("structure", 1.0f);
+        if (i == 80) shim->setParam("freeze", 1.0f);
+        if (i == 90) sp->setParam("character", 90.0f);
+        if (i == 120) hall->setParam("freeze", 0.0f);
+        e.process(in, 1, out, 2, 512);
+    }
+    gCountAllocs = false;
+    CHECK_MSG(gAllocs.load() == 0 && gFrees.load() == 0, gAllocs.load() << " allocations, " << gFrees.load() << " frees");
+    CHECK(allFinite(l) && allFinite(r));
+}

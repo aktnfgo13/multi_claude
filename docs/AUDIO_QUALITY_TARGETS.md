@@ -59,10 +59,15 @@
 | Premium Tremolo | 2–3 | 세 모델 측정상 구별(깊이·THD·대역 위상) |
 | Premium Rotary | 3 (청취 전) | 혼/드럼 속도·관성·도플러 이론 일치. 캐비닛 공진·반사 없음 |
 | 기존 chorus/flanger/phaser/tremolo/vibrato | 1–2 | 보존(비트 동일) |
+| Premium Spring (v0.9) | 2–3 (청취 전) | 분산 처프 측정(300 Hz→3 kHz +5.3 ms), RT60 ±8 %, Drive. 실제 탱크 비교 없음(K-060) |
+| Premium Hall (v0.9) | 2–3 (청취 전) | 대역 RT60 ±15 %, ER/꼬리 분리, L/R 상관 −0.06, Size 무클릭 |
+| Premium Shimmer (v0.9) | 2–3 (청취 전) | 시프트 ±0.02 cents, Feedback/Pre 구조 측정상 구별, 장시간 유한 |
+| Freeze / Ducking (v0.9) | 2 | 전환 무클릭, 웻 전용 덕킹 정확(−12.0 dB). Freeze 드리프트 −3 dB/분(K-059) |
 | NAM | 2 (로더) | 공식 core, 모델 품질은 캡처에 의존. SR 불일치 시 바이패스 |
 | 실시간/플랫폼 | — | Linux x86_64·arm64 VM 테스트, macOS 네이티브 빌드·auval PASS(v0.4), Logic GUI는 사용자 확인 |
 
 ## 4. 다음 Level 상승 조건
 - Level 3 → 4 (AB763, Custom Drive): 실제 앰프/페달 DI·리앰프 측정 데이터, 측정 지연·레벨 보정 후 ESR/MRSTFT·THD 곡선 비교, ABX.
+- v0.9 리버브 목표치: RT60 오차 < 15 %(1 kHz), 전환·Size 변경 시 > 3 kHz 클릭 성분 < −70 dBFS, Freeze 60 s 드리프트 < 3 dB, 덕킹 드라이 오차 < 1e−5.
 - Reverb Level 3: IR 기반 비교(상용 플레이트 IR은 라이선스 확인 필요), 청취.
 - 모든 Level 5 주장: 동일 입력·레벨 매칭 ABX와 정량 지표를 함께 공개.

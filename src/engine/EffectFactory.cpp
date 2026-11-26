@@ -11,6 +11,7 @@
 #include "dsp/dynamics/PremiumGate.h"
 #include "dsp/filters/PremiumEQ.h"
 #include "dsp/modulation/PremiumMod.h"
+#include "dsp/reverb/PremiumSpace.h"
 #include "dsp/cabinet/Cabinet.h"
 #include "dsp/delay/Delay.h"
 #include "dsp/drive/CustomDrive.h"
@@ -48,7 +49,8 @@ const std::vector<Entry>& entries() {
         {"univibe_premium", mk<PremiumUnivibe>}, {"flanger_premium", mk<PremiumFlanger>}, {"tremolo_premium", mk<PremiumTremolo>},
         {"rotary_premium", mk<PremiumRotary>},
         {"delay", mk<Delay>}, {"reverb", mk<Reverb>}, {"reverb_plate_premium", mk<PremiumPlate>},
-        {"delay_tape_premium", mk<TapeEcho>}, {"delay_bbd_premium", mk<BbdDelay>},
+        {"delay_tape_premium", mk<TapeEcho>},
+        {"reverb_hall_premium", mk<PremiumHall>}, {"reverb_spring_premium", mk<PremiumSpring>}, {"reverb_shimmer", mk<PremiumShimmer>}, {"delay_bbd_premium", mk<BbdDelay>},
     };
     return e;
 }

@@ -1,25 +1,25 @@
 # AI 프로젝트 인수인계 (MFX Claude)
 
-- 갱신일: 2026-11-25 · GitHub `aktnfgo13/multi_claude` `main` · 버전 **0.8.0** (구현 `5d1aec6`, 이후 로그 커밋은 `git log`, 직전 v0.7 = `20e85e4`)
+- 갱신일: 2026-11-26 · GitHub `aktnfgo13/multi_claude` `main` · 버전 **0.9.0** (구현 커밋은 `git log`, 직전 v0.8 = `dccc7ec`)
 - 대상: ChatGPT / Claude / Codex 등 후속 개발 AI. 추측하지 말고 이 문서와 링크된 파일을 근거로 진행하세요.
 
 ## Quick Context
-- 제품: 기타 멀티이펙터 **MFX Claude 0.8.0** (AU/VST3/Standalone, JUCE 8, 코어 JUCE·OS 독립 C++20). 필수 규칙 `AGENTS.md` R1–R6.
-- v0.8 신규 모듈레이션(새 타입, 기존 5종 무변경) — `src/dsp/modulation/PremiumMod.*`:
-  `chorus_premium`(Hermite 변조 지연, 1–3 voices, BBD 캐릭터 AA/재구성, 피드백·드리프트), `vibrato_premium`(cents 단위 깊이 보정, 비대칭·드리프트, 지연 5 ms),
-  `phaser_premium`(2–12단 TPT 올패스, Lo/Hi 지수 스윕, 포화 피드백, 스테이지 불일치), `univibe_premium`(비균일 4단 + 램프/LDR 비대칭 모델),
-  `flanger_premium`(실제 스루제로: 고정 드라이 탭 4.5 ms + 변조 탭, Classic 피드백은 상대 지연 주위), `tremolo_premium`(Optical/Bias/Harmonic LR4),
-  `rotary_premium`(혼/드럼 LR4, 관성 가감속, 도플러 + 지향성 AM, 2 마이크). 공통: `ModLfo`(위상 연속·smooth random), `ApTpt`, `Lr4`.
-- CPU(스테레오 48 kHz, x86): 0.21–0.74 % / 메모리 ≤ 32 KiB(48 kHz) / 지연: Vibrato 240, Flanger 216, Rotary 69샘플(보고), 나머지 0.
-- 측정 요약: 보간 비교 Hermite −42.2 dB(선형 −25.3), Vibrato 깊이 오차 ≤ 3 %, Phaser 노치 0.02 %, Flanger TZ 교차 −2.2…+3.2 ms·피드백 피크 ±18 dB,
-  Tremolo 3모델 구별(THD 1.3 % vs 0 %, 대역 상관 −0.92), Rotary 속도 0.79/6.80·0.66/5.90 Hz·가속 0.70/3.50 s·도플러 32.6 cents(이론 32.0).
-- Host Automation(K-048): 해결 — 기존 275개 파라미터 인덱스(=JUCE AU/VST3 ID) 불변, 슬롯당 16..23 확장 128개를 맨 뒤에 추가(version hint 2),
-  세션 키 호환. 헤드리스 Processor 테스트 PASS. **Logic 수동 확인 필요(K-053)**.
-- 호환성: 팩토리 01–10과 기존 이펙트 전부 v0.7과 비트 동일. 새 프리셋 11–12.
-- 검증 환경: Linux x86_64 (C++ 141/141, ASan 0건, pluginval 7 PASS(타임아웃 연장, K-054)), Linux arm64 VM on 사용자 Mac (141/141 — macOS 네이티브 아님). macOS 네이티브 v0.5–v0.8 미확인.
-- 미해결: K-053(Logic 오토메이션), K-055(Phaser 스테이지 전환), K-056(Vibrato 저속 최대 깊이), K-057(근사 계수), K-058(청취·DI), K-047/K-050.
-- 다음 우선순위(v0.9): Mac/Logic 확인 → 청취 튜닝 → 실측(LDR·로터리·DI) → 출시 준비(설치·서명·Windows·매뉴얼) → 하드웨어 ARM 최적화.
-- 읽을 파일: `AGENTS.md` → 이 문서 → `docs/KNOWN_ISSUES.md` → `docs/DSP_SPECIFICATION.md`(Premium Modulation 절) → `docs/PARAMETER_SPECIFICATION.md` §4.
+- 제품: 기타 멀티이펙터 **MFX Claude 0.9.0** (AU/VST3/Standalone, JUCE 8, 코어 JUCE·OS 독립 C++20). 필수 규칙 `AGENTS.md` R1–R6.
+- v0.9 신규 리버브(새 타입 3종, 기존 `reverb` 5모드·`reverb_plate_premium` 무변경) — `src/dsp/reverb/PremiumSpace.*`:
+  - `reverb_spring_premium`: FDN 이름 바꾸기가 아닌 **분산(dispersive) 스프링** — 탱크 2개, 각 루프 = 지연 Td(55−20·character ms) → stretched all-pass 60단(K = fs/2fC) → fC 4차 LP → Tone → 피드백.
+    HF 보조 루프(1차 AP 20단) + 입력 Drive(tanh, 정규화) + 출력 HP 90 Hz. 측정: 도착 지연 300 Hz 50.0 / 1 kHz 53.1 / 3 kHz 55.3 ms(주파수 따라 증가 = 처프), RT60 오차 ≤ 8 %.
+  - `reverb_hall_premium`: ER 12탭/채널(크기 비례, L/R 상이) + 16선 FDN(Walsh–Hadamard, 입력 확산 4단, 선별 이득 + 250 Hz/4 kHz 셸프로 대역별 RT60),
+    smooth-random 변조(기본 50 % / 0.5 Hz), Size는 제어율 one-pole + **샘플 단위 글라이드·슬루 제한 0.06**(클릭 없음). RT60 1/3/8 s 설정 → 1 kHz 오차 < 15 %.
+  - `reverb_shimmer`: 같은 FDN + 듀얼 탭 sin² 창 피치 시프터(50 ms, ±1 cents 이내, AM 리플 0.14 dB). 구조 Feedback(루프 안: 옥타브가 쌓임) / Pre(입력만 시프트). 간격 +12/+7/+19/+5/−12.
+  - Freeze(Hall·Shimmer): 80 ms 램프로 입력 차단 + 루프 손실 0, 드라이는 그대로. 60 s 드리프트 −2.6 / −3.3 dB/분(K-059), 해제 후 정상 감쇠.
+  - Ducking(세 타입 공통 `WetDucker`): 웻만 감쇠(드라이 오차 0), 연주 중 −12 dB 설정 → −12.0 dB, 1.5 s 뒤 꼬리 −0.19 dB, 게인 스텝 ≤ 0.0009/샘플.
+  - **Plate v2: 채택 안 함** — 프로토타입에서 에코 밀도는 개선(NED150 0.745→0.945)됐지만 꼬리 피키니스 악화(8.4→9.95 dB)·트랜지언트 감소로 증거 혼재. v1 유지(DECISION_LOG D-072).
+- CPU(스테레오 48 kHz, x86): Hall 2.8 % · Shimmer 2.4 % · Spring 1.7 % (Plate v1 1.1 %, 구형 reverb 1.0 %). 메모리: Hall 1.26 MiB(48 kHz)/5.0 MiB(192 kHz), Shimmer 1.3 MiB(48 kHz). 보고 지연 0(시프터 내부 지연 25 ms는 웻 경로에만).
+- 호환성: 팩토리 01–12, 구형 reverb 5모드, 기존 이펙트 전부 v0.8과 비트 동일(107 렌더 `cmp`). 새 프리셋 13(Spring Surf Clean)·14(Shimmer Hall Ambient).
+- 검증 환경: Linux x86_64 (C++ 151/151, ASan 0건, pluginval 7 PASS(GUI 제외·타임아웃 연장, K-054), 호스트 레이아웃 테스트 PASS), Linux arm64 VM on 사용자 Mac(결과는 `tests/results/arm64_linux_vm_tests_v09.txt` — macOS 네이티브 아님). macOS 네이티브 v0.5–v0.9 미확인.
+- 미해결: K-053(Logic 오토메이션), K-059(Freeze 장기 레벨 드리프트), K-060(Spring 고역 처프·모달 밀도 청취 미검증), K-061(Shimmer 시프터 창 아티팩트 청취), K-055/K-056/K-057/K-058, K-047/K-050.
+- 다음 우선순위(v0.10): Mac/Logic 확인(K-053·리버브 3종) → 청취 튜닝(Spring·Shimmer) → Freeze 레벨 보정 → 출시 준비(설치·서명·Windows·매뉴얼) → 하드웨어 ARM 최적화(FDN NEON).
+- 읽을 파일: `AGENTS.md` → 이 문서 → `docs/KNOWN_ISSUES.md` → `docs/DSP_SPECIFICATION.md`(Premium Reverb v0.9 절) → `docs/PARAMETER_SPECIFICATION.md` §3·§4.
 
 ## A. 프로젝트 개요
 | 항목 | 내용 |
@@ -51,6 +51,7 @@
 | **Custom Drive ADAA 보정** (`adaa_comp`) | 구현 | **v0.5** | `CustomDrive::processNonlinearAdaa` |
 | **Premium Plate v1** (`reverb_plate_premium`) | 구현, 청취 미검증 | **v0.5** | `src/dsp/reverb/PremiumPlate.*`, `tools/benchmark/reverb_metrics.py` |
 | **저장 호환 훅** | 구현 | **v0.5** | `Effect::legacyValueForMissingParam`, `src/presets/Preset.cpp` |
+| **Premium Spring / Hall / Shimmer, Freeze, Wet Ducking** | 구현, 청취·Logic 미검증 | **v0.9** | `src/dsp/reverb/PremiumSpace.*`, `tests/audio/test_reverb_v09.cpp` |
 
 ## C. 아키텍처
 ```
@@ -148,6 +149,21 @@ src/plugin    JUCE AudioProcessor/Editor (얇은 래퍼)       src/ui  JUCE 컴�
 | `tests/audio/test_modulation_v08.cpp` (신규), `tests/performance/test_performance.cpp` | 테스트 +11 |
 | `presets/factory/11_Premium_Chorus_Clean.json`, `12_Univibe_Rotary_Lead.json` (신규) | |
 
+## D-7. v0.9 변경 (2026-11-26)
+| 파일 | 변경 |
+|---|---|
+| `src/dsp/reverb/PremiumSpace.*` (신규) | `WetDucker`, `Shelf1`, `FdnCore`(16선), `PitchShifter`, `StretchedAp` + `PremiumHall`/`PremiumSpring`/`PremiumShimmer` |
+| `src/dsp/utility/DelayLine.h` | `bytes()` (메모리 보고, 동작 무변경) |
+| `src/engine/EffectFactory.cpp`, `CMakeLists.txt` | 등록, 0.9.0 |
+| `tests/audio/test_reverb_v09.cpp` (신규), `tests/performance/test_performance.cpp` | 테스트 +10 (리버브 9, 할당 1) |
+| `presets/factory/13_Spring_Surf_Clean.json`, `14_Shimmer_Hall_Ambient.json` (신규) | |
+| `tests/results/reverb_metrics_v09.json`, `sanitizer_asan_v09.txt`, `pluginval_vst3_linux_strict7_v09.txt` | 측정·검증 로그 |
+UI: 전용 화면 없음 — 기존 ChainView 추가 메뉴·ParamPanel 일반 컨트롤에 자동 노출, 파라미터 ≤ 17개라 v0.8 호스트 확장(슬롯당 24) 안에서 전부 오토메이션 가능.
+
+## E-9. v0.9 검증 요약 (Linux x86_64, Release)
+C++ 151/151, ASan 0건, v0.8 대비 비트 동일 107/107(팩토리 01–12·구형 reverb·모든 기존 이펙트), pluginval 7 PASS(GUI 제외), 헤드리스 호스트 레이아웃 PASS.
+상세: `docs/INTEGRATION_REPORT.md` 마지막 절. macOS 네이티브·auval·Logic·청취: NOT TESTED (K-062).
+
 ## E. 테스트 및 검증 (이번 작업, Linux x86_64 클라우드, Release)
 | 명령 | 결과 |
 |---|---|
@@ -182,6 +198,8 @@ gap v1 Mac(사용자 실행): 빌드 PASS, 78/78, auval PASS (`tests/results/mac
 ## G. 다음 개발 작업
 | 순서 | 작업 | 변경 대상 | 주의 | 권장 모델 | 최소 검증 |
 |---|---|---|---|---|---|
+| 0 (v0.10) | Mac 빌드·auval·Logic: 리버브 3종, Freeze 토글 오토메이션, K-053 | `scripts/macos_build_install_verify.sh` | 설치 AU 백업 후 교체, Codex/Legacy AU 삭제 금지 | (사용자) | auval PASS, Logic 재생·저장·재열기 |
+| 0b | Freeze 레벨 드리프트 보정(K-059), Spring/Shimmer 청취 튜닝 | `src/dsp/reverb/PremiumSpace.*` | 출시 전이면 같은 타입에서 조정 가능하나 프리셋 13–14 비트 변화 기록 | 고성능 코딩 모델 | `test_reverb_v09` |
 | 1 | v0.4 Mac 1회 검증 | `scripts/macos_build_install_verify.sh` | 설치 AU는 스크립트가 백업 후 교체 | (사용자) | auval PASS, Logic에서 AB763·Model 전환 |
 | 2 | AB763 M2: PI(롱테일), 6V6 푸시풀, Sag, NFB, OT | `src/dsp/amp/AB763Amp.*` | M1 소리는 `model` 파라미터 추가로 보존(R6), type id 불변 | 고성능 코딩 모델 | 기존 M1 출력 비트 동일, 할당 0, SR 독립 |
 | 3 | 골든 렌더 자동 테스트(K-020) | `tests/unit/test_presets.cpp` | 플랫폼 간 허용 오차 정의 | 중간급 | 팩토리 01–06 |

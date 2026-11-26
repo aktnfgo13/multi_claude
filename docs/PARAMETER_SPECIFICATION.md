@@ -92,6 +92,9 @@ v2에서 값을 그대로 두면 02/03 프리셋의 출력이 14–19 dB 낮아�
   레거시 값 훅이 필요 없습니다(저장 데이터에 없으면 기본값 = 기존 동작).
 * 새 타입: `delay_tape_premium`, `delay_bbd_premium`, `comp_fet`. 기존 프리셋은 이 타입을 포함하지 않으므로 자동 활성화되지 않습니다.
 
+### v0.9: 새 타입
+`reverb_hall_premium`(17), `reverb_spring_premium`(10), `reverb_shimmer`(15) — 기존 타입 파라미터 변경 없음. `freeze`는 Toggle, `interval`·`structure`는 Choice(항목 추가 시 K-021 정책).
+
 ### v0.7: 추가 파라미터
 * `delay_bbd_premium`: `model`(v1/v2), `chips`(1/2/4, v2 전용)을 끝에 추가. 저장 데이터에 `model`이 없으면 v1(= v0.6 출력 비트 동일),
   새 인스턴스는 v2·2 chips.
@@ -99,7 +102,7 @@ v2에서 값을 그대로 두면 02/03 프리셋의 출력이 14–19 dB 낮아�
   밴드 타입 5개는 16–20 → Logic 자동화 대상 아님).
 * 호스트 자동화는 슬롯당 앞 16개 파라미터만 노출(`kParamsPerSlot` = 16). `delay`의 `time_r_ms`(인덱스 16)는 자동화 불가(K-048).
 
-## 3. 이펙트별 파라미터 (자동 생성, v0.8)
+## 3. 이펙트별 파라미터 (자동 생성, v0.9)
 
 ### `utility` — Gain / Volume
 
@@ -603,6 +606,63 @@ v2에서 값을 그대로 두면 02/03 프리셋의 출력이 14–19 dB 낮아�
 | `modulation` | Modulation | 0…100 | 20 | % | linear |
 | `heads` | Heads | Head 1 / Heads 1+2 / Heads 1+2+3 | 0 |  | linear |
 | `spread` | Spread | 0…100 | 30 | % | linear |
+| `level_db` | Output Level | -24…12 | 0 | dB | linear |
+
+### `reverb_hall_premium` — Premium Hall
+
+| id | 이름 | 범위 | 기본값 | 단위 | 스케일 |
+|---|---|---|---|---|---|
+| `decay_s` | Decay | 0.300000012…20 | 3 | s | log |
+| `predelay_ms` | Pre-Delay | 0…250 | 20 | ms | linear |
+| `size` | Size | 0…100 | 60 | % | linear |
+| `bass_mult` | Bass Decay | 0.5…2.5 | 1.20000005 | :1 | linear |
+| `treble_mult` | Treble Decay | 0.100000001…1 | 0.449999988 | :1 | linear |
+| `early` | Early Reflections | 0…100 | 40 | % | linear |
+| `diffusion` | Diffusion | 0…100 | 70 | % | linear |
+| `mod_depth` | Mod Depth | 0…100 | 50 | % | linear |
+| `mod_rate_hz` | Mod Rate | 0.0500000007…2 | 0.5 | Hz | log |
+| `low_cut_hz` | Low Cut | 20…500 | 80 | Hz | log |
+| `high_cut_hz` | High Cut | 2000…20000 | 12000 | Hz | log |
+| `width` | Width | 0…150 | 100 | % | linear |
+| `mix` | Mix | 0…100 | 25 | % | linear |
+| `freeze` | Freeze | 0…1 | 0 |  | linear |
+| `duck_db` | Ducking | 0…24 | 0 | dB | linear |
+| `duck_threshold_db` | Duck Threshold | -60…0 | -30 | dB | linear |
+| `level_db` | Output Level | -24…12 | 0 | dB | linear |
+
+### `reverb_spring_premium` — Premium Spring
+
+| id | 이름 | 범위 | 기본값 | 단위 | 스케일 |
+|---|---|---|---|---|---|
+| `decay_s` | Decay | 0.5…8 | 2.5 | s | log |
+| `mix` | Mix | 0…100 | 25 | % | linear |
+| `tone` | Tone | 0…100 | 50 | % | linear |
+| `predelay_ms` | Pre-Delay | 0…100 | 0 | ms | linear |
+| `drive` | Drive | 0…100 | 30 | % | linear |
+| `character` | Spring Character | 0…100 | 50 | % | linear |
+| `width` | Stereo Width | 0…100 | 60 | % | linear |
+| `duck_db` | Ducking | 0…24 | 0 | dB | linear |
+| `duck_threshold_db` | Duck Threshold | -60…0 | -30 | dB | linear |
+| `level_db` | Output Level | -24…12 | 0 | dB | linear |
+
+### `reverb_shimmer` — Premium Shimmer
+
+| id | 이름 | 범위 | 기본값 | 단위 | 스케일 |
+|---|---|---|---|---|---|
+| `decay_s` | Decay | 1…30 | 8 | s | log |
+| `shimmer` | Shimmer | 0…100 | 50 | % | linear |
+| `interval` | Interval | +12 / +7 / +19 / +5 / -12 | 0 |  | linear |
+| `structure` | Structure | Feedback / Pre | 0 |  | linear |
+| `tone_hz` | Tone | 1000…12000 | 6000 | Hz | log |
+| `size` | Size | 0…100 | 70 | % | linear |
+| `mod_depth` | Mod Depth | 0…100 | 30 | % | linear |
+| `predelay_ms` | Pre-Delay | 0…250 | 30 | ms | linear |
+| `low_cut_hz` | Low Cut | 20…1000 | 200 | Hz | log |
+| `width` | Width | 0…150 | 100 | % | linear |
+| `mix` | Mix | 0…100 | 35 | % | linear |
+| `freeze` | Freeze | 0…1 | 0 |  | linear |
+| `duck_db` | Ducking | 0…24 | 0 | dB | linear |
+| `duck_threshold_db` | Duck Threshold | -60…0 | -30 | dB | linear |
 | `level_db` | Output Level | -24…12 | 0 | dB | linear |
 
 ### `delay_bbd_premium` — BBD Analog Delay

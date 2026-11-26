@@ -344,6 +344,51 @@ LR4 800 Hz → 혼(고역) / 드럼(저역). 속도 Slow/Fast/Brake: 혼 0.80/6.
 | tremolo_premium | 0.42 % (기존 0.16) | < 1 KiB | 0 |
 | rotary_premium | 0.52 % | 4 / 16 KiB | 1.4 ms (69) |
 
+## Premium Reverb & Ambient (v0.9, `src/dsp/reverb/PremiumSpace.*`)
+### 기존 리버브 감사 (v0.8 기준, 무변경)
+| type | 구조 | 측정(48 kHz IR, mix 100) | 한계 |
+|---|---|---|---|
+| `reverb` Room/Hall/Plate/Ambient | 8선 FDN(Householder), 선별 감쇠, 입력 확산 4단, ER 탭(Room/Hall) | Hall T=3: RT60 500 Hz 2.85 s, 8 kHz 0.57 s, NED50 0.53, 피키니스 7.37 dB | 대역별 RT60 직접 제어 없음, Freeze·Shimmer·Ducking 없음, 8선 밀도 |
+| `reverb` Spring | 분산 올패스 16단 × 2 루프("스타일라이즈드") | RT60 1.62 s, NED150 0.33, 피키니스 13.4 dB | 물리 분산 길이·전이 주파수 없음, Drive 없음 |
+| `reverb_plate_premium` (v1) | Dattorro + 구간 RT60·저역 배수·ER·변조 | RT60 500 Hz 2.85 s, NED150 0.745, 피키니스 8.9 dB | 초기 밀도 낮음(→ v2 시험, 채택 안 함 D-072) |
+
+### 공통 부품 (`PremiumSpace.h`)
+* `FdnCore`: 16선(라인 37.3–107.9 ms × size 0.4–1.6), 4단 스테레오 입력 확산(3.31/4.87/7.13/10.29 ms, g = 0.45 + 0.3·diffusion),
+  선별 이득 gM = 10^(−3L/(fs·T)) + 1차 셸프 250 Hz(저역 배수)·4 kHz(고역 배수), FWHT 혼합(×1/4), 출력 = Hadamard 3·12행(×1/4, 역상 트릭 없음).
+  변조: smooth-random(라인별 위상), 프리즈 중 70 % 감소. Size: 32샘플마다 one-pole 목표(τ 0.3 s), 이동은 샘플 단위 글라이드·슬루 ≤ 0.06 samples/sample(D-077).
+  Freeze: 80 ms 램프 — 입력 × (1−f), 루프 필터 출력 → 원신호로 보간(손실 0), `softGuard`(> 2에서만).
+* `PitchShifter`: 두 탭(반주기 위상차), 지연 dMin + p·w(w = 50 ms), sin² 창(합 = 1), 위상 −= (ratio−1)/w. 내부 지연 ≈ 25 ms(웻 전용, 보고 0).
+* `StretchedAp`: z^−K 기반 1차 올패스(K ≤ 64) — 스프링 분산. `WetDucker`: 입력 |x| 엔벨로프(5 ms/250 ms) → 임계 초과량에 비례, 최대 감쇠 duck_db, 웻 게인에만 곱.
+* 믹스: dry = min(1, 2(1−mix)), wet = min(1, 2·mix) (D-076). Width: M/S.
+
+### Premium Spring (`reverb_spring_premium`)
+탱크 2개(L/R, 두 번째 Td×1.12·a+0.03). 전이 주파수 fC = 3500 + 2500·character Hz, K = round(fs/2fC), a = 0.55 + 0.1(1−character).
+루프: read(Td + 지터) → StretchedAp 60단 → fC 4차 LP → Tone 1극 → push(x + g·s), g는 Td + DC 군지연 M·K(1−a)/(1+a)로 계산한 RT60 이득.
+HF 보조 루프: 1차 AP(−0.6) 20단, tdH = 0.42·Td, 입력 HP fC, ×0.2. 입력 Drive = tanh(dbToGain(18·drive)·x)/gain(소신호 이득 1). 출력 HP 90 Hz.
+측정: 주파수별 첫 도착 300 Hz 50.0 / 1 kHz 53.1 / 3 kHz 55.3 ms, RT60(500 Hz) 1.5→1.45 s, 4→3.68 s, 3차 고조파 −33.9(drive 0) / −24.1(30) / −3.5 dB(100), width 0 → L = R.
+
+### Premium Hall (`reverb_hall_premium`)
+입력 HP/LP → 평활 프리딜레이 → ER 12탭/채널(0.55/(1+ms/12), 크기 비례, L/R 상이, 8 kHz LP) + FdnCore. 기본 변조 50 % / 0.5 Hz(피키니스 9.1 → 8.0 dB).
+측정: RT60 1 kHz 설정 1/3/8 s → 오차 < 15 %, 대역 RT60(500 Hz 3.16 s, 125 Hz 3.69 s, 8 kHz 1.49 s at T=3, bass 1.2·treble 0.45), 첫 ER 17.1 ms(프리 10 ms + 7.1 ms),
+꼬리 L/R 상관 −0.06, 모노 파워 비 0.47, NED150 0.97, Size 0↔100 반복 시 > 3 kHz 성분 −81 dBFS(클릭 없음), 무음 → 38 s 뒤 < −200 dBFS.
+
+### Premium Shimmer (`reverb_shimmer`)
+Feedback 구조: 이전 웻 출력 → 시프터 → HP 250 Hz / LP tone → × shimmer × 2.4·√(1−ḡ²) → 레벨 조절기(> 0.3) → FDN 입력에 합산 (패스마다 간격 누적).
+Pre 구조: 입력만 시프트(게인 1). FDN: setDecay(T, 1.0, 0.6), 확산 0.85, 변조 0.25 Hz.
+측정: 시프트 오차 +12/+7/+19/−12 → 0.00/0.02/−0.007/0.00 cents, AM 리플 0.14 dB; 3.5 s 뒤 옥타브 대역(330 Hz 기준) Feedback +3.3/+3.6 dB, Pre −1.7/−30.9 dB;
+잡음 20 s + 무음 40 s(shimmer 100, decay 30) 피크 1.90, 유한, 55–60 s RMS −73 dBFS.
+
+### Freeze / Ducking 측정 (`test_reverb_v09`)
+Freeze(잡음 재생 중 전환): 전환 스텝 비 1.02(Hall)/0.89(Shimmer), 60 s 드리프트 −2.6/−3.3 dB/분(K-059), 프리즈 중 새 3 kHz 프레이즈 미포착(−66/−85 dB), 드라이 통과, 해제 후 −200 dBFS까지 감쇠.
+Ducking(−12 dB, 임계 −30 dB): 드라이 오차 0, 연주 중 −12.0 dB, 꼬리 −0.19 dB, 게인 스텝 ≤ 0.0009/샘플.
+
+### CPU / 메모리 / 지연 (스테레오 48 kHz, x86, `cpu_percent_stereo_48k_*`)
+| type | CPU | 메모리 | 지연 |
+|---|---|---|---|
+| `reverb_hall_premium` | 2.81 % | 1.26 MiB (192 kHz 5.0 MiB) | 0 |
+| `reverb_shimmer` | 2.38 % | 1.3 MiB | 0 (웻 내부 25 ms) |
+| `reverb_spring_premium` | 1.70 % | NOT MEASURED(지연선 2×수십 ms 수준) | 0 |
+
 ## Delay 스테레오 보강 (v0.6, 기존 `delay`)
 확인 결과 기존: Mono/Stereo(R 시간 = L × (1 + Offset))/Ping-Pong, 템포 싱크, Mix/Feedback 평활, 트레일 있음.
 추가(끝에 덧붙임, 기본값 = 기존 동작, v0.5와 출력 비트 동일 확인):

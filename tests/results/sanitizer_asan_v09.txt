@@ -1,0 +1,10 @@
+# ASan+UBSan (build-asan, MFX_SANITIZE=address) - v0.9 reverb tests + generic effect tests, Linux x86_64 container
+3 passed, 0 failed, 10 checks
+1 passed, 0 failed, 5 checks
+2 passed, 0 failed, 7 checks
+1 passed, 0 failed, 12 checks
+1 passed, 0 failed, 3 checks
+1 passed, 0 failed, 2 checks
+1 passed, 0 failed, 672 checks
+1 passed, 0 failed, 42 checks
+premium_reverb_extremes: 1 passed, 0 failed, 135 checks

@@ -234,3 +234,34 @@ python3 research/spice/run_spice.py tolerance …     → E-018
 | pluginval strictness 7 (VST3 Linux, GUI 제외, `--timeout-ms` 연장) | PASS | `pluginval_vst3_linux_strict7_v08.txt`, K-054 |
 | Linux arm64 VM (사용자 Mac, g++ 11.4, macOS 네이티브 아님) | PASS 141/141 | `arm64_linux_vm_tests_v08.txt` |
 | macOS·auval·Logic(오토메이션·로딩), 청취 | NOT TESTED | K-053, K-058 |
+
+---
+# 추가: v0.9 Premium Reverb & Ambient Engine (2026-11-26)
+| 항목 | 상태 | 근거 |
+|---|---|---|
+| 기준 확인: `dccc7ec`, 141/141, 작업 트리 깨끗 | PASS | 작업 전 |
+| 팩토리 01–12, 구형 `reverb` 5모드, Premium Plate v1, v0.8 모든 이펙트(블록 64/256) = v0.8 | PASS (비트 동일 107/107) | v0.8 빌드 vs 후보 `cmp` |
+| Premium Spring 분산·RT60·Drive·Width | PASS | `spring_premium_dispersion_decay_and_drive` |
+| Premium Hall 대역 RT60·ER·스테레오·Size 무클릭·변조 음정·바닥 | PASS | `hall_premium_*` 3개 |
+| Shimmer 시프트 정확도·구조 비교·장시간 안정 | PASS | `shimmer_*` 2개 |
+| Freeze(Hall·Shimmer) 전환·유지·해제 | PASS (드리프트 −2.6/−3.3 dB/분, K-059) | `freeze_captures_holds_and_releases` |
+| Ducking 웻 전용·복귀·무클릭 | PASS | `ducking_is_wet_only_recovers_and_keeps_tails` |
+| 44.1/48/96/192 kHz × 블록 1/17/128/512, 전 파라미터 최대·NaN/Inf·무음 | PASS | `premium_reverb_extremes_*` + 일반 테스트 |
+| 콜백 할당 0 (Size·Freeze·Interval·Structure·Character 변경 포함) | PASS | `no_heap_allocation_or_free_v09_reverbs` |
+| Plate v2 | 구현 안 함(측정 혼재) | DECISION_LOG D-072 |
+| C++ 전체 | PASS 151/151 (141 + 10) | `cpp_tests.json` |
+| ASan (v0.9 관련) | PASS 0건 | `sanitizer_asan_v09.txt` |
+| 호스트 파라미터 레이아웃(헤드리스 Processor) | PASS | host test |
+| pluginval strictness 7 (VST3 Linux, GUI 제외, `--timeout-ms` 연장) | PASS | `pluginval_vst3_linux_strict7_v09.txt` |
+| Linux arm64 VM (사용자 Mac, macOS 네이티브 아님) | 아래 결과 파일 참조 | `arm64_linux_vm_tests_v09.txt` |
+| macOS·auval·Logic, 청취 | NOT TESTED | K-053, K-062, K-060, K-061 |
+
+리버브 지표(48 kHz IR, mix 100, `tests/results/reverb_metrics_v09.json`):
+| 타입 | RT60 125/500/2k/8k (s) | NED 50/150 ms | L/R 상관 | 꼬리 피키니스 |
+|---|---|---|---|---|
+| Premium Hall T=3 (ER 0) | 3.69 / 3.16 / 2.54 / 1.49 | 0.34 / 0.97 | −0.05 | 7.97 dB |
+| Premium Spring 기본 | 2.53 / 2.57 / 1.54 / 1.15 | 0.67 / 0.63 | 0.45 | 14.3 dB |
+| Shimmer T=8 | 8.06 / 8.13 / 8.09 / 4.97 | 0.12 / 0.93 | −0.04 | 9.45 dB |
+| Plate v1 (참고) | 3.10 / 2.85 / 2.51 / 1.87 | 0.56 / 0.75 | −0.01 | 8.89 dB |
+| 구형 Hall T=3 (참고) | 3.01 / 2.85 / 1.94 / 0.57 | 0.53 / 0.96 | −0.05 | 7.37 dB |
+| 구형 Spring (참고) | 2.10 / 1.85 / 0.92 / 0.30 | 0.58 / 0.33 | −0.01 | 13.4 dB |

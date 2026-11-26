@@ -62,3 +62,7 @@
 | K-056 | OPEN | P2 | Premium Vibrato 최대 깊이는 중심 지연 5 ms에 묶임 → 0.5 Hz 이하에서 50 cents 이상 불가 | 중심 지연 확장(지연 증가와 교환) |
 | K-057 | OPEN | P2 | Uni-Vibe 램프/LDR, Rotary 회전 속도·반경, Tremolo 광학 계수는 근사/대표값(실측 없음) | 실측 또는 공개 자료 |
 | K-058 | OPEN | P2 | 새 모듈레이션 7종 청취, Logic 로딩, 실제 기타 DI 검증 없음 | 사용자 |
+| K-059 | OPEN | P2 | Freeze 장기 레벨 드리프트: 60 s 동안 Hall −2.6 dB/분, Shimmer −3.3 dB/분 (셸프·보간 손실 잔여, 테스트 허용 < 3 dB/52 s) | 프리즈 중 셸프 우회 또는 레벨 보정 |
+| K-060 | OPEN | P2 | Premium Spring: 처프는 측정되나(300 Hz→3 kHz +5.3 ms) 실제 탱크(Accutronics 4AB3 등) 실측 비교·청취 없음, 꼬리 피키니스 14.3 dB(구형 13.4 dB) | 실측 IR 또는 청취 |
+| K-061 | OPEN | P2 | Shimmer 시프터 창(50 ms) 아티팩트·Feedback 구조 옥타브 누적량(330 Hz 기준 3.5 s 뒤 +3.3 dB)의 청취 미확인, 내부 지연 25 ms(웻 전용, 미보고) | 청취 후 창 길이·누적 계수 |
+| K-062 | OPEN | P1 | v0.9 리버브 3종 macOS 네이티브 빌드·auval·Logic 미확인 (Freeze 토글 오토메이션 포함) | 사용자 Mac |

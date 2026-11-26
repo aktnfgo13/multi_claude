@@ -1,0 +1,16 @@
+{
+  "format": "mfx-preset",
+  "version": 1,
+  "name": "Spring Surf Clean",
+  "input_gain_db": 0,
+  "output_gain_db": 0,
+  "tempo_bpm": 120,
+  "parallel": false,
+  "parallel_mix": 0.5,
+  "chain": [
+    {"type": "gate_premium", "params": {"threshold_db": -60, "mode": 1, "ratio": 4, "sc_hpf_hz": 100}},
+    {"type": "amp_ab763", "params": {"volume": 3, "treble": 6.5, "bass": 4, "mix": 100, "level": 0, "oversampling": 1, "model": 1}},
+    {"type": "cabinet", "params": {}},
+    {"type": "reverb_spring_premium", "params": {"decay_s": 2.8, "mix": 32, "tone": 65, "drive": 45, "character": 40, "width": 40}}
+  ]
+}

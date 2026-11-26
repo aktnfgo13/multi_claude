@@ -1,0 +1,18 @@
+{
+  "format": "mfx-preset",
+  "version": 1,
+  "name": "Shimmer Hall Ambient",
+  "input_gain_db": 0,
+  "output_gain_db": 0,
+  "tempo_bpm": 90,
+  "parallel": false,
+  "parallel_mix": 0.5,
+  "chain": [
+    {"type": "gate_premium", "params": {"threshold_db": -60, "mode": 1, "ratio": 4, "sc_hpf_hz": 100}},
+    {"type": "comp_fet", "params": {"input_db": 3, "output_db": 8, "attack_us": 600, "release_ms": 300, "ratio": 0, "mix": 70}},
+    {"type": "amp_ab763", "params": {"volume": 2.5, "treble": 5.5, "bass": 4, "mix": 100, "level": 0, "oversampling": 1, "model": 1}},
+    {"type": "cabinet", "params": {}},
+    {"type": "reverb_shimmer", "params": {"decay_s": 9, "shimmer": 45, "interval": 0, "structure": 0, "tone_hz": 6000, "mix": 30, "duck_db": 6}},
+    {"type": "reverb_hall_premium", "params": {"decay_s": 3.5, "predelay_ms": 25, "size": 70, "mix": 20, "duck_db": 4}}
+  ]
+}

@@ -66,6 +66,12 @@ v0.8 방향: ① Mac/Logic 청취·자동화 확인과 반영 ② 호스트 파�
 v0.9 방향: ① Mac/Logic 확인(v0.5–v0.8, 특히 K-053 오토메이션) ② 청취 기반 튜닝(모듈레이션·Plate·Gate) ③ 실측(LDR·로터리·실제 DI)
 ④ 출시 준비(설치 패키지·코드 서명·Windows 빌드·사용자 매뉴얼) ⑤ 하드웨어 플랫폼 선정 후 ARM 최적화.
 
+## v0.9 Premium Reverb & Ambient Engine (2026-11-26)
+새 타입 3종(`reverb_spring_premium` 분산 스프링, `reverb_hall_premium` ER + 16선 FDN, `reverb_shimmer` 피치 시프트 FDN),
+Freeze(Hall·Shimmer), 웻 전용 Ducking(3종), 프리셋 13–14. Plate v2는 측정 증거 혼재로 보류(D-072). 기존 리버브·프리셋 v0.8과 비트 동일.
+v0.10 방향: ① Mac/Logic 확인(K-053, K-062) ② Spring·Shimmer 청취 튜닝, Freeze 드리프트(K-059) ③ 실측(스프링 탱크 IR·실제 DI)
+④ 출시 준비(설치 패키지·코드 서명·Windows 빌드·사용자 매뉴얼) ⑤ ARM: FDN 16선 NEON 벡터화·메모리 예산(Hall 1.26 MiB@48 kHz).
+
 ## 다음 마일스톤
 1. M1 (Mac, 사용자): `scripts/macos_build_install_verify.sh` → auval → Logic 체크리스트(BUILD_GUIDE §2) → 결과 로그 전달.
 2. M1b (청취, 사용자): `audio/compare_drive_v2/abx` 블라인드 청취, 프리셋 02/03/05 확인, Custom Drive v2 노브 감각 피드백.

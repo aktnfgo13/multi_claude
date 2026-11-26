@@ -30,6 +30,9 @@ preservation of existing models/presets) override anything below.
 * v0.8 types: chorus/vibrato/phaser/univibe/flanger/tremolo/rotary `_premium` (src/dsp/modulation/PremiumMod.*).
   Host parameters: the 275-entry v0.2 layout is frozen (index = AU/VST3 ID); params 16..23 per slot are appended after it
   (version hint 2). Never insert host parameters before existing ones. Plug-in tests: `-DMFX_BUILD_PLUGIN_TESTS=ON`.
+* v0.9 types: `reverb_spring_premium` (dispersive stretched all-pass loops), `reverb_hall_premium` (ER + 16-line FDN),
+  `reverb_shimmer` (pitch-shifted FDN) in src/dsp/reverb/PremiumSpace.* — Freeze and wet-only Ducking. Legacy `reverb` and
+  `reverb_plate_premium` are untouched (Plate v2 rejected, D-072). Tests: tests/audio/test_reverb_v09.cpp.
 * Unverified items are written as NOT TESTED / BLOCKED. Never claim listening results; never call a GRU model "NAM".
 
 ## Build & test

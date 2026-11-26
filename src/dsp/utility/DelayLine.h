@@ -21,6 +21,7 @@ public:
         w_ = 0;
     }
     int maxDelay() const { return size_ - 4; }
+    size_t bytes() const { size_t n = 0; for (const auto& b : buf_) n += b.size() * sizeof(float); return n; }
     /// Write one frame then advance (call once per sample after reads).
     inline void push(float x, int ch) { buf_[ch][(size_t)w_] = x; }
     inline void advance() { w_ = (w_ + 1) & mask_; }
